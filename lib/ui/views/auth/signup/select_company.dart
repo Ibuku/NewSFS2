@@ -67,7 +67,7 @@ class SelectCompany extends StatelessWidget {
                     children: <Widget>[
                       verticalSpaceMedium,
                       CustomTextField(
-                        hintText: "Purpose of Giving",
+                        hintText: "Company",
                         // textController: _pogController,
                         validator: (value) {
                           if (value == null || value == "") {
@@ -81,7 +81,7 @@ class SelectCompany extends StatelessWidget {
                         readOnly: true,
                         suffixIcon: Icon(
                           Icons.arrow_drop_down,
-                          color: Colors.white,
+                          // color: Colors.white,
                         ),
                         onTap: () {
                           Navigator.push(
@@ -107,7 +107,7 @@ class SelectCompany extends StatelessWidget {
                           });
                         },
                       ),
-                      verticalSpace15,
+                      verticalSpace30,
                       BusyButton(
                         title: "Continue",
                         onPressed: () {},

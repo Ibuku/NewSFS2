@@ -24,7 +24,7 @@ class _FullScreenPickerState extends State<FullScreenPicker> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        backgroundColor: Colors.grey[800],
+        // backgroundColor: Colors.grey[800],
         body: InkWell(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
@@ -38,7 +38,9 @@ class _FullScreenPickerState extends State<FullScreenPicker> {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top, bottom: 24),
+                  top: MediaQuery.of(context).padding.top,
+                  bottom: 24,
+                ),
                 child: appBar(),
               ),
               Expanded(
@@ -48,26 +50,29 @@ class _FullScreenPickerState extends State<FullScreenPicker> {
                           width: 40,
                           height: 40,
                           child: CircularProgressIndicator(
-                            strokeWidth: 2,
+                            strokeWidth: 3,
+                            valueColor: AlwaysStoppedAnimation(primaryColor),
                           ),
                         ),
                       )
                     : ListView.builder(
                         padding: EdgeInsets.only(
-                            bottom: 16 + MediaQuery.of(context).padding.bottom),
+                          bottom: 16 + MediaQuery.of(context).padding.bottom,
+                        ),
                         itemCount: selectList.length,
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
-                              Navigator.pop(
-                                  context, selectList[index]);
+                              Navigator.pop(context, selectList[index]);
                             },
                             child: Column(
                               children: <Widget>[
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, right: 16),
+                                  padding: const EdgeInsets.only(
+                                    left: 8,
+                                    right: 16,
+                                  ),
                                   child: Row(
                                     children: <Widget>[
                                       Expanded(
@@ -76,9 +81,10 @@ class _FullScreenPickerState extends State<FullScreenPicker> {
                                           child: Text(
                                             selectList[index]['display'],
                                             style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16,
-                                                color: Colors.white),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -123,7 +129,7 @@ class _FullScreenPickerState extends State<FullScreenPicker> {
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.arrow_back,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -136,7 +142,10 @@ class _FullScreenPickerState extends State<FullScreenPicker> {
           child: Text(
             widget.title,
             style: TextStyle(
-                fontSize: 22, fontWeight: FontWeight.w700, color: Colors.white),
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
           ),
         ),
       ],
