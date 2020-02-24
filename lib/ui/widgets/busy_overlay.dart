@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lagmobile/ui/shared/app_colors.dart';
+import '../shared/app_colors.dart';
 
 /// A modal overlay that will show over your child widget (fullscreen) when the show value is true
 ///

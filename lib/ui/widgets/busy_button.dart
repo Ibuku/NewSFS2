@@ -1,5 +1,5 @@
-import '../shared/shared_styles.dart';
 import 'package:flutter/material.dart';
+import '../shared/shared_styles.dart';
 
 /// A button that shows a busy indicator in place of title
 class BusyButton extends StatefulWidget {
