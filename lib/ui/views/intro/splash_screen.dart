@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/viewmodels/startup_view_model.dart';
@@ -21,10 +20,11 @@ class SplashScreen extends StatelessWidget {
                   Text(
                     "Hello &\nWelcome!",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.mavenPro(
+                    style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w700,
-                      textStyle: TextStyle(color: sfsPrimaryColor)
+                      color: primaryColor,
+                      fontFamily: 'Maven Pro',
                     ),
                   ),
                 ],

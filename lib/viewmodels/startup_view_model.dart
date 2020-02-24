@@ -6,6 +6,9 @@ import '../viewmodels/base_model.dart';
 import '../ui/views/intro/splash_screen.dart';
 import '../ui/views/intro/decision_screen.dart';
 
+import '../ui/views/auth/login_screen.dart';
+import '../ui/views/auth/register_screen.dart';
+
 class StartUpViewModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
 
@@ -19,5 +22,24 @@ class StartUpViewModel extends BaseModel {
     Future.delayed(Duration(seconds: 2), () {
       _navigationService.navigateTo(DecisionScreen.routeName, replace: true);
     });
+  }
+
+  void toAuth(String type) {
+    String toRoute = "";
+    switch (type) {
+      case "login":
+        toRoute = LoginScreen.routeName;
+        break;
+      case "register":
+        toRoute = RegisterScreen.routeName;
+        break;
+      default:
+        toRoute = LoginScreen.routeName;
+        break;
+    }
+    _navigationService.navigateTo(
+      toRoute,
+      replace: false,
+    );
   }
 }

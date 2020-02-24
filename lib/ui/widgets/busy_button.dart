@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sfscredit/ui/shared/app_colors.dart';
 import '../shared/shared_styles.dart';
 
 /// A button that shows a busy indicator in place of title
@@ -7,7 +8,7 @@ class BusyButton extends StatefulWidget {
   final String title;
   final Function onPressed;
   final bool enabled;
-  
+
   const BusyButton({
     @required this.title,
     this.busy = false,
@@ -31,12 +32,19 @@ class _BusyButtonState extends State<BusyButton> {
           duration: const Duration(milliseconds: 300),
           alignment: Alignment.center,
           padding: EdgeInsets.symmetric(
-            horizontal: widget.busy ? 10 : 15,
-            vertical: widget.busy ? 10 : 10,
+            horizontal: widget.busy ? 10 : 48,
+            vertical: widget.busy ? 10 : 18,
           ),
           decoration: BoxDecoration(
-            color: widget.enabled ? Colors.grey[800] : Colors.grey[300],
-            borderRadius: BorderRadius.circular(5),
+            color: widget.enabled ? primaryColor : Colors.grey[300],
+            borderRadius: BorderRadius.circular(24.0),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Theme.of(context).dividerColor,
+                blurRadius: 8,
+                offset: Offset(4, 4),
+              ),
+            ],
           ),
           child: !widget.busy
               ? Text(
