@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-// import 'ui/views/intro/startup_view.dart';
-// import 'ui/views/explore/index.dart';
-
-// import 'ui/views/explore/stories/single.dart';
-// import 'ui/views/explore/information/single.dart';
-// import 'ui/views/explore/events/single.dart';
+import 'ui/views/intro/startup_view.dart';
 
 var appRoutes = <String, WidgetBuilder>{
-  // '/': (ctx) => StartUpView(),
+  '/': (ctx) => StartUpView(),
 
   // ExplorePage.routeName: (ctx) => ExplorePage(),
 
