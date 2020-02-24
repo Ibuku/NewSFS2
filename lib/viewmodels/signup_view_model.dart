@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:sfscredit/models/company.dart';
 
+import '../models/company.dart';
+import '../ui/views/auth/signup/register_screen.dart';
 import '../services/authentication_service.dart';
 import '../services/dialog_service.dart';
 import '../services/navigation_service.dart';
@@ -73,6 +74,20 @@ class SignUpViewModel extends BaseModel {
       await _dialogService.showDialog(
         title: 'Sign Up Failure',
         description: result,
+      );
+    }
+  }
+
+  void showSignupForm() {
+    if (selectedCompany != null) {
+      _navigationService.navigateTo(
+        RegisterScreen.routeName,
+        arguments: selectedCompany,
+      );
+    } else {
+      _dialogService.showDialog(
+        title: "Validation error",
+        description: "You have not selected a company",
       );
     }
   }

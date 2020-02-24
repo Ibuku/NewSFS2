@@ -4,6 +4,7 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/widgets/busy_button.dart';
+import 'package:sfscredit/ui/widgets/custom_card.dart';
 import 'package:sfscredit/ui/widgets/custom_text_field.dart';
 import 'package:sfscredit/ui/widgets/full_screen_picker.dart';
 import 'package:sfscredit/viewmodels/signup_view_model.dart';
@@ -65,67 +66,60 @@ class SelectCompany extends StatelessWidget {
                   ),
                 ),
                 verticalSpace20,
-                Card(
-                  elevation: 1,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-                    child: Column(
-                      children: <Widget>[
-                        verticalSpaceMedium,
-                        CustomTextField(
-                          hintText: model.loading
-                              ? "Loading Companies ..."
-                              : model.selectedCompany != null
-                                  ? model.selectedCompany.display
-                                  : "Select a company",
-                          textController: _companyController,
-                          validator: (value) {
-                            if (value == null || value == "") {
-                              return "Please select a company";
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            print(value);
-                            model.setSelectedCompany(value);
-                          },
-                          readOnly: true,
-                          suffixIcon: Icon(
-                            Icons.arrow_drop_down,
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FullScreenPicker(
-                                  title: "Select a company",
-                                  dataSource:
-                                      model.loading ? [] : model.companies,
-                                ),
-                                fullscreenDialog: false,
+                CustomCard(
+                  child: Column(
+                    children: <Widget>[
+                      verticalSpaceMedium,
+                      CustomTextField(
+                        hintText: model.loading
+                            ? "Loading Companies ..."
+                            : model.selectedCompany != null
+                                ? model.selectedCompany.display
+                                : "Select a company",
+                        textController: _companyController,
+                        validator: (value) {
+                          if (value == null || value == "") {
+                            return "Please select a company";
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          model.setSelectedCompany(value);
+                        },
+                        readOnly: true,
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                        ),
+                        onTap: () {
+                          if (model.loading || model.companies.isEmpty) {
+                            return;
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FullScreenPicker(
+                                title: "Select a company",
+                                dataSource:
+                                    model.loading ? [] : model.companies,
                               ),
-                            ).then((value) {
-                              if (value != null) {
-                                // _companyController.text = value.name;
-                                model.setSelectedCompany(value);
-                              }
-                            });
-                          },
-                        ),
-                        verticalSpace30,
-                        BusyButton(
-                          title: "Continue",
-                          onPressed: () {},
-                          busy: false,
-                        ),
-                        verticalSpaceSmall
-                      ],
-                    ),
+                              fullscreenDialog: false,
+                            ),
+                          ).then((value) {
+                            if (value != null) {
+                              model.setSelectedCompany(value);
+                            }
+                          });
+                        },
+                      ),
+                      verticalSpace30,
+                      BusyButton(
+                        title: "Continue",
+                        onPressed: () => model.showSignupForm(),
+                        busy: false,
+                      ),
+                      verticalSpaceSmall
+                    ],
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  margin: EdgeInsets.zero,
                 ),
               ],
             ),
