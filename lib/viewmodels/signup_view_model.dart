@@ -23,6 +23,7 @@ class SignUpViewModel extends BaseModel {
 
   Future init() async {
     setLoading(true);
+
     var companyRes = await _authenticationService.getCompanies();
     if (companyRes.statusCode == 200) {
       var body = jsonDecode(companyRes.body);
@@ -30,13 +31,16 @@ class SignUpViewModel extends BaseModel {
       _companiesList = companies.map((i) => Company.fromMap(i)).toList();
     } else {
       _dialogService.showDialog(
-          title: "Network error occured", description: companyRes.toString());
+        title: "Network error occured",
+        description: companyRes.toString(),
+      );
     }
+
     setLoading(false);
   }
 
-  void setSelectedCompany(dynamic role) {
-    _selectedCompany = role;
+  void setSelectedCompany(Company company) {
+    _selectedCompany = company;
     notifyListeners();
   }
 

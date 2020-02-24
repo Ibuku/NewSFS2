@@ -73,7 +73,11 @@ class SelectCompany extends StatelessWidget {
                       children: <Widget>[
                         verticalSpaceMedium,
                         CustomTextField(
-                          hintText: "Company",
+                          hintText: model.loading
+                              ? "Loading Companies ..."
+                              : model.selectedCompany != null
+                                  ? model.selectedCompany.display
+                                  : "Select a company",
                           textController: _companyController,
                           validator: (value) {
                             if (value == null || value == "") {
@@ -95,14 +99,14 @@ class SelectCompany extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => FullScreenPicker(
                                   title: "Select a company",
-                                  dataSource: model.loading ? [] : model.companies,
-                                  dataSourceKey: "name",
+                                  dataSource:
+                                      model.loading ? [] : model.companies,
                                 ),
                                 fullscreenDialog: false,
                               ),
                             ).then((value) {
                               if (value != null) {
-                                _companyController.text = value.name;
+                                // _companyController.text = value.name;
                                 model.setSelectedCompany(value);
                               }
                             });
