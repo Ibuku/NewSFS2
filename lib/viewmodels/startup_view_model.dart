@@ -1,3 +1,5 @@
+import 'package:sfscredit/ui/views/auth/signup/select_company.dart';
+
 import '../locator.dart';
 
 import '../services/navigation_service.dart';
@@ -7,7 +9,7 @@ import '../ui/views/intro/splash_screen.dart';
 import '../ui/views/intro/decision_screen.dart';
 
 import '../ui/views/auth/login_screen.dart';
-import '../ui/views/auth/register_screen.dart';
+import '../ui/views/auth/signup/select_company.dart';
 
 class StartUpViewModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
@@ -31,7 +33,7 @@ class StartUpViewModel extends BaseModel {
         toRoute = LoginScreen.routeName;
         break;
       case "register":
-        toRoute = RegisterScreen.routeName;
+        toRoute = SelectCompany.routeName;
         break;
       default:
         toRoute = LoginScreen.routeName;
