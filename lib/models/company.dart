@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 
 class Company {
-  final String id;
+  final int id;
   final String logo;
   final String emailDomain;
-  final String industryID;
+  final int industryID;
   final String name;
+  final String display;
 
   Company({
     @required this.id,
@@ -13,6 +14,7 @@ class Company {
     @required this.emailDomain,
     this.industryID,
     this.logo,
+    this.display
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +36,7 @@ class Company {
       emailDomain: map['email_domain'],
       name: map['name'],
       industryID: map['industry_id'],
+      display: map['name'],
     );
   }
 }

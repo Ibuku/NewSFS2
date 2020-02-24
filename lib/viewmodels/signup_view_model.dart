@@ -16,8 +16,8 @@ class SignUpViewModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
-  String _selectedRole = 'Select a User Role';
-  String get selectedRole => _selectedRole;
+  Company _selectedCompany;
+  Company get selectedCompany => _selectedCompany;
   List<Company> _companiesList = [];
   List get companies => _companiesList;
 
@@ -28,16 +28,15 @@ class SignUpViewModel extends BaseModel {
       var body = jsonDecode(companyRes.body);
       List companies = body['data'];
       _companiesList = companies.map((i) => Company.fromMap(i)).toList();
-    }
-    else
-    {
-      _dialogService.showDialog(title: "Network error occured", description: companyRes.toString());
+    } else {
+      _dialogService.showDialog(
+          title: "Network error occured", description: companyRes.toString());
     }
     setLoading(false);
   }
 
-  void setSelectedRole(dynamic role) {
-    _selectedRole = role;
+  void setSelectedCompany(dynamic role) {
+    _selectedCompany = role;
     notifyListeners();
   }
 
@@ -49,10 +48,11 @@ class SignUpViewModel extends BaseModel {
     setBusy(true);
 
     var result = await _authenticationService.signUpWithEmail(
-        email: email,
-        password: password,
-        fullName: fullName,
-        role: _selectedRole);
+      email: email,
+      password: password,
+      fullName: fullName,
+      companyID: _selectedCompany.id,
+    );
 
     setBusy(false);
 

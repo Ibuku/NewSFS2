@@ -4,8 +4,9 @@ import 'package:sfscredit/ui/shared/app_colors.dart';
 class FullScreenPicker extends StatefulWidget {
   final String title;
   final List dataSource;
+  final String dataSourceKey;
 
-  FullScreenPicker({this.title, this.dataSource});
+  FullScreenPicker({this.title, this.dataSource, this.dataSourceKey});
 
   @override
   _FullScreenPickerState createState() => _FullScreenPickerState();
@@ -13,10 +14,12 @@ class FullScreenPicker extends StatefulWidget {
 
 class _FullScreenPickerState extends State<FullScreenPicker> {
   List selectList = List();
+  String dsKey;
 
   @override
   void initState() {
     selectList = widget.dataSource;
+    dsKey = widget.dataSourceKey;
     super.initState();
   }
 
@@ -79,7 +82,7 @@ class _FullScreenPickerState extends State<FullScreenPicker> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(16.0),
                                           child: Text(
-                                            selectList[index]['display'],
+                                            selectList[index].display,
                                             style: TextStyle(
                                               fontWeight: FontWeight.w500,
                                               fontSize: 16,

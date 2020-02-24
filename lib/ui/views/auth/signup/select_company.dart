@@ -10,12 +10,13 @@ import 'package:sfscredit/viewmodels/signup_view_model.dart';
 
 class SelectCompany extends StatelessWidget {
   static const routeName = '/auth/signup/select-company';
+  final _companyController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<SignUpViewModel>.withConsumer(
       viewModel: SignUpViewModel(),
-      onModelReady: (model) {},
+      onModelReady: (model) => model.init(),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text("Select Company"),
@@ -73,7 +74,7 @@ class SelectCompany extends StatelessWidget {
                         verticalSpaceMedium,
                         CustomTextField(
                           hintText: "Company",
-                          // textController: _companyController,
+                          textController: _companyController,
                           validator: (value) {
                             if (value == null || value == "") {
                               return "Please select a company";
@@ -81,8 +82,8 @@ class SelectCompany extends StatelessWidget {
                             return null;
                           },
                           onSaved: (value) {
-                            // model.
-                            // _givingData['type'] = _selectedGiving['value'];
+                            print(value);
+                            model.setSelectedCompany(value);
                           },
                           readOnly: true,
                           suffixIcon: Icon(
@@ -94,20 +95,15 @@ class SelectCompany extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => FullScreenPicker(
                                   title: "Select a company",
-                                  dataSource: [],
+                                  dataSource: model.loading ? [] : model.companies,
+                                  dataSourceKey: "name",
                                 ),
                                 fullscreenDialog: false,
                               ),
                             ).then((value) {
                               if (value != null) {
-                                // setState(() {
-                                //   _pogController.text = value['display'];
-                                //   _givingData['type'] = value['value'];
-                                //   _selectedGiving = value;
-                                // });
-                                // FocusScope.of(context).requestFocus(
-                                //   amountFN,
-                                // );
+                                _companyController.text = value.name;
+                                model.setSelectedCompany(value);
                               }
                             });
                           },
