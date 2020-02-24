@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:sfscredit/models/company.dart';
 
 import '../services/authentication_service.dart';
 import '../services/dialog_service.dart';
@@ -15,6 +18,23 @@ class SignUpViewModel extends BaseModel {
 
   String _selectedRole = 'Select a User Role';
   String get selectedRole => _selectedRole;
+  List<Company> _companiesList = [];
+  List get companies => _companiesList;
+
+  Future init() async {
+    setLoading(true);
+    var companyRes = await _authenticationService.getCompanies();
+    if (companyRes.statusCode == 200) {
+      var body = jsonDecode(companyRes.body);
+      List companies = body['data'];
+      _companiesList = companies.map((i) => Company.fromMap(i)).toList();
+    }
+    else
+    {
+      _dialogService.showDialog(title: "Network error occured", description: companyRes.toString());
+    }
+    setLoading(false);
+  }
 
   void setSelectedRole(dynamic role) {
     _selectedRole = role;

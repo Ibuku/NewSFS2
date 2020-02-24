@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import 'services/authentication_service.dart';
 import 'services/base_service.dart';
 import 'services/token_service.dart';
 import 'services/dialog_service.dart';
@@ -13,7 +14,6 @@ void setupLocator() {
 
   locator.registerLazySingleton(() => BaseService());
   locator.registerLazySingleton(() => TokenService());
-  // locator.registerLazySingleton(() => ExploreService());
-  // locator.registerLazySingleton(() => AuthenticationService());
-  // locator.registerLazySingleton(() => FirestoreService());
+  
+  locator.registerLazySingleton(() => AuthenticationService());
 }

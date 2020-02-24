@@ -1,7 +1,25 @@
-import '../locator.dart';
 import 'package:flutter/foundation.dart';
 
+import '../const.dart';
+import '../locator.dart';
+
+import 'base_service.dart';
+
 class AuthenticationService {
+  final BaseService _networkService = locator<BaseService>();
+  final String baseURL = API_BASE_URL;
+  
+  Future getCompanies() async {
+    try {
+      return await _networkService.get("$baseURL/companies", headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      });
+    } catch (e) {
+      return (e.message);
+    }
+  }
+
   // User _currentUser;
   // User get currentUser => _currentUser;
 
