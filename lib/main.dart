@@ -30,9 +30,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: locator<NavigationService>().navigationKey,
       theme: ThemeData(
-        primaryColor: primaryColor,
+        primaryColor: sfsPrimaryColor,
         textTheme: GoogleFonts.nunitoTextTheme(),
-        indicatorColor: primaryColor,
+        indicatorColor: sfsPrimaryColor,
       ),
       routes: appRoutes,
     );
