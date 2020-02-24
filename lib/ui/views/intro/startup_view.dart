@@ -19,8 +19,7 @@ class StartUpView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Image.asset(
-                'assets/images/sfs_credit.png',
-                width: 100,
+                'assets/new_images/logo.png',
               ),
             ],
           ),
