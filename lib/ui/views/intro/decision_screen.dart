@@ -19,7 +19,7 @@ class DecisionScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.asset('assets/new_images/get_started.png'),
+              Image.asset('assets/images/get_started.png'),
               verticalSpaceMedium,
               // Text(
               //   "Easy, quick loan processes",

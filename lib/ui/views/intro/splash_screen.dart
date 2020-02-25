@@ -31,7 +31,7 @@ class SplashScreen extends StatelessWidget {
               ),
             ),
             Image.asset(
-              'assets/new_images/splash.png',
+              'assets/images/splash.png',
               fit: BoxFit.cover,
               width: double.infinity,
             ),

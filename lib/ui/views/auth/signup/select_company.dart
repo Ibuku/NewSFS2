@@ -40,7 +40,7 @@ class SelectCompany extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset('assets/new_images/select_company.png'),
+                Image.asset('assets/images/select_company.png'),
                 verticalSpaceSmall,
                 Text(
                   "Select Company",

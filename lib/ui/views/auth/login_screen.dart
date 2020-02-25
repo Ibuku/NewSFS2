@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.symmetric(vertical: 20),
           child: Column(
             children: <Widget>[
-              Image.asset('assets/new_images/login.png'),
+              Image.asset('assets/images/login.png'),
               verticalSpace(30),
               Text(
                 "Please Log in",
