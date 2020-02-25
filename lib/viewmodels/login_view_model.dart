@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
-import '../models/company.dart';
-import '../ui/views/auth/signup/register_screen.dart';
 import '../services/authentication_service.dart';
 import '../services/dialog_service.dart';
 import '../services/navigation_service.dart';
@@ -54,7 +52,7 @@ class LoginViewModel extends BaseModel {
       }
     } else {
       await _dialogService.showDialog(
-        title: 'Login Failed',
+        title: 'Application error',
         description: result,
       );
     }

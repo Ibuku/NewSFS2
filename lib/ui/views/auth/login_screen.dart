@@ -9,8 +9,6 @@ import 'package:sfscredit/ui/widgets/custom_card.dart';
 import 'package:sfscredit/ui/widgets/custom_text_field.dart';
 import 'package:sfscredit/viewmodels/login_view_model.dart';
 
-import '../../../const.dart';
-
 class LoginScreen extends StatefulWidget {
   static const routeName = '/auth/login';
 
