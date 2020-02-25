@@ -38,7 +38,7 @@ class AccountActivateViewModel extends BaseModel {
   Future verifyAccount({
     @required Map authData,
   }) async {
-    if (authData['pin'].length > 6 || authData['pin'].length < 6) {
+    if (authData['otp'].length > 6 || authData['otp'].length < 6) {
       await _dialogService.showDialog(
         title: 'validation error',
         description: "PIN is greater or less than 6 digits",
@@ -47,34 +47,37 @@ class AccountActivateViewModel extends BaseModel {
     }
     setBusy(true);
 
-    var result = await _authenticationService.authenticate(
+    var result = await _authenticationService.verifyAccount(
       authData: authData,
-      type: "verify/otp",
+      type: "account/verify/otp",
     );
 
     setBusy(false);
 
-    if (result.runtimeType == Response) {
-      var body = jsonDecode(result.body);
-      if (result.statusCode == 200) {
-        _navigationService.navigateTo(LoginScreen.routeName, replace: true);
-      } else if (result.statusCode == 400) {
-        await _dialogService.showDialog(
-          title: 'Account verification failed',
-          description: body['message'],
-        );
-      } else {
-        await _dialogService.showDialog(
-          title: 'Account verification failed',
-          description: body['message'],
-        );
-      }
-    } else {
-      await _dialogService.showDialog(
-        title: 'Account verification failed',
-        description: result,
-      );
-    }
+    print(result.statusCode);
+    print(result.body);
+
+    // if (result.runtimeType == Response) {
+    //   var body = jsonDecode(result.body);
+    //   if (result.statusCode == 200) {
+    //     _navigationService.navigateTo(LoginScreen.routeName, replace: true);
+    //   } else if (result.statusCode == 400) {
+    //     await _dialogService.showDialog(
+    //       title: 'Account verification failed',
+    //       description: body['message'],
+    //     );
+    //   } else {
+    //     await _dialogService.showDialog(
+    //       title: 'Account verification failed',
+    //       description: body['message'],
+    //     );
+    //   }
+    // } else {
+    //   await _dialogService.showDialog(
+    //     title: 'Account verification failed',
+    //     description: result.toString(),
+    //   );
+    // }
   }
 
   void toRoute(String type) {
