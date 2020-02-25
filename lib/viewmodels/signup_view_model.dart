@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart';
 
 import '../models/company.dart';
 import '../ui/views/auth/signup/register_screen.dart';
@@ -26,10 +27,18 @@ class SignUpViewModel extends BaseModel {
     setLoading(true);
 
     var companyRes = await _authenticationService.getCompanies();
-    if (companyRes.statusCode == 200) {
-      var body = jsonDecode(companyRes.body);
-      List companies = body['data'];
-      _companiesList = companies.map((i) => Company.fromMap(i)).toList();
+
+    if (companyRes != null) {
+      if (companyRes.statusCode == 200) {
+        var body = jsonDecode(companyRes.body);
+        List companies = body['data'];
+        _companiesList = companies.map((i) => Company.fromMap(i)).toList();
+      } else {
+        _dialogService.showDialog(
+          title: "Network error occured",
+          description: companyRes.toString(),
+        );
+      }
     } else {
       _dialogService.showDialog(
         title: "Network error occured",
@@ -56,23 +65,34 @@ class SignUpViewModel extends BaseModel {
 
     setBusy(false);
 
-    print(result.body);
-
-    // if (result.statusCode == 200) {
-    //   // if (result) {
-    //   //   _navigationService.navigateTo("");
-    //   // } else {
-    //   //   await _dialogService.showDialog(
-    //   //     title: 'Sign Up Failure',
-    //   //     description: 'General sign up failure. Please try again later',
-    //   //   );
-    //   // }
-    // } else {
-    //   await _dialogService.showDialog(
-    //     title: 'Sign Up Failed',
-    //     description: result.body,
-    //   );
-    // }
+    if (result.runtimeType == Response) {
+      var body = jsonDecode(result.body);
+      if (result.statusCode == 200) {
+        // if (result) {
+        //   _navigationService.navigateTo("");
+        // } else {
+        //   await _dialogService.showDialog(
+        //     title: 'Sign Up Failure',
+        //     description: 'General sign up failure. Please try again later',
+        //   );
+        // }
+      } else if (result.statusCode == 400) {
+        await _dialogService.showDialog(
+          title: 'Sign Up Failed',
+          description: body['message'],
+        );
+      } else {
+        await _dialogService.showDialog(
+          title: 'Sign Up Failed',
+          description: body['message'],
+        );
+      }
+    } else {
+      await _dialogService.showDialog(
+        title: 'Sign Up Failed',
+        description: result,
+      );
+    }
   }
 
   void showSignupForm() {

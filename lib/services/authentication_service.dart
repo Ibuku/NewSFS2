@@ -42,17 +42,13 @@ class AuthenticationService {
   Future signup({@required Map authData}) async {
     try {
       var authResult = await _networkService.post(
-        "$BASE_URL/register",
+        "$API_BASE_URL/register",
         headers: {
           "Accept": "application/json",
-          // "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
         body: authData,
       );
-      print(authResult.body);
-      print(authResult.statusCode);
-      print(authResult.request.headers);
-      print(authResult.reasonPhrase);
       return authResult;
     } catch (e) {
       return e;
