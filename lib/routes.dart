@@ -7,6 +7,7 @@ import 'ui/views/intro/decision_screen.dart';
 import 'ui/views/auth/login_screen.dart';
 import 'ui/views/auth/signup/select_company.dart';
 import 'ui/views/auth/signup/register_screen.dart';
+import 'ui/views/auth/activate_account.dart';
 
 var appRoutes = <String, WidgetBuilder>{
   '/': (ctx) => StartUpView(),
@@ -16,4 +17,5 @@ var appRoutes = <String, WidgetBuilder>{
   LoginScreen.routeName: (ctx) => LoginScreen(),
   SelectCompany.routeName: (ctx) => SelectCompany(),
   RegisterScreen.routeName: (ctx) => RegisterScreen(),
+  ActivateAccount.routeName: (ctx) => ActivateAccount(),
 };

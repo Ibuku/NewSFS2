@@ -46,36 +46,33 @@ class SignUpViewModel extends BaseModel {
   }
 
   Future signUp({
-    @required String email,
-    @required String password,
-    @required String fullName,
+    @required Map authData,
   }) async {
     setBusy(true);
 
-    var result = await _authenticationService.signUpWithEmail(
-      email: email,
-      password: password,
-      fullName: fullName,
-      companyID: _selectedCompany.id,
-    );
+    authData['company_id'] = selectedCompany.id.toString();
+
+    var result = await _authenticationService.signup(authData: authData);
 
     setBusy(false);
 
-    if (result is bool) {
-      if (result) {
-        _navigationService.navigateTo("");
-      } else {
-        await _dialogService.showDialog(
-          title: 'Sign Up Failure',
-          description: 'General sign up failure. Please try again later',
-        );
-      }
-    } else {
-      await _dialogService.showDialog(
-        title: 'Sign Up Failure',
-        description: result,
-      );
-    }
+    print(result.body);
+
+    // if (result.statusCode == 200) {
+    //   // if (result) {
+    //   //   _navigationService.navigateTo("");
+    //   // } else {
+    //   //   await _dialogService.showDialog(
+    //   //     title: 'Sign Up Failure',
+    //   //     description: 'General sign up failure. Please try again later',
+    //   //   );
+    //   // }
+    // } else {
+    //   await _dialogService.showDialog(
+    //     title: 'Sign Up Failed',
+    //     description: result.body,
+    //   );
+    // }
   }
 
   void showSignupForm() {

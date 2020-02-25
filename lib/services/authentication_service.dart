@@ -8,7 +8,7 @@ import 'base_service.dart';
 class AuthenticationService {
   final BaseService _networkService = locator<BaseService>();
   final String baseURL = API_BASE_URL;
-  
+
   Future getCompanies() async {
     try {
       return await _networkService.get("$baseURL/companies", headers: {
@@ -39,31 +39,23 @@ class AuthenticationService {
     // }
   }
 
-  Future signUpWithEmail({
-    @required String email,
-    @required String password,
-    @required String fullName,
-    @required int companyID,
-  }) async {
+  Future signup({@required Map authData}) async {
     try {
-      // var authResult = await _firebaseAuth.createUserWithEmailAndPassword(
-      //   email: email,
-      //   password: password,
-      // );
-
-      // create a new user profile on firestore
-      // _currentUser = User(
-      //   id: authResult.user.uid,
-      //   email: email,
-      //   fullName: fullName,
-      //   userRole: role,
-      // );
-
-      // await _firestoreService.createUser(_currentUser);
-
-      // return authResult.user != null;
+      var authResult = await _networkService.post(
+        "$BASE_URL/register",
+        headers: {
+          "Accept": "application/json",
+          // "Content-Type": "multipart/form-data",
+        },
+        body: authData,
+      );
+      print(authResult.body);
+      print(authResult.statusCode);
+      print(authResult.request.headers);
+      print(authResult.reasonPhrase);
+      return authResult;
     } catch (e) {
-      return e.message;
+      return e;
     }
   }
 

@@ -1,14 +1,28 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:sfscredit/const.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/widgets/busy_button.dart';
 import 'package:sfscredit/ui/widgets/custom_card.dart';
 import 'package:sfscredit/ui/widgets/custom_text_field.dart';
 import 'package:sfscredit/viewmodels/signup_view_model.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   static const routeName = '/auth/signup/register';
+
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final passwordController = TextEditingController();
+
+  Map _authData = {
+    'type': 'mobile',
+    'callback_url': BASE_URL,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +63,9 @@ class RegisterScreen extends StatelessWidget {
                       }
                       return null;
                     },
+                    onSaved: (value) {
+                      _authData['firstname'] = value;
+                    },
                   ),
                   verticalSpace(15),
                   CustomTextField(
@@ -59,6 +76,9 @@ class RegisterScreen extends StatelessWidget {
                       }
                       return null;
                     },
+                    onSaved: (value) {
+                      _authData['lastname'] = value;
+                    },
                   ),
                   verticalSpace(15),
                   CustomTextField(
@@ -67,12 +87,19 @@ class RegisterScreen extends StatelessWidget {
                       if (value.isEmpty) {
                         return "Email is required";
                       }
+                      if (!EmailValidator.validate(value)) {
+                        return "Email address is not valid";
+                      }
                       return null;
+                    },
+                    onSaved: (value) {
+                      _authData['email'] = value;
                     },
                   ),
                   verticalSpace(15),
                   CustomTextField(
                     hintText: "Password",
+                    textController: passwordController,
                     validator: (value) {
                       if (value.isEmpty) {
                         return "Password is required";
@@ -80,6 +107,9 @@ class RegisterScreen extends StatelessWidget {
                       return null;
                     },
                     obscureText: true,
+                    onSaved: (value) {
+                      _authData['password'] = value;
+                    },
                   ),
                   verticalSpace(15),
                   CustomTextField(
@@ -87,6 +117,9 @@ class RegisterScreen extends StatelessWidget {
                     validator: (value) {
                       if (value.isEmpty) {
                         return "Confirm password is required";
+                      }
+                      if (value != passwordController.text) {
+                        return "Passwords do not match";
                       }
                       return null;
                     },
@@ -99,7 +132,8 @@ class RegisterScreen extends StatelessWidget {
                       if (!_formKey.currentState.validate()) {
                         return;
                       }
-                      // model.signUp(email: null, password: null, fullName: null)
+                      _formKey.currentState.save();
+                      model.signUp(authData: _authData);
                     },
                     busy: model.busy,
                   )
