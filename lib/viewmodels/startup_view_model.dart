@@ -21,9 +21,9 @@ class StartUpViewModel extends BaseModel {
   }
 
   Future handleSplashLogic() async {
-    Future.delayed(Duration(seconds: 5), () {
-      _navigationService.navigateTo(DecisionScreen.routeName, replace: true);
-    });
+    // Future.delayed(Duration(seconds: 5), () {
+    //   _navigationService.navigateTo(DecisionScreen.routeName, replace: true);
+    // });
   }
 
   void toAuth(String type) {
