@@ -61,7 +61,7 @@ class SignUpViewModel extends BaseModel {
 
     authData['company_id'] = selectedCompany.id.toString();
 
-    var result = await _authenticationService.signup(authData: authData);
+    var result = await _authenticationService.authenticate(authData: authData, type: "register");
 
     setBusy(false);
 

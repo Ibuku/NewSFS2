@@ -39,10 +39,10 @@ class AuthenticationService {
     // }
   }
 
-  Future signup({@required Map authData}) async {
+  Future authenticate({@required Map authData, @required String type}) async {
     try {
       var authResult = await _networkService.post(
-        "$API_BASE_URL/register",
+        "$API_BASE_URL/$type",
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json",
