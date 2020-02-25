@@ -63,11 +63,13 @@ class AuthenticationService {
     // var user = await _firebaseAuth.currentUser();
     // await _populateCurrentUser(user);
     // return user != null;
+    return true;
   }
 
-  Future _populateCurrentUser(var user) async {
-    // if (user != null) {
-    //   _currentUser = await _firestoreService.getUser(user.uid);
-    // }
-  }
+  // Future _populateCurrentUser(var user) async {
+  //   // if (user != null) {
+  //   //   _currentUser = await _firestoreService.getUser(user.uid);
+  //   // }
+  //   // return true;
+  // }
 }
