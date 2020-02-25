@@ -15,13 +15,13 @@ class StartUpViewModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
 
   Future handleStartUpLogic() async {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 5), () {
       _navigationService.navigateTo(SplashScreen.routeName, replace: true);
     });
   }
 
   Future handleSplashLogic() async {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 5), () {
       _navigationService.navigateTo(DecisionScreen.routeName, replace: true);
     });
   }

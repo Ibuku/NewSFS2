@@ -4,7 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 import '../models/company.dart';
+
+import '../ui/views/auth/verify/activate_account.dart';
 import '../ui/views/auth/signup/register_screen.dart';
+
 import '../services/authentication_service.dart';
 import '../services/dialog_service.dart';
 import '../services/navigation_service.dart';
@@ -68,14 +71,7 @@ class SignUpViewModel extends BaseModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
-        // if (result) {
-        //   _navigationService.navigateTo("");
-        // } else {
-        //   await _dialogService.showDialog(
-        //     title: 'Sign Up Failure',
-        //     description: 'General sign up failure. Please try again later',
-        //   );
-        // }
+        _navigationService.navigateTo(ActivateAccount.routeName, replace: true);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
           title: 'Sign Up Failed',

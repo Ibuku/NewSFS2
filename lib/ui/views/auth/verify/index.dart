@@ -10,14 +10,14 @@ import 'package:sfscredit/ui/widgets/custom_text_field.dart';
 import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/login_view_model.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const routeName = '/auth/login';
+class VerifyIndex extends StatefulWidget {
+  static const routeName = '/auth/verify/index';
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _VerifyIndexState createState() => _VerifyIndexState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _VerifyIndexState extends State<VerifyIndex> {
   final _formKey = GlobalKey<FormState>();
   final passwordController = TextEditingController();
 
@@ -47,10 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.symmetric(vertical: 20),
           child: Column(
             children: <Widget>[
-              Image.asset('assets/images/login.png'),
-              verticalSpace(30),
               Text(
-                "Please Log in",
+                "Please enter your\nemail address",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.mavenPro(
                   textStyle: TextStyle(
@@ -71,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: <Widget>[
                       CustomTextField(
-                        hintText: "Email",
+                        hintText: "Email address",
                         validator: (value) {
                           if (value.isEmpty) {
                             return "Email is required";
@@ -85,24 +83,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           _authData['email'] = value;
                         },
                       ),
-                      verticalSpace(15),
-                      CustomTextField(
-                        hintText: "Password",
-                        textController: passwordController,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return "Password is required";
-                          }
-                          return null;
-                        },
-                        obscureText: true,
-                        onSaved: (value) {
-                          _authData['password'] = value;
-                        },
-                      ),
                       verticalSpace(30),
                       BusyButton(
-                        title: "Finish",
+                        title: "Continue",
                         onPressed: () {
                           if (!_formKey.currentState.validate()) {
                             return;
@@ -113,29 +96,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         busy: model.busy,
                       ),
                       verticalSpace(20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          TextLink(
-                            "Forgot Password ?",
-                            onPressed: () => model.toRoute('forgot-password'),
-                          ),
-                          TextLink(
-                            "Sign up",
-                            onPressed: () => model.toRoute('register'),
-                          ),
-                        ],
+                      TextLink(
+                        "Cancel",
+                        onPressed: () {},
+                        color: Colors.red,
                       ),
-                      verticalSpace(20),
                     ],
                   ),
                 ),
-              ),
-              verticalSpace(30),
-              TextLink(
-                "Verify email address",
-                onPressed: () => model.toRoute('verify-email'),
-                color: Colors.red,
               ),
             ],
           ),

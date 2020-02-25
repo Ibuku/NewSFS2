@@ -3,6 +3,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
+import '../ui/views/auth/verify/index.dart';
+import '../ui/views/auth/forgot_password.dart';
+import '../ui/views/auth/signup/select_company.dart';
+
 import '../services/authentication_service.dart';
 import '../services/dialog_service.dart';
 import '../services/navigation_service.dart';
@@ -56,5 +60,27 @@ class LoginViewModel extends BaseModel {
         description: result,
       );
     }
+  }
+
+  void toRoute(String type) {
+    String toRoute = "";
+    switch (type) {
+      case "register":
+        toRoute = SelectCompany.routeName;
+        break;
+      case "forgot-password":
+        toRoute = ForgotPassword.routeName;
+        break;
+      case "verify-email":
+        toRoute = VerifyIndex.routeName;
+        break;
+      default:
+        toRoute = SelectCompany.routeName;
+        break;
+    }
+    _navigationService.navigateTo(
+      toRoute,
+      replace: false,
+    );
   }
 }
