@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'ui/views/app/dashboard.dart';
+
 import 'ui/views/intro/startup_view.dart';
 import 'ui/views/intro/splash_screen.dart';
 import 'ui/views/intro/decision_screen.dart';
@@ -22,4 +24,6 @@ var appRoutes = <String, WidgetBuilder>{
   VerifyIndex.routeName: (ctx) => VerifyIndex(),
   ActivateAccount.routeName: (ctx) => ActivateAccount(),
   ForgotPassword.routeName: (ctx) => ForgotPassword(),
+
+  DashboardScreen.routeName: (ctx) =>DashboardScreen(),
 };

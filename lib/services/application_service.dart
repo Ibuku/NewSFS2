@@ -21,7 +21,8 @@ class ApplicationService {
     await _localStorageService.empty();
   }
 
-  static void dispose() {
+  void dispose() async {
+    await logout();
     _user$.close();
   }
 }

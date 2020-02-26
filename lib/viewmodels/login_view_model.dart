@@ -41,8 +41,8 @@ class LoginViewModel extends BaseModel {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
         _authenticationService.loadToken(body);
-        _authenticationService.loadUser(body);
-        ApplicationService.user = User.fromJson(body);
+        _authenticationService.loadUser(body['data']);
+        ApplicationService.user = User.fromJson(body['data']);
 
         _navigationService.navigateTo(DashboardScreen.routeName, replace: true);
       } else if (result.statusCode == 400) {
