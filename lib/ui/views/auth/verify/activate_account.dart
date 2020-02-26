@@ -6,6 +6,7 @@ import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/widgets/busy_button.dart';
 import 'package:sfscredit/ui/widgets/custom_card.dart';
+import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/account_activate_view_model.dart';
 
 class ActivateAccount extends StatefulWidget {
@@ -94,7 +95,13 @@ class _ActivateAccountState extends State<ActivateAccount> {
                         title: "Verify",
                         busy: model.busy,
                         onPressed: () => model.verifyAccount(authData: _verifyData),
-                      )
+                      ),
+                      verticalSpace(20),
+                      TextLink(
+                        "Resend OTP",
+                        onPressed: () => model.resendOTP(),
+                        color: Colors.red,
+                      ),
                     ],
                   ),
                 )

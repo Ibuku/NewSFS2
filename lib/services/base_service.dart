@@ -64,9 +64,10 @@ class BaseService {
     Map<String, String> headers,
     dynamic body,
     bool isAuth = false,
+    bool encodeBody = true,
   }) async {
     final String token = await _tokenService.getToken();
-    final String jsonBody = jsonEncode(body);
+    final jsonBody = encodeBody ? jsonEncode(body) : body;
     final http.Response res = await http.put(
       url,
       headers: <String, String>{

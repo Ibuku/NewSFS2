@@ -72,6 +72,23 @@ class AuthenticationService {
     }
   }
 
+  Future resendOTP({@required String email, @required String type}) async {
+    try {
+      var authResult = await _networkService.put(
+        "$API_BASE_URL/$type",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: {"email": email},
+        encodeBody: false,
+      );
+      return authResult;
+    } catch (e) {
+      return e;
+    }
+  }
+
   Future<bool> isUserLoggedIn() async {
     // var user = await _firebaseAuth.currentUser();
     // await _populateCurrentUser(user);

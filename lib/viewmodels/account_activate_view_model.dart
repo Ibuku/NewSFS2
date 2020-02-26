@@ -38,12 +38,20 @@ class AccountActivateViewModel extends BaseModel {
   Future verifyAccount({
     @required Map authData,
   }) async {
-    if (authData['otp'].length > 6 || authData['otp'].length < 6) {
+    if (authData['otp'] == null) {
       await _dialogService.showDialog(
         title: 'validation error',
-        description: "PIN is greater or less than 6 digits",
+        description: "OTP is required",
       );
       return;
+    } else {
+      if (authData['otp'].length > 6 || authData['otp'].length < 6) {
+        await _dialogService.showDialog(
+          title: 'validation error',
+          description: "PIN is greater or less than 6 digits",
+        );
+        return;
+      }
     }
     setBusy(true);
 
@@ -53,9 +61,6 @@ class AccountActivateViewModel extends BaseModel {
     );
 
     setBusy(false);
-
-    print(result.statusCode);
-    print(result.body);
 
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
@@ -75,6 +80,42 @@ class AccountActivateViewModel extends BaseModel {
     } else {
       await _dialogService.showDialog(
         title: 'Account verification failed',
+        description: result.toString(),
+      );
+    }
+  }
+
+  Future resendOTP() async {
+    setLoading(true);
+
+    var result = await _authenticationService.resendOTP(
+      email: userEmail,
+      type: "account/verify/otp",
+    );
+
+    setLoading(false);
+
+    if (result.runtimeType == Response) {
+      var body = jsonDecode(result.body);
+      if (result.statusCode == 200) {
+        await _dialogService.showDialog(
+          title: 'OTP Resend request Sent',
+          description: body['message'],
+        );
+      } else if (result.statusCode == 400) {
+        await _dialogService.showDialog(
+          title: 'OTP Resend failed',
+          description: body['message'],
+        );
+      } else {
+        await _dialogService.showDialog(
+          title: 'OTP Resend failed',
+          description: body['message'],
+        );
+      }
+    } else {
+      await _dialogService.showDialog(
+        title: 'OTP Resend failed',
         description: result.toString(),
       );
     }
