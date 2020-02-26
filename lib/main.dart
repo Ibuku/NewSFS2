@@ -9,11 +9,13 @@ import 'services/navigation_service.dart';
 import 'routes.dart';
 import 'ui/shared/app_colors.dart';
 
-void main() {
-  // Register all the models and services before the app starts
-  setupLocator();
-
-  runApp(MyApp());
+Future<void> main() async {
+  try {
+    await setupLocator();
+    runApp(MyApp());
+  } catch(error) {
+    print('Locator setup has failed');
+  }
 }
 
 class MyApp extends StatelessWidget {
