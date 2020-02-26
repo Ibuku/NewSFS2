@@ -57,13 +57,14 @@ class AuthenticationService {
 
   Future verifyAccount({@required Map authData, @required String type}) async {
     try {
-      var authResult = await _networkService.customPost(
+      var authResult = await _networkService.post(
         "$API_BASE_URL/$type",
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: authData,
+        encodeBody: false,
       );
       return authResult;
     } catch (e) {

@@ -33,9 +33,10 @@ class BaseService {
     Map<String, String> headers,
     dynamic body,
     bool isAuth = false,
+    bool encodeBody = true,
   }) async {
     final String token = await _tokenService.getToken();
-    final String jsonBody = jsonEncode(body);
+    final jsonBody = encodeBody ? jsonEncode(body) : body;
     final http.Response res = await http.post(
       url,
       headers: <String, String>{
@@ -53,35 +54,6 @@ class BaseService {
           ...headers
         },
         body: jsonBody,
-      );
-    }
-    return res;
-  }
-
-  Future<http.Response> customPost(
-    String url, {
-    Map<String, String> headers,
-    dynamic body,
-    bool isAuth = false,
-  }) async {
-    final String token = await _tokenService.getToken();
-    final http.Response res = await http.post(
-      url,
-      headers: <String, String>{
-        if (isAuth) HttpHeaders.authorizationHeader: 'Bearer $token',
-        ...headers
-      },
-      body: body,
-    );
-    if (res.statusCode == 401) {
-      final String tokenStr = await refresh(token);
-      return await http.post(
-        url,
-        headers: <String, String>{
-          if (isAuth) HttpHeaders.authorizationHeader: 'Bearer $tokenStr',
-          ...headers
-        },
-        body: body,
       );
     }
     return res;
