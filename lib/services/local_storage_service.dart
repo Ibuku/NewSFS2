@@ -7,10 +7,12 @@ class LocalStorageService {
   static Future<LocalStorageService> getInstance() async {
     if (_instance == null) {
       _instance = LocalStorageService();
+      print("DONE");
     }
 
     if (_preferences == null) {
       _preferences = await SharedPreferences.getInstance();
+      print("DONE2");
     }
 
     return _instance;

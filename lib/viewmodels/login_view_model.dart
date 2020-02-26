@@ -3,10 +3,15 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
+import '../models/user.dart';
+
+import '../ui/views/app/dashboard.dart';
+
 import '../ui/views/auth/verify/index.dart';
 import '../ui/views/auth/forgot_password.dart';
 import '../ui/views/auth/signup/select_company.dart';
 
+import '../services/application_service.dart';
 import '../services/authentication_service.dart';
 import '../services/dialog_service.dart';
 import '../services/navigation_service.dart';
@@ -35,15 +40,11 @@ class LoginViewModel extends BaseModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
-        print(body);
-        // if (result) {
-        //   _navigationService.navigateTo("");
-        // } else {
-        //   await _dialogService.showDialog(
-        //     title: 'Sign Up Failure',
-        //     description: 'General sign up failure. Please try again later',
-        //   );
-        // }
+        _authenticationService.loadToken(body);
+        _authenticationService.loadUser(body);
+        ApplicationService.user = User.fromJson(body);
+
+        _navigationService.navigateTo(DashboardScreen.routeName, replace: true);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
           title: 'Login Failed',

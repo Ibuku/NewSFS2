@@ -11,6 +11,8 @@ class ApplicationService {
 
   static User user = User(); // store the current authenticated user
 
+  User get getUser => user;
+
   static Future<void> initialize() async {
     _user$ = StreamController<String>.broadcast();
   }
