@@ -10,8 +10,8 @@ import 'services/local_storage_service.dart';
 GetIt locator = GetIt.instance;
 
 Future<void> setupLocator() async {
-  // var instance = await LocalStorageService.getInstance();
-  // print(instance);
+  var lsInstance = await LocalStorageService.getInstance();
+  locator.registerSingleton<LocalStorageService>(lsInstance);
 
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DialogService());
@@ -20,8 +20,4 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => TokenService());
 
   locator.registerLazySingleton(() => AuthenticationService());
-
-  // locator.registerSingleton<LocalStorageService>(instance);
-
-  locator.registerLazySingleton(() => LocalStorageService.getInstance());
 }

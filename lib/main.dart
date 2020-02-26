@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sfscredit/services/local_storage_service.dart';
 
 import 'locator.dart';
 import 'managers/dialog_manager.dart';
@@ -10,10 +11,13 @@ import 'routes.dart';
 import 'ui/shared/app_colors.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   try {
+    await LocalStorageService.getInstance();
     await setupLocator();
     runApp(MyApp());
   } catch(error) {
+    print(error);
     print('Locator setup has failed');
   }
 }

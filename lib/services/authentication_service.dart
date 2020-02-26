@@ -12,7 +12,7 @@ import 'token_service.dart';
 
 class AuthenticationService {
   final BaseService _networkService = locator<BaseService>();
-  final LocalStorageService _storageService = locator<LocalStorageService>();
+  final _storageService = locator<LocalStorageService>();
   final TokenService _tokenService = locator<TokenService>();
 
   final String baseURL = API_BASE_URL;
