@@ -71,7 +71,7 @@ class SignUpViewModel extends BaseModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
-        _navigationService.navigateTo(ActivateAccount.routeName, replace: true);
+        _navigationService.navigateTo(ActivateAccount.routeName, replace: true, arguments: authData['email']);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
           title: 'Sign Up Failed',

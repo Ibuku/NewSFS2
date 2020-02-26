@@ -35,6 +35,7 @@ class LoginViewModel extends BaseModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
+        print(body);
         // if (result) {
         //   _navigationService.navigateTo("");
         // } else {
