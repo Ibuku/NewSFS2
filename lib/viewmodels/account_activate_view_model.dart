@@ -57,27 +57,27 @@ class AccountActivateViewModel extends BaseModel {
     print(result.statusCode);
     print(result.body);
 
-    // if (result.runtimeType == Response) {
-    //   var body = jsonDecode(result.body);
-    //   if (result.statusCode == 200) {
-    //     _navigationService.navigateTo(LoginScreen.routeName, replace: true);
-    //   } else if (result.statusCode == 400) {
-    //     await _dialogService.showDialog(
-    //       title: 'Account verification failed',
-    //       description: body['message'],
-    //     );
-    //   } else {
-    //     await _dialogService.showDialog(
-    //       title: 'Account verification failed',
-    //       description: body['message'],
-    //     );
-    //   }
-    // } else {
-    //   await _dialogService.showDialog(
-    //     title: 'Account verification failed',
-    //     description: result.toString(),
-    //   );
-    // }
+    if (result.runtimeType == Response) {
+      var body = jsonDecode(result.body);
+      if (result.statusCode == 200) {
+        _navigationService.navigateTo(LoginScreen.routeName, replace: true);
+      } else if (result.statusCode == 400) {
+        await _dialogService.showDialog(
+          title: 'Account verification failed',
+          description: body['message'],
+        );
+      } else {
+        await _dialogService.showDialog(
+          title: 'Account verification failed',
+          description: body['message'],
+        );
+      }
+    } else {
+      await _dialogService.showDialog(
+        title: 'Account verification failed',
+        description: result.toString(),
+      );
+    }
   }
 
   void toRoute(String type) {

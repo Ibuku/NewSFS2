@@ -65,15 +65,13 @@ class BaseService {
     bool isAuth = false,
   }) async {
     final String token = await _tokenService.getToken();
-    final String jsonBody = jsonEncode(body);
     final http.Response res = await http.post(
       url,
       headers: <String, String>{
         if (isAuth) HttpHeaders.authorizationHeader: 'Bearer $token',
         ...headers
       },
-      body: jsonBody,
-      encoding: Encoding.getByName('utf-8'),
+      body: body,
     );
     if (res.statusCode == 401) {
       final String tokenStr = await refresh(token);
@@ -83,7 +81,7 @@ class BaseService {
           if (isAuth) HttpHeaders.authorizationHeader: 'Bearer $tokenStr',
           ...headers
         },
-        body: jsonBody,
+        body: body,
       );
     }
     return res;

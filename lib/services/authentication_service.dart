@@ -2,14 +2,12 @@ import 'package:flutter/foundation.dart';
 
 import '../const.dart';
 import '../locator.dart';
-import 'package:dio/dio.dart';
 
 import 'base_service.dart';
 
 class AuthenticationService {
   final BaseService _networkService = locator<BaseService>();
   final String baseURL = API_BASE_URL;
-  Dio dio = Dio();
 
   Future getCompanies() async {
     try {
@@ -59,28 +57,18 @@ class AuthenticationService {
 
   Future verifyAccount({@required Map authData, @required String type}) async {
     try {
-      var authResult = await dio.post(
+      var authResult = await _networkService.customPost(
         "$API_BASE_URL/$type",
-        data: authData,
-        options: Options(contentType: Headers.formUrlEncodedContentType),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: authData,
       );
       return authResult;
     } catch (e) {
       return e;
     }
-    // try {
-    //   var authResult = await _networkService.customPost(
-    //     "$API_BASE_URL/$type",
-    //     headers: {
-    //       "Accept": "application/json",
-    //       "Content-Type": "application/x-www-form-urlencoded",
-    //     },
-    //     body: authData,
-    //   );
-    //   return authResult;
-    // } catch (e) {
-    //   return e;
-    // }
   }
 
   Future<bool> isUserLoggedIn() async {
