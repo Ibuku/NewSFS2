@@ -13,7 +13,7 @@ class BaseService {
     Map<String, String> headers,
     bool isAuth = false,
   }) async {
-    final String token = await _tokenService.getToken();
+    final String token = _tokenService.getToken();
     final http.Response res = await http.get(url, headers: <String, String>{
       if (isAuth) HttpHeaders.authorizationHeader: 'Bearer $token',
       ...headers
@@ -35,7 +35,7 @@ class BaseService {
     bool isAuth = false,
     bool encodeBody = true,
   }) async {
-    final String token = await _tokenService.getToken();
+    final String token = _tokenService.getToken();
     final jsonBody = encodeBody ? jsonEncode(body) : body;
     final http.Response res = await http.post(
       url,
@@ -66,7 +66,7 @@ class BaseService {
     bool isAuth = false,
     bool encodeBody = true,
   }) async {
-    final String token = await _tokenService.getToken();
+    final String token = _tokenService.getToken();
     final jsonBody = encodeBody ? jsonEncode(body) : body;
     final http.Response res = await http.put(
       url,
