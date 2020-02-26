@@ -42,4 +42,8 @@ class LocalStorageService {
     print('(TRACE) LocalStorageService:_getFromDisk. key: $key value: $value');
     return value;
   }
+
+  Future<void> empty() async {
+    await _preferences.clear();
+  }
 }

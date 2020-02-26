@@ -102,8 +102,8 @@ class BaseService {
     );
     if (res.statusCode == 200) {
       final Map<String, dynamic> jsonRes = jsonDecode(res.body);
-      final String accessToken = jsonRes['token'];
-      _tokenService.setToken(accessToken);
+      final String accessToken = jsonRes['access_token'];
+      _tokenService.token = jsonRes;
       return accessToken;
     }
     return null;
