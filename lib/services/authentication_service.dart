@@ -1,12 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:sfscredit/models/user.dart';
 
 import '../const.dart';
 import '../locator.dart';
 
 import 'base_service.dart';
+import 'local_storage_service.dart';
+import 'token_service.dart';
 
 class AuthenticationService {
   final BaseService _networkService = locator<BaseService>();
+  final LocalStorageService _storageService = locator<LocalStorageService>();
+  final TokenService _tokenService = locator<TokenService>();
+
   final String baseURL = API_BASE_URL;
 
   Future getCompanies() async {
@@ -18,25 +26,6 @@ class AuthenticationService {
     } catch (e) {
       return (e.message);
     }
-  }
-
-  // User _currentUser;
-  // User get currentUser => _currentUser;
-
-  Future loginWithEmail({
-    @required String email,
-    @required String password,
-  }) async {
-    // try {
-    //   var authResult = await _firebaseAuth.signInWithEmailAndPassword(
-    //     email: email,
-    //     password: password,
-    //   );
-    //   await _populateCurrentUser(authResult.user);
-    //   return authResult.user != null;
-    // } catch (e) {
-    //   return e.message;
-    // }
   }
 
   Future authenticate({@required Map authData, @required String type}) async {
@@ -90,16 +79,22 @@ class AuthenticationService {
   }
 
   Future<bool> isUserLoggedIn() async {
-    // var user = await _firebaseAuth.currentUser();
-    // await _populateCurrentUser(user);
-    // return user != null;
+    var token = _tokenService.userToken;
+    return token.accessToken != null ? true : false;
+  }
+
+  Future loadUser(var user) async {
+    if (user != null) {
+      User us = User.fromJson(user);
+      _storageService.saveToDisk("user", json.encode(us.toJson()));
+    }
     return true;
   }
 
-  // Future _populateCurrentUser(var user) async {
-  //   // if (user != null) {
-  //   //   _currentUser = await _firestoreService.getUser(user.uid);
-  //   // }
-  //   // return true;
-  // }
+  Future loadToken(var token) async {
+    if (token != null) {
+      _tokenService.token = token;
+    }
+    return true;
+  }
 }
