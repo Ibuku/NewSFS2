@@ -5,6 +5,7 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/widgets/busy_button.dart';
+import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/custom_card.dart';
 import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/account_activate_view_model.dart';
@@ -41,71 +42,76 @@ class _ActivateAccountState extends State<ActivateAccount> {
           ),
           brightness: Brightness.light,
         ),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/verify.png',
-                  height: 60,
-                  fit: BoxFit.cover,
-                ),
-                verticalSpaceSmall,
-                Text(
-                  "Verification",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.mavenPro(
-                    textStyle: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: primaryColor,
-                    ),
+        body: BusyOverlay(
+          show: model.loading,
+          title: "Sending request ...",
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Image.asset(
+                    'assets/images/verify.png',
+                    height: 60,
+                    fit: BoxFit.cover,
                   ),
-                ),
-                verticalSpaceSmall,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80),
-                  child: Text(
-                    "Check your email for an OTP. Enter the code here to continue",
+                  verticalSpaceSmall,
+                  Text(
+                    "Verification",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.mavenPro(
                       textStyle: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                         color: primaryColor,
                       ),
                     ),
                   ),
-                ),
-                verticalSpace(30),
-                CustomCard(
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 40),
-                  child: Column(
-                    children: <Widget>[
-                      PinEntryTextField(
-                        fields: 6,
-                        showFieldAsBox: true,
-                        onSubmit: (String pin) {
-                          _verifyData['otp'] = pin;
-                        },
+                  verticalSpaceSmall,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 80),
+                    child: Text(
+                      "Check your email for an OTP. Enter the code here to continue",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: primaryColor,
+                        ),
                       ),
-                      verticalSpace20,
-                      BusyButton(
-                        title: "Verify",
-                        busy: model.busy,
-                        onPressed: () => model.verifyAccount(authData: _verifyData),
-                      ),
-                      verticalSpace(20),
-                      TextLink(
-                        "Resend OTP",
-                        onPressed: () => model.resendOTP(),
-                        color: Colors.red,
-                      ),
-                    ],
+                    ),
                   ),
-                )
-              ],
+                  verticalSpace(30),
+                  CustomCard(
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 40),
+                    child: Column(
+                      children: <Widget>[
+                        PinEntryTextField(
+                          fields: 6,
+                          showFieldAsBox: true,
+                          onSubmit: (String pin) {
+                            _verifyData['otp'] = pin;
+                          },
+                        ),
+                        verticalSpace20,
+                        BusyButton(
+                          title: "Verify",
+                          busy: model.busy,
+                          onPressed: () =>
+                              model.verifyAccount(authData: _verifyData),
+                        ),
+                        verticalSpace(20),
+                        TextLink(
+                          "Resend OTP",
+                          onPressed: () => model.resendOTP(),
+                          color: Colors.red,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
