@@ -41,7 +41,7 @@ class _ActivateAccountState extends State<ActivateAccount> {
           brightness: Brightness.light,
         ),
         body: SingleChildScrollView(
-          // padding: EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: 5),
           child: Center(
             child: Column(
               children: <Widget>[
