@@ -11,6 +11,7 @@ class DashboardScreen extends StatelessWidget {
         title: Text("Dashboard"),
       ),
       body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(),
         child: Text(ApplicationService.user.toJson().toString()),
       ),
     );

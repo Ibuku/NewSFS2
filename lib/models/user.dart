@@ -1,3 +1,5 @@
+import 'package:sfscredit/models/user_profile.dart';
+
 class User {
   int id;
   String firstname;
@@ -5,6 +7,7 @@ class User {
   String email;
   int companyId;
   String fullName;
+  UserProfile profile;
 
   User({
     this.id,
@@ -13,6 +16,7 @@ class User {
     this.email,
     this.companyId,
     this.fullName,
+    this.profile,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -22,6 +26,9 @@ class User {
     email = json['email'];
     companyId = json['company_id'];
     fullName = json['full_name'];
+    profile = json['user_profile'] == null
+        ? null
+        : UserProfile.fromJson(json['user_profile']);
   }
 
   Map<String, dynamic> toJson() {
@@ -32,6 +39,7 @@ class User {
     data['email'] = this.email;
     data['company_id'] = this.companyId;
     data['full_name'] = this.fullName;
+    data['profile'] = this.profile;
     return data;
   }
 }
