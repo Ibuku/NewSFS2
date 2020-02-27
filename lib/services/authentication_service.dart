@@ -78,6 +78,23 @@ class AuthenticationService {
     }
   }
 
+  Future forgotPassword({@required Map body, @required String type}) async {
+    try {
+      var authResult = await _networkService.post(
+        "$API_BASE_URL/$type",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: body,
+        encodeBody: false,
+      );
+      return authResult;
+    } catch (e) {
+      return e;
+    }
+  }
+
   Future<bool> isUserLoggedIn() async {
     var token = _tokenService.userToken;
     return token.accessToken != null ? true : false;
