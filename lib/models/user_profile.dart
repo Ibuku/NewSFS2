@@ -1,5 +1,4 @@
 class UserProfile {
-  int id;
   int userId;
   String avatar;
   String phoneNumber;
@@ -8,7 +7,6 @@ class UserProfile {
   String dateOfBirth;
 
   UserProfile({
-    this.id,
     this.userId,
     this.avatar,
     this.phoneNumber,
@@ -18,7 +16,6 @@ class UserProfile {
   });
 
   UserProfile.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
     userId = json['user_id'];
     avatar = json['avatar'];
     phoneNumber = json['phone_number'];
@@ -29,7 +26,6 @@ class UserProfile {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
     data['user_id'] = this.userId;
     data['avatar'] = this.avatar;
     data['phone_number'] = this.phoneNumber;
