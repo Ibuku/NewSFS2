@@ -7,7 +7,7 @@ import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/dashboard.dart';
 
 class Dashboard2Screen extends StatelessWidget {
-  static const routeName = '/app/dashboard';
+  static const routeName = '/app/dashboard2';
 
   @override
   Widget build(BuildContext context) {

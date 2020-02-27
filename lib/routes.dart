@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 
 import 'ui/views/app/dashboard.dart';
 
@@ -28,4 +29,5 @@ var appRoutes = <String, WidgetBuilder>{
 
   DashboardScreen.routeName: (ctx) =>DashboardScreen(),
   ApplyScreen1.routeName: (ctx) =>ApplyScreen1(),
+  //ApplyScreen2.routeName: (ctx) =>ApplyScreen2(),
 };
