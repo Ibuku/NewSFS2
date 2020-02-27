@@ -37,15 +37,16 @@ class AccountActivateViewModel extends BaseModel {
 
   Future verifyAccount({
     @required Map authData,
+    @required String otpText,
   }) async {
-    if (authData['otp'] == null) {
+    if (otpText == '' || otpText == null) {
       await _dialogService.showDialog(
         title: 'validation error',
         description: "OTP is required",
       );
       return;
     } else {
-      if (authData['otp'].length > 6 || authData['otp'].length < 6) {
+      if (otpText.length > 6 || otpText.length < 6) {
         await _dialogService.showDialog(
           title: 'validation error',
           description: "PIN is greater or less than 6 digits",
@@ -53,6 +54,7 @@ class AccountActivateViewModel extends BaseModel {
         return;
       }
     }
+    authData['otp'] = otpText;
     setBusy(true);
 
     var result = await _authenticationService.verifyAccount(

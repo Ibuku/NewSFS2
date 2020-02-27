@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:pin_entry_text_field/pin_entry_text_field.dart';
 import 'package:provider_architecture/provider_architecture.dart';
-import 'package:sfscredit/ui/shared/app_colors.dart';
-import 'package:sfscredit/ui/shared/ui_helpers.dart';
-import 'package:sfscredit/ui/widgets/busy_button.dart';
-import 'package:sfscredit/ui/widgets/busy_overlay.dart';
-import 'package:sfscredit/ui/widgets/custom_card.dart';
-import 'package:sfscredit/ui/widgets/text_link.dart';
-import 'package:sfscredit/viewmodels/account_activate_view_model.dart';
+
+import '../../../../ui/shared/app_colors.dart';
+import '../../../../ui/shared/ui_helpers.dart';
+import '../../../../ui/widgets/busy_button.dart';
+import '../../../../ui/widgets/busy_overlay.dart';
+import '../../../../ui/widgets/custom_card.dart';
+import '../../../../ui/widgets/text_link.dart';
+import '../../../../viewmodels/account_activate_view_model.dart';
 
 class ActivateAccount extends StatefulWidget {
   static const routeName = '/auth/verify/activate-account';
@@ -19,6 +21,8 @@ class ActivateAccount extends StatefulWidget {
 
 class _ActivateAccountState extends State<ActivateAccount> {
   Map _verifyData = {};
+  final _otpController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<AccountActivateViewModel>.withConsumer(
@@ -87,19 +91,44 @@ class _ActivateAccountState extends State<ActivateAccount> {
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 40),
                     child: Column(
                       children: <Widget>[
-                        PinEntryTextField(
-                          fields: 6,
-                          showFieldAsBox: true,
-                          onSubmit: (String pin) {
-                            _verifyData['otp'] = pin;
+                        // PinEntryTextField(
+                        //   fields: 6,
+                        //   showFieldAsBox: true,
+                        //   onSubmit: (String pin) {
+                        //     _verifyData['otp'] = pin;
+                        //   },
+                        // ),
+                        PinCodeTextField(
+                          length: 6,
+                          obsecureText: false,
+                          animationType: AnimationType.fade,
+                          shape: PinCodeFieldShape.box,
+                          animationDuration: Duration(milliseconds: 300),
+                          borderRadius: BorderRadius.circular(5),
+                          fieldHeight: 50,
+                          fieldWidth: 40,
+                          onChanged: (value) {
+                            if (value.length == 6) {
+                              _verifyData['otp'] = value;
+                            }
                           },
+                          activeColor: primaryColor,
+                          onCompleted: (value) {
+                            if (value.length == 6) {
+                              _verifyData['otp'] = value;
+                            }
+                          },
+                          controller: _otpController,
                         ),
+
                         verticalSpace20,
                         BusyButton(
                           title: "Verify",
                           busy: model.busy,
-                          onPressed: () =>
-                              model.verifyAccount(authData: _verifyData),
+                          onPressed: () => model.verifyAccount(
+                            authData: _verifyData,
+                            otpText: _otpController.text,
+                          ),
                         ),
                         verticalSpace(20),
                         TextLink(
