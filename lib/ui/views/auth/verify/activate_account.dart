@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:pin_entry_text_field/pin_entry_text_field.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 
 import '../../../../ui/shared/app_colors.dart';
@@ -91,13 +90,6 @@ class _ActivateAccountState extends State<ActivateAccount> {
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 40),
                     child: Column(
                       children: <Widget>[
-                        // PinEntryTextField(
-                        //   fields: 6,
-                        //   showFieldAsBox: true,
-                        //   onSubmit: (String pin) {
-                        //     _verifyData['otp'] = pin;
-                        //   },
-                        // ),
                         PinCodeTextField(
                           length: 6,
                           obsecureText: false,
