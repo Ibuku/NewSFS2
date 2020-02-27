@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
-import 'package:sfscredit/ui/views/auth/login_screen.dart';
 
-import '../ui/views/app/dashboard.dart';
+import '../ui/views/auth/login_screen.dart';
+
 import '../services/authentication_service.dart';
 import '../services/dialog_service.dart';
 import '../services/navigation_service.dart';
