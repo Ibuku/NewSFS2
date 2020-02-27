@@ -45,6 +45,7 @@ dependencies:
   shared_preferences: ^0.5.6+2
   # for otp code text field
   pin_code_fields: ^2.3.0+3
+  percent_indicator: ^2.1.1
 
 
 dev_dependencies:
