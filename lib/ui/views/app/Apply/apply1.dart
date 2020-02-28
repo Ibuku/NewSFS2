@@ -3,6 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
+import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 //import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 import 'package:sfscredit/ui/views/app/dashboard2.dart';
 
@@ -435,7 +436,7 @@ class ApplyScreen1 extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Dashboard2Screen(),
+              builder: (context) => ApplyScreen2(),
             ),
           );
         },
