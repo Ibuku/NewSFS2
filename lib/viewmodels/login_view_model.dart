@@ -50,12 +50,14 @@ class LoginViewModel extends BaseModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
+        setBusy(true);
         _authenticationService.loadToken(body);
         _authenticationService.loadUser(body['data']);
         ApplicationService.user = User.fromJson(body['data']);
         await ApplicationViewModel().getUserProfile();
+        setBusy(false);
 
-        _navigationService.navigateTo(DashboardScreen.routeName, replace: true);
+        _navigationService.navigateAndClearRoute(DashboardScreen.routeName);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
           title: 'Login Failed',
