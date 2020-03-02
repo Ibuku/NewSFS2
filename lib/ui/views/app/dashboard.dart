@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:sfscredit/ui/shared/ui_helpers.dart';
+import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
+
+import 'profile/update_kyc.dart';
 
 class DashboardScreen extends StatelessWidget {
   static const routeName = '/app/dashboard';
@@ -18,17 +22,43 @@ class DashboardScreen extends StatelessWidget {
             centerTitle: false,
             actions: <Widget>[],
           ),
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(),
-            child: Column(
-              children: [
-                Text(model.getUser().toJson().toString()),
-              ],
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            child: model.getUser().profile == null
+                ? profileNotSet(model)
+                : profileSetup(),
           ),
         ),
       ),
+    );
+  }
+
+  Widget profileNotSet(ApplicationViewModel model) {
+    return Column(
+      children: <Widget>[
+        CardItem(
+          titleText: "Update KYC",
+          btnText: "Update",
+          icon: Icons.person,
+          onPressed: () => model.toRoute(UpdateKYC.routeName),
+        ),
+        verticalSpace15,
+        CardItem(
+          titleText: "Apply for your first loan",
+          btnText: "Apply",
+          icon: Icons.keyboard_tab,
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget profileSetup() {
+    return Column(
+      children: <Widget>[
+        Text("Profile Setup"),
+      ],
     );
   }
 }

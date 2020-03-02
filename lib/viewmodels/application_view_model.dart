@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:sfscredit/services/dialog_service.dart';
+import 'package:sfscredit/services/navigation_service.dart';
+import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 
 import '../models/user.dart';
 
@@ -15,14 +17,14 @@ import 'base_model.dart';
 
 class ApplicationViewModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
-  // final NavigationService _navigationService = locator<NavigationService>();
+  final NavigationService _navigationService = locator<NavigationService>();
   final ApplicationService _application = locator<ApplicationService>();
   final AuthenticationService _authenticationService =
       locator<AuthenticationService>();
 
   User _user;
 
-  getUser() {
+  User getUser() {
     _user = _application.getUser;
     return _user;
   }
@@ -38,9 +40,9 @@ class ApplicationViewModel extends BaseModel {
 
   void toRoute(String type) {
     switch (type) {
-      // case "back":
-      //   _navigationService.pop();
-      //   break;
+      case UpdateKYC.routeName:
+        _navigationService.navigateTo(UpdateKYC.routeName);
+        break;
       // case "activate-account":
       //   // _navigationService.navigateTo(
       //   //   ActivateAccount.routeName,
