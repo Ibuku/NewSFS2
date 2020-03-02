@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 
 import 'ui/views/app/dashboard.dart';
 
@@ -12,6 +13,7 @@ import 'ui/views/auth/signup/register_screen.dart';
 import 'ui/views/auth/verify/index.dart';
 import 'ui/views/auth/verify/activate_account.dart';
 import 'ui/views/auth/forgot_password.dart';
+import 'ui/views/app/Apply/apply1.dart';
 
 var appRoutes = <String, WidgetBuilder>{
   '/': (ctx) => StartUpView(),
@@ -26,4 +28,6 @@ var appRoutes = <String, WidgetBuilder>{
   ForgotPassword.routeName: (ctx) => ForgotPassword(),
 
   DashboardScreen.routeName: (ctx) =>DashboardScreen(),
+  ApplyScreen1.routeName: (ctx) =>ApplyScreen1(),
+  //ApplyScreen2.routeName: (ctx) =>ApplyScreen2(),
 };

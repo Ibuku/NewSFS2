@@ -32,7 +32,7 @@ class _DialogManagerState extends State<DialogManager> {
         title: Text(request.title),
         content: Text(request.description),
         actions: <Widget>[
-          if (isConfirmationDialog)
+          if(isConfirmationDialog)
             FlatButton(
               child: Text(request.cancelTitle),
               onPressed: () {
