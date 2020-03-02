@@ -55,7 +55,7 @@ class LoginViewModel extends BaseModel {
         ApplicationService.user = User.fromJson(body['data']);
         await ApplicationViewModel().getUserProfile();
 
-        _navigationService.navigateTo(DashboardScreen.routeName, replace: true);
+        _navigationService.navigateAndClearRoute(DashboardScreen.routeName);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
           title: 'Login Failed',

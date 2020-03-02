@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
+import 'package:sfscredit/services/dialog_service.dart';
+
 import '../models/user.dart';
 
 import '../services/authentication_service.dart';
@@ -11,14 +14,17 @@ import '../locator.dart';
 import 'base_model.dart';
 
 class ApplicationViewModel extends BaseModel {
-  // final DialogService _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   // final NavigationService _navigationService = locator<NavigationService>();
   final ApplicationService _application = locator<ApplicationService>();
   final AuthenticationService _authenticationService =
       locator<AuthenticationService>();
 
+  User _user;
+
   getUser() {
-    return _application.getUser;
+    _user = _application.getUser;
+    return _user;
   }
 
   Future getUserProfile() async {
@@ -42,5 +48,20 @@ class ApplicationViewModel extends BaseModel {
       //   break;
       default:
     }
+  }
+
+  Future<bool> onWillPop() async {
+    bool ans = false;
+    await _dialogService
+        .showConfirmationDialog(
+      title: "Confirm Action !",
+      description: "Do you want to exit SFS Credit",
+      cancelTitle: "No",
+      confirmationTitle: "Yes",
+    )
+        .then((val) {
+      ans = val.confirmed;
+    });
+    return ans;
   }
 }
