@@ -25,6 +25,15 @@ class SignUpViewModel extends BaseModel {
   Company get selectedCompany => _selectedCompany;
   List<Company> _companiesList = [];
   List get companies => _companiesList;
+  bool _passwordVisible = true;
+  bool get passwordVisible => _passwordVisible;
+  bool _password2Visible = true;
+  bool get password2Visible => _password2Visible;
+
+  void setPasswordVisible(bool val, {int type = 1}) {
+    type == 1 ? _passwordVisible = val : _password2Visible = val;
+    notifyListeners();
+  }
 
   Future init() async {
     setLoading(true);
@@ -64,14 +73,16 @@ class SignUpViewModel extends BaseModel {
 
     authData['company_id'] = selectedCompany.id.toString();
 
-    var result = await _authenticationService.authenticate(authData: authData, type: "register");
+    var result = await _authenticationService.authenticate(
+        authData: authData, type: "register");
 
     setBusy(false);
 
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
-        _navigationService.navigateTo(ActivateAccount.routeName, replace: true, arguments: authData['email']);
+        _navigationService.navigateTo(ActivateAccount.routeName,
+            replace: true, arguments: authData['email']);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
           title: 'Sign Up Failed',

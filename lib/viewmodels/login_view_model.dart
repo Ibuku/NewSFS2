@@ -27,6 +27,14 @@ class LoginViewModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
+  bool _passwordVisible = true;
+  bool get passwordVisible => _passwordVisible;
+
+  void setPasswordVisible(bool val) {
+    _passwordVisible = val;
+    notifyListeners();
+  }
+
   Future login({
     @required Map authData,
   }) async {
