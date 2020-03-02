@@ -87,6 +87,7 @@ class SelectCompany extends StatelessWidget {
                             }
                             return null;
                           },
+                          enabled: !model.loading,
                           onSaved: (value) {
                             model.setSelectedCompany(value);
                           },
@@ -118,7 +119,7 @@ class SelectCompany extends StatelessWidget {
                         verticalSpace30,
                         BusyButton(
                           title: "Continue",
-                          onPressed: () => model.showSignupForm(),
+                          onPressed: () => model.loading ? null : model.showSignupForm(),
                           busy: false,
                         ),
                         verticalSpaceSmall

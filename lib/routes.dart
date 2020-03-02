@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 //import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 
+import 'ui/views/app/profile/update_kyc.dart';
+
 import 'ui/views/app/dashboard.dart';
 
 import 'ui/views/intro/startup_view.dart';
@@ -30,4 +32,6 @@ var appRoutes = <String, WidgetBuilder>{
   DashboardScreen.routeName: (ctx) =>DashboardScreen(),
   ApplyScreen1.routeName: (ctx) =>ApplyScreen1(),
   //ApplyScreen2.routeName: (ctx) =>ApplyScreen2(),
+
+  UpdateKYC.routeName: (ctx) => UpdateKYC(),
 };
