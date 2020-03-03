@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import '../locator.dart';
 import 'token_service.dart';
 
-class BaseService {
+class NetworkService {
   final TokenService _tokenService = locator<TokenService>();
 
   Future<http.Response> get(
