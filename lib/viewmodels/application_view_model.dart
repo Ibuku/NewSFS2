@@ -1,15 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
-import 'package:sfscredit/services/dialog_service.dart';
-import 'package:sfscredit/services/navigation_service.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 
 import '../models/user.dart';
 
 import '../services/authentication_service.dart';
-// import '../services/dialog_service.dart';
-// import '../services/navigation_service.dart';
+import '../services/dialog_service.dart';
+import '../services/navigation_service.dart';
 import '../services/application_service.dart';
 import '../locator.dart';
 
@@ -24,17 +21,23 @@ class ApplicationViewModel extends BaseModel {
 
   User _user;
 
-  User getUser() {
+  User get user {
     _user = _application.getUser;
     return _user;
+  }
+
+  set user(userJson) {
+    _authenticationService.loadUser(userJson);
+    ApplicationService.user = User.fromJson(userJson);
   }
 
   Future getUserProfile() async {
     var userProfile = await _application.userProfile();
     if (userProfile.statusCode == 200) {
       var body = jsonDecode(userProfile.body);
-      _authenticationService.loadUser(body['data']);
-      ApplicationService.user = User.fromJson(body['data']);
+      user = body['data'];
+      // _authenticationService.loadUser(body['data']);
+      // ApplicationService.user = User.fromJson(body['data']);
     }
   }
 

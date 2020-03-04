@@ -25,7 +25,7 @@ class DashboardScreen extends StatelessWidget {
           // backgroundColor: Colors.white,
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: model.getUser().profile == null
+            child: model.user.profile == null
                 ? profileNotSet(model)
                 : profileSetup(),
           ),
