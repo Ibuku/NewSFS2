@@ -25,7 +25,7 @@ class DashboardScreen extends StatelessWidget {
               IconButton(
                 icon: Icon(FeatherIcons.logOut),
                 onPressed: () async {
-                  bool doLogout = await model.logout();
+                  await model.logout();
                 },
               ),
             ],
