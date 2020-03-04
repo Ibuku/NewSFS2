@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'app_colors.dart';
 
 // Box Decorations
 
@@ -21,3 +24,7 @@ const EdgeInsets largeFieldPadding =
 // Text Variables
 const TextStyle buttonTitleTextStyle =
     const TextStyle(fontWeight: FontWeight.w700, color: Colors.white);
+
+TextStyle cardButtonTextStyle = GoogleFonts.nunito(
+  fontWeight: FontWeight.bold,
+).copyWith(color: primaryColor, fontSize: 16);

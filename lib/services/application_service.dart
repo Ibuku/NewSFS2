@@ -44,4 +44,22 @@ class ApplicationService {
       return e;
     }
   }
+
+  Future updateUserProfile(Map body) async {
+    try {
+      var updateResult = await _network.post(
+        "$API_BASE_URL/user/update-profile",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: body,
+        encodeBody: false,
+        isAuth: true
+      );
+      return updateResult;
+    } catch (e) {
+      return e;
+    }
+  }
 }
