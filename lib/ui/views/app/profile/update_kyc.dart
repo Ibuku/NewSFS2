@@ -17,9 +17,14 @@ class UpdateKYC extends StatefulWidget {
 
 class _UpdateKYCState extends State<UpdateKYC> {
   final _formKey = GlobalKey<FormState>();
+
   final _fnTextController = TextEditingController();
   final _lnTextController = TextEditingController();
   final _dobTextController = TextEditingController();
+  final _pnTextController = TextEditingController();
+  final _bvnTextController = TextEditingController();
+  final _nokTextController = TextEditingController();
+
   Map _userProfile = {};
   DateTime _selectedDOB;
 
@@ -35,7 +40,8 @@ class _UpdateKYCState extends State<UpdateKYC> {
       }
       setState(() {
         _selectedDOB = pickedDate;
-        _userProfile['date_of_birth'] = DateFormat("y-MM-dd").format(_selectedDOB);
+        _userProfile['date_of_birth'] =
+            DateFormat("y-MM-dd").format(_selectedDOB);
       });
       _dobTextController.text = DateFormat('dd MMMM, y').format(_selectedDOB);
     });
@@ -49,6 +55,13 @@ class _UpdateKYCState extends State<UpdateKYC> {
       builder: (context, model, child) {
         _fnTextController.text = model.user.firstname;
         _lnTextController.text = model.user.lastname;
+        if (model.user.profile.dateOfBirth != null) {
+          _selectedDOB = DateTime.parse(model.user.profile.dateOfBirth);
+          _dobTextController.text = DateFormat("y-MM-dd").format(_selectedDOB);
+        }
+        _pnTextController.text = model.user.profile.phoneNumber;
+        _bvnTextController.text = model.user.profile.bvn;
+        _nokTextController.text = model.user.profile.nextOfKin;
 
         return BusyOverlay(
           show: model.busy,
@@ -84,7 +97,8 @@ class _UpdateKYCState extends State<UpdateKYC> {
                         return null;
                       },
                       onSaved: (val) {
-                        _userProfile['date_of_birth'] = DateFormat("y-MM-dd").format(_selectedDOB);
+                        _userProfile['date_of_birth'] =
+                            DateFormat("y-MM-dd").format(_selectedDOB);
                       },
                       suffixIcon: Icon(Icons.calendar_today),
                       readOnly: true,
@@ -93,6 +107,7 @@ class _UpdateKYCState extends State<UpdateKYC> {
                     verticalSpace15,
                     CustomTextField(
                       hintText: "Mobile number",
+                      textController: _pnTextController,
                       inputType: TextInputType.phone,
                       validator: (value) {
                         if (value.toString().length < 11) {
@@ -109,6 +124,7 @@ class _UpdateKYCState extends State<UpdateKYC> {
                     verticalSpace15,
                     CustomTextField(
                       hintText: "BVN",
+                      textController: _bvnTextController,
                       inputType: TextInputType.number,
                       validator: (value) {
                         if (value.toString().length < 11) {
@@ -125,6 +141,7 @@ class _UpdateKYCState extends State<UpdateKYC> {
                     verticalSpace15,
                     CustomTextField(
                       hintText: "Next of Kin",
+                      textController: _nokTextController,
                       validator: (value) {
                         if (value.toString().isEmpty) {
                           return "Next of Kin is required";

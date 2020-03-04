@@ -49,6 +49,8 @@ dependencies:
   percent_indicator: ^2.1.1
   # for formatting stuffs
   intl: ^0.16.0
+  # For feather Icons
+  feather_icons_flutter: ^4.7.4
 
 dev_dependencies:
   flutter_test:

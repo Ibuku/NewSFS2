@@ -1,3 +1,4 @@
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
@@ -20,7 +21,14 @@ class DashboardScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text("Dashboard"),
             centerTitle: false,
-            actions: <Widget>[],
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(FeatherIcons.logOut),
+                onPressed: () async {
+                  bool doLogout = await model.logout();
+                },
+              ),
+            ],
           ),
           // backgroundColor: Colors.white,
           body: SingleChildScrollView(

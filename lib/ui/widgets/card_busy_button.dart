@@ -32,8 +32,8 @@ class _CardBusyButtonState extends State<CardBusyButton> {
         onTap: widget.busy ? () {} : widget.onPressed,
         child: InkWell(
           child: AnimatedContainer(
-            height: widget.busy ? 40 : null,
-            width: widget.busy ? 40 : null,
+            height: widget.busy ? 60 : null,
+            width: widget.busy ? 30 : null,
             duration: const Duration(milliseconds: 300),
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(

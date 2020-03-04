@@ -29,7 +29,11 @@ class ProfileViewModel extends ApplicationViewModel {
         setBusy(true);
         await ApplicationViewModel().getUserProfile();
         setBusy(false);
-        print("Profile updated successfully");
+        
+        _dialogService.showDialog(
+          title: "Profile Update Successful",
+          description: body['message'],
+        );
 
         // _navigationService.navigateAndClearRoute(DashboardScreen.routeName);
       } else if (result.statusCode == 400) {
