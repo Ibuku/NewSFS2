@@ -5,14 +5,11 @@ import 'package:http/http.dart';
 
 import '../viewmodels/application_view_model.dart';
 
-import '../models/user.dart';
-
 import '../ui/views/app/dashboard.dart';
 import '../ui/views/auth/verify/index.dart';
 import '../ui/views/auth/forgot_password.dart';
 import '../ui/views/auth/signup/select_company.dart';
 
-import '../services/application_service.dart';
 import '../services/authentication_service.dart';
 import '../services/dialog_service.dart';
 import '../services/navigation_service.dart';
@@ -52,8 +49,9 @@ class LoginViewModel extends BaseModel {
       if (result.statusCode == 200) {
         setBusy(true);
         _authenticationService.loadToken(body);
-        _authenticationService.loadUser(body['data']);
-        ApplicationService.user = User.fromJson(body['data']);
+        ApplicationViewModel().user = body['data'];
+        // _authenticationService.loadUser(body['data']);
+        // ApplicationService.user = User.fromJson(body['data']);
         await ApplicationViewModel().getUserProfile();
         setBusy(false);
 

@@ -6,12 +6,12 @@ import 'package:sfscredit/models/user.dart';
 import '../const.dart';
 import '../locator.dart';
 
-import 'base_service.dart';
+import 'network_service.dart';
 import 'local_storage_service.dart';
 import 'token_service.dart';
 
 class AuthenticationService {
-  final BaseService _networkService = locator<BaseService>();
+  final NetworkService _networkService = locator<NetworkService>();
   final _storageService = locator<LocalStorageService>();
   final TokenService _tokenService = locator<TokenService>();
 
