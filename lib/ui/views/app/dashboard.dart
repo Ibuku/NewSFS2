@@ -3,7 +3,6 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
-
 import 'profile/update_kyc.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -45,7 +44,7 @@ class DashboardScreen extends StatelessWidget {
         ),
         verticalSpace15,
         CardItem(
-          titleText: "Apply for your first loan",
+          titleText: "Your first loan",
           btnText: "Apply",
           icon: Icons.keyboard_tab,
           onPressed: () {},

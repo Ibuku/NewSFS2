@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:sfscredit/const.dart';
 import 'package:sfscredit/locator.dart';
 import 'local_storage_service.dart';

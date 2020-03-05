@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import '../locator.dart';
 import '../models/token.dart';
 import '../services/local_storage_service.dart';
