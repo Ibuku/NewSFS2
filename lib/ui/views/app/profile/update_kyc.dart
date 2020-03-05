@@ -55,13 +55,14 @@ class _UpdateKYCState extends State<UpdateKYC> {
       builder: (context, model, child) {
         _fnTextController.text = model.user.firstname;
         _lnTextController.text = model.user.lastname;
-        if (model.user.profile.dateOfBirth != null) {
+        
+        if (model.user.profile != null) {
           _selectedDOB = DateTime.parse(model.user.profile.dateOfBirth);
           _dobTextController.text = DateFormat("y-MM-dd").format(_selectedDOB);
+          _pnTextController.text = model.user.profile.phoneNumber;
+          _bvnTextController.text = model.user.profile.bvn;
+          _nokTextController.text = model.user.profile.nextOfKin;
         }
-        _pnTextController.text = model.user.profile.phoneNumber;
-        _bvnTextController.text = model.user.profile.bvn;
-        _nokTextController.text = model.user.profile.nextOfKin;
 
         return BusyOverlay(
           show: model.busy,
