@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sfscredit/ui/views/app/dashboard2.dart';
 //import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 
 import 'ui/views/app/profile/update_kyc.dart';
@@ -21,17 +22,15 @@ var appRoutes = <String, WidgetBuilder>{
   '/': (ctx) => StartUpView(),
   SplashScreen.routeName: (ctx) => SplashScreen(),
   DecisionScreen.routeName: (ctx) => DecisionScreen(),
-
   LoginScreen.routeName: (ctx) => LoginScreen(),
   SelectCompany.routeName: (ctx) => SelectCompany(),
   RegisterScreen.routeName: (ctx) => RegisterScreen(),
   VerifyIndex.routeName: (ctx) => VerifyIndex(),
   ActivateAccount.routeName: (ctx) => ActivateAccount(),
   ForgotPassword.routeName: (ctx) => ForgotPassword(),
-
   DashboardScreen.routeName: (ctx) =>DashboardScreen(),
   ApplyScreen1.routeName: (ctx) =>ApplyScreen1(),
   //ApplyScreen2.routeName: (ctx) =>ApplyScreen2(),
-
   UpdateKYC.routeName: (ctx) => UpdateKYC(),
+  Dashboard2Screen.routeName: (ctx) =>DashboardScreen(),
 };

@@ -51,6 +51,9 @@ dependencies:
   intl: ^0.16.0
   # For feather Icons
   feather_icons_flutter: ^4.7.4
+  # for settings
+  settings_ui: ^0.1.1
+
 
 dev_dependencies:
   flutter_test:

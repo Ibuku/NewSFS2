@@ -5,9 +5,13 @@ import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
 import 'profile/update_kyc.dart';
+import 'package:sfscredit/ui/views/app/profile/settings.dart';
+import 'package:settings_ui/settings_ui.dart';
 
 class DashboardScreen extends StatelessWidget {
   static const routeName = '/app/dashboard';
+
+  get value => null;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +36,7 @@ class DashboardScreen extends StatelessWidget {
           // backgroundColor: Colors.white,
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+
             child: model.user.profile == null
                 ? profileNotSet(model)
                 : profileSetup(),
@@ -61,11 +66,32 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget profileSetup() {
-    return Column(
-      children: <Widget>[
-        Text("Profile Setup"),
-      ],
-    );
+//    Widget profileSetup() {
+//      return Column(
+//        children: <Widget>[
+//          SettingsList(
+//            sections: [
+//              SettingsSection(
+//                title: 'Section',
+//                tiles: [
+//                  SettingsTile(
+//                    title: 'Language',
+//                    subtitle: 'English',
+//                    leading: Icon(Icons.language),
+//                    onTap: () {},
+//                  ),
+//                  SettingsTile.switchTile(
+//                    title: 'Use fingerprint',
+//                    leading: Icon(Icons.fingerprint),
+//                    switchValue: value,
+//                    onToggle: (bool value) {},
+//                  ),
+//                ],
+//              ),
+//            ],
+//          )
+//        ],
+//      );
+//    }
   }
-}
+
