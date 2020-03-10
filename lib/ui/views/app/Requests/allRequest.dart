@@ -5,7 +5,7 @@ import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Requests/approvedRequest.dart';
 import 'package:sfscredit/ui/views/app/Requests/request.dart';
-import 'package:sfscredit/ui/views/app/dashboard2.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
 class AllRequestScreen extends StatelessWidget {
   static const routeName = '/app/Requests/allRequest.dart';

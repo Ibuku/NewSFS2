@@ -3,23 +3,30 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
-import 'package:sfscredit/ui/views/app/Requests/pendingRequest.dart';
+import 'package:sfscredit/ui/views/app/Requests/approvedRequest.dart';
 import 'package:sfscredit/ui/views/app/Requests/request.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
-class DeclinedRequestScreen extends StatelessWidget {
-  static const routeName = '/app/Requests/declinedRequest.dart';
+class RequestSummaryScreen extends StatelessWidget {
+  static const routeName = '/app/Requests/allRequest.dart';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("All Requests"),
+        title: Text("Request Summary"),
       ),
       backgroundColor: Colors.white,
 
 
 
+//      body: SingleChildScrollView(
+//        padding: EdgeInsets.symmetric(),
+//        child: Text(ApplicationService.user.toJson().toString()),
+//      ),
+//    );
+//  }
+//}
       body: Container(
         child: SingleChildScrollView(
           child: new Container(
@@ -50,88 +57,8 @@ class DeclinedRequestScreen extends StatelessWidget {
                               blurRadius: 20,
                               offset: Offset(0, 10),)
                           ]),
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-
-                          Container(
-                           // color: Colors.white,
-                            width: 140.0,
-                              child: Center(
-                                child: Text(
-                                  "All",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                ),
-                              ),
-
-                          ),
-
-                          Container(
-                            width: 140.0,
-
-                            child: Center(
-                              child: Text(
-                                "Pending",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 17),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 140.0,
-
-                            child: Center(
-                              child: Text(
-                                "Approved",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 17),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            color: Colors.transparent,
-                            width: 140.0,
-                            child: RaisedButton(
-                              // padding: EdgeInsets.only(top: 20, left: 1, right: 1),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DeclinedRequestScreen(),
-                                  ),
-                                );
-                              },
-                              splashColor: Colors.white,
-                              //decoration: BoxDecoration(
-
-                              child: Center(
-                                child: Text(
-                                  "Declined",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                ),
-                              ),
-                            ),
-                          ),
-//
-//
-//
-//
-                          // ),
-
-                          //  SizedBox(width: 7.0),
-                        ],
-                      ),
                     ),
+
                     // History
                     SizedBox(
                       height: 15.0,
@@ -181,7 +108,7 @@ class DeclinedRequestScreen extends StatelessWidget {
                           );
                         }, separatorBuilder: (context, index){
                       return Divider(height: 16,);
-                    },itemCount: 3),
+                    },itemCount: 7),
 
                   ],
                 ),
@@ -198,7 +125,7 @@ class DeclinedRequestScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PendingRequestScreen(),
+              builder: (context) => ApprovedRequestScreen(),
             ),
           );
         },
@@ -208,3 +135,4 @@ class DeclinedRequestScreen extends StatelessWidget {
   }
 
 }
+

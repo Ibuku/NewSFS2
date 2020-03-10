@@ -40,10 +40,12 @@ dependencies:
   # for email validation
   email_validator: ^1.0.0
   # for better http request
-  dio: 
+  dio:
   # for persisting data throughout app livecycle
   shared_preferences: ^0.5.6+2
   # for otp code text field
+  intl: ^0.16.0
+  feather_icons_flutter: ^4.7.4
   pin_code_fields: ^2.3.0+3
   percent_indicator: ^2.1.1
 

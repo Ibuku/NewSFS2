@@ -44,4 +44,6 @@ class ApplicationService {
       return e;
     }
   }
+
+  updateUserProfile(Map userProfile) {}
 }

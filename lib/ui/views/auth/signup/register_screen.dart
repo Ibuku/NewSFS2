@@ -106,7 +106,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       }
                       return null;
                     },
-                    obscureText: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.remove_red_eye,
+                      ),
+                      onPressed: () => model.setPasswordVisible(
+                        !model.passwordVisible,
+                      ),
+                    ),
+                    obscureText: model.passwordVisible,
                     onSaved: (value) {
                       _authData['password'] = value;
                     },
@@ -123,7 +131,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       }
                       return null;
                     },
-                    obscureText: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.remove_red_eye,
+                      ),
+                      onPressed: () => model.setPasswordVisible(
+                        !model.password2Visible,
+                        type: 2,
+                      ),
+                    ),
+                    obscureText: model.password2Visible,
                   ),
                   verticalSpace(15),
                   BusyButton(

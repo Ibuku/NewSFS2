@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 //import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
-import 'package:sfscredit/ui/views/app/dashboard2.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
 class ApplyScreen1 extends StatelessWidget {
   static const routeName = '/app/Apply/apply.dart';
@@ -35,14 +36,9 @@ class ApplyScreen1 extends StatelessWidget {
                 constraints: new BoxConstraints(),
                 child: new Column(children: <Widget>[
                   Container(
-                    //padding: EdgeInsets.only(top: 20),
                     height: 200,
-                    // width:400 ,
                     decoration: BoxDecoration(
-                      //color: randomColor(),
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/background.png'),
-                          fit: BoxFit.fill),
+                      color: Hexcolor('#120A44'),
                     ),
                     child: Stack(
                       children: <Widget>[
@@ -105,7 +101,13 @@ class ApplyScreen1 extends StatelessWidget {
                               children: <Widget>[
 
                                 new Text('Current Salary',
-                                  style: TextStyle(fontSize: 15,color: Colors.indigo[900] ),
+                                  style: GoogleFonts.mavenPro(
+                                    textStyle: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: primaryColor,
+                                    ),
+                                  ),
 
                                 ),
 
@@ -113,7 +115,13 @@ class ApplyScreen1 extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
                                     new Text('N 0.00',
-                                      style: TextStyle(fontSize: 25,color: Colors.indigo[900],fontWeight: FontWeight.bold,),
+                                      style: GoogleFonts.mavenPro(
+                                        textStyle: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                          color: primaryColor,
+                                        ),
+                                      ),
 
                                     ),
 //                                    new Text('  is  '),
@@ -154,9 +162,12 @@ class ApplyScreen1 extends StatelessWidget {
 //                                ),
                         Text(
                           "Loan Options",
-                          style: TextStyle(
-                            color: Colors.indigo[900],
-                            fontSize: 17,
+                          style: GoogleFonts.mavenPro(
+                            textStyle: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              color: primaryColor,
+                            ),
                           ),
                         ),
 //
@@ -196,8 +207,13 @@ class ApplyScreen1 extends StatelessWidget {
                           children: <Widget>[
                             Image(image: AssetImage('assets/images/circle2.png',),color: Colors.grey,alignment: Alignment.topLeft,),
                             new Text('Package 1',
-                              style: TextStyle(fontSize: 15,color: Colors.indigo[900],fontWeight: FontWeight.normal,),
-
+                              style: GoogleFonts.mavenPro(
+                                textStyle: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal,
+                                  color: primaryColor,
+                                ),
+                              ),
                             ),
 
                             RaisedButton(
@@ -208,9 +224,12 @@ class ApplyScreen1 extends StatelessWidget {
                               ),
                               child: Text(
                                 "See terms ",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
+                                style: GoogleFonts.mavenPro(
+                                  textStyle: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryColor,
+                                  ),
                                 ),
                               ),
                               onPressed: () {
@@ -230,11 +249,23 @@ class ApplyScreen1 extends StatelessWidget {
                         //  Image(image: AssetImage('assets/images/icon4.png'),alignment: Alignment.topRight,)
 
                         new Text('N 400,000.00',
-                          style: TextStyle(fontSize: 20,color: Colors.indigo[900],fontWeight: FontWeight.bold ),
+                          style: GoogleFonts.mavenPro(
+                            textStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal,
+                              color: primaryColor,
+                            ),
+                          ),
 
                         ),
                         new Text('N 25,000.00 monthly repayment',
-                          style: TextStyle(fontSize: 15,color: Colors.grey,fontWeight: FontWeight.normal ),
+                          style: GoogleFonts.mavenPro(
+                            textStyle: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
+                              color: primaryColor,
+                            ),
+                          ),
 
                         ),
 
@@ -274,7 +305,13 @@ class ApplyScreen1 extends StatelessWidget {
                           children: <Widget>[
                             //Image(image: AssetImage('assets/images/circle2.png',),color: Colors.grey,alignment: Alignment.topLeft,),
                             new Text('Package 2',
-                              style: TextStyle(fontSize: 15,color: Colors.indigo[900],fontWeight: FontWeight.normal,),
+                              style: GoogleFonts.mavenPro(
+                                textStyle: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal,
+                                  color: primaryColor,
+                                ),
+                              ),
 
                             ),
 
@@ -308,11 +345,23 @@ class ApplyScreen1 extends StatelessWidget {
                         //  Image(image: AssetImage('assets/images/icon4.png'),alignment: Alignment.topRight,)
 
                         new Text('N 800,000.00',
-                          style: TextStyle(fontSize: 20,color: Colors.indigo[900],fontWeight: FontWeight.bold ),
+                          style: GoogleFonts.mavenPro(
+                            textStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: primaryColor,
+                            ),
+                          ),
 
                         ),
                         new Text('N 25,000.00 monthly repayment',
-                          style: TextStyle(fontSize: 15,color: Colors.grey,fontWeight: FontWeight.normal ),
+                          style: GoogleFonts.mavenPro(
+                            textStyle: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
+                              color: primaryColor,
+                            ),
+                          ),
 
                         ),
 
@@ -353,12 +402,12 @@ class ApplyScreen1 extends StatelessWidget {
                             //  Icon(Icons.radio_button_unchecked, color: Hexcolor('#120A44'),
                             Text(
                               "Cancel ",
-                              style: TextStyle(
-                                wordSpacing: 5,
-                                color: Hexcolor('#120A44'),
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                //fontFamily: 'Nunito-Light',
+                              style: GoogleFonts.mavenPro(
+                                textStyle: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                ),
                               ),
                             ),
 //

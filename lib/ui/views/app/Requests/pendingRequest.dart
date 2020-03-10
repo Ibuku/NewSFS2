@@ -4,7 +4,7 @@ import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Requests/request.dart';
-import 'package:sfscredit/ui/views/app/dashboard2.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
 class PendingRequestScreen extends StatelessWidget {
   static const routeName = '/app/Requests/pendingRequest.dart';

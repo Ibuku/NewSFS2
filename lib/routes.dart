@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
+import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
+import 'package:sfscredit/ui/views/app/Requests/approvedRequest.dart';
+import 'package:sfscredit/ui/views/app/Requests/declinedRequest.dart';
+import 'package:sfscredit/ui/views/app/Requests/pendingRequest.dart';
+import 'package:sfscredit/ui/views/app/Requests/request.dart';
+import 'package:sfscredit/ui/views/app/privacypolicy.dart';
+import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 //import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 
-import 'ui/views/app/dashboard.dart';
+import 'ui/views/app/Dashboard/dashboard.dart';
 
 import 'ui/views/intro/startup_view.dart';
 import 'ui/views/intro/splash_screen.dart';
@@ -26,8 +35,15 @@ var appRoutes = <String, WidgetBuilder>{
   VerifyIndex.routeName: (ctx) => VerifyIndex(),
   ActivateAccount.routeName: (ctx) => ActivateAccount(),
   ForgotPassword.routeName: (ctx) => ForgotPassword(),
-
   DashboardScreen.routeName: (ctx) =>DashboardScreen(),
+  Dashboard2Screen.routeName: (ctx) =>Dashboard2Screen(),
   ApplyScreen1.routeName: (ctx) =>ApplyScreen1(),
-  //ApplyScreen2.routeName: (ctx) =>ApplyScreen2(),
+  UpdateKYC.routeName: (ctx) => UpdateKYC(),
+  ApplyScreen2.routeName: (ctx) =>ApplyScreen2(),
+  Request1Screen.routeName: (ctx) => Request1Screen(),
+  AllRequestScreen.routeName: (ctx) => AllRequestScreen(),
+  ApprovedRequestScreen.routeName: (ctx) => ApprovedRequestScreen(),
+  DeclinedRequestScreen.routeName: (ctx) => DeclinedRequestScreen(),
+  PendingRequestScreen.routeName: (ctx) => PendingRequestScreen(),
+  PolicyScreen.routeName: (ctx) => PolicyScreen(),
 };

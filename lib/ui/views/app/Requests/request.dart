@@ -4,7 +4,7 @@ import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
-import 'package:sfscredit/ui/views/app/dashboard2.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
 class Request1Screen extends StatelessWidget {
   static const routeName = '/app/Requests/request.dart';
@@ -13,7 +13,7 @@ class Request1Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Welcome"),
+        title: Text("All Requests"),
       ),
       backgroundColor: Colors.white,
 

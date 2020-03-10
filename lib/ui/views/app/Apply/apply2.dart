@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Requests/request.dart';
 //import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
-import 'package:sfscredit/ui/views/app/dashboard2.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
 class ApplyScreen2 extends StatelessWidget {
   static const routeName = '/app/Apply/apply2.dart';
@@ -30,32 +32,17 @@ class ApplyScreen2 extends StatelessWidget {
                     height: 200,
                     // width:400 ,
                     decoration: BoxDecoration(
-                      //color: randomColor(),
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/background.png'),
-                          fit: BoxFit.fill),
+                      color: Hexcolor('#120A44'),
                     ),
                     child: Stack(
                       children: <Widget>[
                         Positioned(
-                          height: 50,
-                          width: 20,
-                          right: 50,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Hexcolor('#120A44'),
-                              backgroundBlendMode: BlendMode.color,
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/avatar.png'),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          height: 50,
+                          top: 30,
+                          height: 70,
                           width: 30,
-                          right: 50,
+                          right: 30,
                           child: Container(
+                            //margin: EdgeInsets.only(top: 20),
                             decoration: BoxDecoration(
                               color: Hexcolor('#120A44'),
                               backgroundBlendMode: BlendMode.color,
@@ -69,11 +56,11 @@ class ApplyScreen2 extends StatelessWidget {
                         Positioned(
                           top: 70,
                           left: 30,
-                          height: 130,
+                          height: 250,
                           right: 25,
                           child: Container(
-                            margin: EdgeInsets.only(top: 10,),
-                            padding: EdgeInsets.only(right: 50,bottom: 40),
+                            margin: EdgeInsets.only(top: 50,),
+                            padding: EdgeInsets.only(right: 50,),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.white,

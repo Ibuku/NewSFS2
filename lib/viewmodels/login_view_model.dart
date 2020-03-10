@@ -1,18 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
-
 import '../viewmodels/application_view_model.dart';
 
-import '../models/user.dart';
-
-import '../ui/views/app/dashboard.dart';
+import '../ui/views/app/Dashboard/dashboard.dart';
 import '../ui/views/auth/verify/index.dart';
 import '../ui/views/auth/forgot_password.dart';
 import '../ui/views/auth/signup/select_company.dart';
 
-import '../services/application_service.dart';
 import '../services/authentication_service.dart';
 import '../services/dialog_service.dart';
 import '../services/navigation_service.dart';
@@ -23,9 +18,17 @@ import 'base_model.dart';
 
 class LoginViewModel extends BaseModel {
   final AuthenticationService _authenticationService =
-      locator<AuthenticationService>();
+  locator<AuthenticationService>();
   final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
+
+  bool _passwordVisible = true;
+  bool get passwordVisible => _passwordVisible;
+
+  void setPasswordVisible(bool val) {
+    _passwordVisible = val;
+    notifyListeners();
+  }
 
   Future login({
     @required Map authData,
@@ -42,12 +45,15 @@ class LoginViewModel extends BaseModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
+        setBusy(true);
         _authenticationService.loadToken(body);
-        _authenticationService.loadUser(body['data']);
-        ApplicationService.user = User.fromJson(body['data']);
+        ApplicationViewModel().user = body['data'];
+        // _authenticationService.loadUser(body['data']);
+        // ApplicationService.user = User.fromJson(body['data']);
         await ApplicationViewModel().getUserProfile();
+        setBusy(false);
 
-        _navigationService.navigateTo(DashboardScreen.routeName, replace: true);
+        _navigationService.navigateAndClearRoute(DashboardScreen.routeName);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
           title: 'Login Failed',

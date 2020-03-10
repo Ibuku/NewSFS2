@@ -95,7 +95,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                           return null;
                         },
-                        obscureText: true,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.remove_red_eye,
+                          ),
+                          onPressed: () => model.setPasswordVisible(
+                            !model.passwordVisible,
+                          ),
+                        ),
+                        obscureText: model.passwordVisible,
                         onSaved: (value) {
                           _authData['password'] = value;
                         },

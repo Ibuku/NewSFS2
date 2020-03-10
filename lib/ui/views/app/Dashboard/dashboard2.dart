@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
-import 'package:sfscredit/ui/views/app/dashboard.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard.dart';
 
 class Dashboard2Screen extends StatelessWidget {
   static const routeName = '/app/dashboard2';
@@ -24,14 +25,9 @@ class Dashboard2Screen extends StatelessWidget {
                 constraints: new BoxConstraints(),
                 child: new Column(children: <Widget>[
                   Container(
-                    //padding: EdgeInsets.only(top: 20),
                     height: 200,
-                    // width:400 ,
                     decoration: BoxDecoration(
-                      //color: randomColor(),
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/background.png'),
-                          fit: BoxFit.fill),
+                      color: Hexcolor('#120A44'),
                     ),
                     child: Stack(
                       children: <Widget>[
@@ -183,11 +179,7 @@ class Dashboard2Screen extends StatelessWidget {
                         SizedBox(
                           height: 380.0,
                         ),
-                        // RaisedButton(
-//
-//                                shape: RoundedRectangleBorder(
-//                                  borderRadius: BorderRadius.circular(20),
-//                                ),
+
                         Text(
                           "Wallet Balance ",
                           style: TextStyle(
@@ -237,28 +229,6 @@ class Dashboard2Screen extends StatelessWidget {
                         ),
 //
 
-//                RaisedButton(
-//                  color: Colors.white,
-//                  elevation: 4,
-//                  shape: RoundedRectangleBorder(
-//                    borderRadius: BorderRadius.circular(20),
-//                  ),
-//                  child: Text(
-//                    "Active Loans ",
-//                    style: TextStyle(
-//                      color: Colors.indigo[900],
-//                      fontSize: 17,
-//                    ),
-//                  ),
-//                  onPressed: () {
-//                    Navigator.push(
-//                      context,
-//                      MaterialPageRoute(
-//                        builder: (context) => NavMenuPage(),
-//                      ),
-//                    );
-//                  },
-//                ),
                         //  SizedBox(width: 7.0),
                       ],
                     ),
@@ -298,14 +268,6 @@ class Dashboard2Screen extends StatelessWidget {
 
                         },
 
-//                  onPressed: () {
-//                    Navigator.push(
-//                      context,
-//                      MaterialPageRoute(
-//                        builder: (context) => VerificationPage(email: email),
-//                      ),
-//                    );
-//                  },
                         splashColor: Colors.white,
                         //decoration: BoxDecoration(
 
@@ -393,18 +355,6 @@ class Dashboard2Screen extends StatelessWidget {
                           circularStrokeCap: CircularStrokeCap.round,
                           progressColor: Colors.lightBlueAccent,
                         ),
-
-
-                        //Image(image: AssetImage('assets/images/icon2.png'),alignment: Alignment.topRight,height: 70.0,width: 90.0),
-//                 CustomPaint(
-//                    foregroundPainter:CircleProgress(),
-//                    child: Container(
-//                      width: 200,
-//                      height: 200,
-//                      child: Text("100%"),
-//                    ),
-//
-//                ),
 
                         SizedBox(
                           height: 5.0,
