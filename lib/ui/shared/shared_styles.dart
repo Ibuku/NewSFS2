@@ -23,8 +23,15 @@ const EdgeInsets.symmetric(horizontal: 15, vertical: 15);
 
 // Text Variables
 const TextStyle buttonTitleTextStyle =
+<<<<<<< HEAD
 const TextStyle(fontWeight: FontWeight.w700, color: Colors.white);
 
 TextStyle cardButtonTextStyle = GoogleFonts.nunito(
     fontWeight: FontWeight.bold,
+=======
+    const TextStyle(fontWeight: FontWeight.w700, color: Colors.white);
+
+TextStyle cardButtonTextStyle = GoogleFonts.nunito(
+  fontWeight: FontWeight.bold,
+>>>>>>> fec8536300d401894e7189b24d220ef78b9393e3
 ).copyWith(color: primaryColor, fontSize: 16);

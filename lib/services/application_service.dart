@@ -1,14 +1,13 @@
 import 'dart:async';
-
 import 'package:sfscredit/const.dart';
 import 'package:sfscredit/locator.dart';
 import 'local_storage_service.dart';
-import 'base_service.dart';
+import 'network_service.dart';
 
 import '../models/user.dart';
 
 class ApplicationService {
-  final BaseService _network = locator<BaseService>();
+  final NetworkService _network = locator<NetworkService>();
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
   static StreamController _user$;
@@ -45,5 +44,25 @@ class ApplicationService {
     }
   }
 
+<<<<<<< HEAD
   updateUserProfile(Map userProfile) {}
+=======
+  Future updateUserProfile(Map body) async {
+    try {
+      var updateResult = await _network.post(
+        "$API_BASE_URL/user/update-profile",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: body,
+        encodeBody: false,
+        isAuth: true
+      );
+      return updateResult;
+    } catch (e) {
+      return e;
+    }
+  }
+>>>>>>> fec8536300d401894e7189b24d220ef78b9393e3
 }

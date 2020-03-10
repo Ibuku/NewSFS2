@@ -29,7 +29,11 @@ class ProfileViewModel extends ApplicationViewModel {
         setBusy(true);
         await ApplicationViewModel().getUserProfile();
         setBusy(false);
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> fec8536300d401894e7189b24d220ef78b9393e3
         _dialogService.showDialog(
           title: "Profile Update Successful",
           description: body['message'],

@@ -29,6 +29,16 @@ class ApplicationViewModel extends BaseModel {
     return _user;
   }
 
+<<<<<<< HEAD
+=======
+  User _user;
+
+  User get user {
+    _user = _application.getUser;
+    return _user;
+  }
+
+>>>>>>> fec8536300d401894e7189b24d220ef78b9393e3
   set user(userJson) {
     _authenticationService.loadUser(userJson);
     ApplicationService.user = User.fromJson(userJson);
@@ -49,11 +59,19 @@ class ApplicationViewModel extends BaseModel {
       case UpdateKYC.routeName:
         _navigationService.navigateTo(UpdateKYC.routeName);
         break;
+<<<<<<< HEAD
     // case "activate-account":
     //   // _navigationService.navigateTo(
     //   //   ActivateAccount.routeName,
     //   // );
     //   break;
+=======
+      // case "activate-account":
+      //   // _navigationService.navigateTo(
+      //   //   ActivateAccount.routeName,
+      //   // );
+      //   break;
+>>>>>>> fec8536300d401894e7189b24d220ef78b9393e3
       default:
     }
   }
@@ -83,7 +101,11 @@ class ApplicationViewModel extends BaseModel {
       confirmationTitle: "Yes",
     )
         .then(
+<<<<<<< HEAD
           (val) {
+=======
+      (val) {
+>>>>>>> fec8536300d401894e7189b24d220ef78b9393e3
         ans = val.confirmed;
         if(val.confirmed == true){
           _storageService.empty();

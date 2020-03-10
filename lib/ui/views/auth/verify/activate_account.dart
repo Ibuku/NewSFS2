@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider_architecture/provider_architecture.dart';
-
 import '../../../../ui/shared/app_colors.dart';
 import '../../../../ui/shared/ui_helpers.dart';
 import '../../../../ui/widgets/busy_button.dart';

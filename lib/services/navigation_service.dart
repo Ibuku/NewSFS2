@@ -27,10 +27,17 @@ class NavigationService {
   }
 
   Future<dynamic> navigateAndClearRoute(
+<<<<<<< HEAD
       String routeName, {
         dynamic arguments,
         String baseRouteName,
       }) {
+=======
+    String routeName, {
+    dynamic arguments,
+    String baseRouteName,
+  }) {
+>>>>>>> fec8536300d401894e7189b24d220ef78b9393e3
     return _navigationKey.currentState.pushNamedAndRemoveUntil(
       routeName,
       baseRouteName == null
