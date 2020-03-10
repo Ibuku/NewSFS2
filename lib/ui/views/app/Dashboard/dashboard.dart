@@ -11,6 +11,7 @@ import 'package:sfscredit/viewmodels/application_view_model.dart';
 //import 'package:sfscredit/ui/views/app/profile/settings.dart';
 //import 'package:settings_ui/settings_ui.dart';
 
+
 class DashboardScreen extends StatelessWidget {
   static const routeName = '/app/dashboard';
 
@@ -48,7 +49,6 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget profileNotSet(ApplicationViewModel model) {
     return Column(
       children: <Widget>[

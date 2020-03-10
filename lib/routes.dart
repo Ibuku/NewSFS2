@@ -4,7 +4,7 @@ import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
 import 'ui/views/app/profile/update_kyc.dart';
 
-import 'ui/views/app/dashboard.dart';
+import 'ui/views/app/Dashboard/dashboard.dart';
 
 import 'ui/views/intro/startup_view.dart';
 import 'ui/views/intro/splash_screen.dart';
