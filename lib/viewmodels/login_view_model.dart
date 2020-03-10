@@ -1,13 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard.dart';
 import '../viewmodels/application_view_model.dart';
-
-<<<<<<< HEAD
-import '../ui/views/app/Dashboard/dashboard.dart';
-=======
-import '../ui/views/app/dashboard.dart';
->>>>>>> fec8536300d401894e7189b24d220ef78b9393e3
 import '../ui/views/auth/verify/index.dart';
 import '../ui/views/auth/forgot_password.dart';
 import '../ui/views/auth/signup/select_company.dart';

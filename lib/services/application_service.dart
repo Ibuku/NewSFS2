@@ -9,7 +9,7 @@ import '../models/user.dart';
 class ApplicationService {
   final NetworkService _network = locator<NetworkService>();
   final LocalStorageService _localStorageService =
-      locator<LocalStorageService>();
+  locator<LocalStorageService>();
   static StreamController _user$;
 
   static User user = User(); // store the current authenticated user
@@ -44,25 +44,21 @@ class ApplicationService {
     }
   }
 
-<<<<<<< HEAD
-  updateUserProfile(Map userProfile) {}
-=======
   Future updateUserProfile(Map body) async {
     try {
       var updateResult = await _network.post(
-        "$API_BASE_URL/user/update-profile",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: body,
-        encodeBody: false,
-        isAuth: true
+          "$API_BASE_URL/user/update-profile",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: body,
+          encodeBody: false,
+          isAuth: true
       );
       return updateResult;
     } catch (e) {
       return e;
     }
   }
->>>>>>> fec8536300d401894e7189b24d220ef78b9393e3
 }
