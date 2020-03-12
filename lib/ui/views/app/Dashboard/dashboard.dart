@@ -1,3 +1,4 @@
+
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -8,12 +9,28 @@ import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 //import 'profile/update_kyc.dart';
 //import 'package:sfscredit/ui/views/app/profile/settings.dart';
 //import 'package:settings_ui/settings_ui.dart';
 
 
 class DashboardScreen extends StatelessWidget {
+  var alertStyle = AlertStyle(
+    overlayColor: Colors.white38,
+    animationType: AnimationType.fromTop,
+    isCloseButton: false,
+    isOverlayTapDismiss: false,
+    // descStyle: TextStyle(fontSize: 20.0),
+    animationDuration: Duration(milliseconds: 400),
+    alertBorder: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(40.0),
+      side: BorderSide(
+        color: Colors.white,
+      ),
+    ),
+  );
   static const routeName = '/app/dashboard';
 
   get value => null;
@@ -37,11 +54,187 @@ class DashboardScreen extends StatelessWidget {
                 },
               ),
             ],
+
           ),
+          endDrawer: new Drawer(
+            child: Container(
+              color: Hexcolor('#120A44'),
+              child: ListView(
+                children: <Widget>[
+                  UserAccountsDrawerHeader(
+
+                    accountName: new Text(
+                      "Allen Joe",
+                      style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                    ),
+                    currentAccountPicture: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",),
+                    ),
+                    decoration: new BoxDecoration(
+                      color: Hexcolor('#120A44'),
+                    ),
+                    accountEmail: new Text("babatundeibukun@gmail.com"),
+                  ),
+                  ListTile(
+
+                    leading: Icon(Icons.dashboard, color: Colors.white,),
+                    title: Text("Dashboard",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DashboardScreen(),
+                        ),
+                      );
+
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.menu,color: Colors.white,),
+
+                    title: Text("Apply",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DashboardScreen(),
+                        ),
+                      );
+
+                    },
+
+                  ),
+                  ListTile(
+                    leading:  Icon(Icons.content_paste,color: Colors.white,),
+                    title: Text("My Loans",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DashboardScreen(),
+                        ),
+                      );
+
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.save_alt,color: Colors.white,),
+                    title: Text("Requests",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DashboardScreen(),
+                        ),
+                      );
+
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.notifications_active,color: Colors.white,),
+                    title: Text("Notifications",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DashboardScreen(),
+                        ),
+                      );
+
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings,color: Colors.white,),
+                    title: Text("Settings",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DashboardScreen(),
+                        ),
+                      );
+
+                    },
+                  ),
+                  ListTile(
+                    leading: IconButton(
+                      icon: Icon(FeatherIcons.logOut),
+                      onPressed: () async {
+                        await model.logout();
+                      },
+                    ),
+//                    onTap: () {
+//                      return Alert(
+//                        context: context,
+//                        style: alertStyle,
+//                        // type: AlertType.info,
+//                        image: Image.asset(
+//                          'assets/images/pop2.png',alignment: Alignment.center,
+//                        ),
+//                        title: "Reset Password",
+//                        content: Container(
+//
+//                          //margin: EdgeInsets.only(top: 10.0),
+//                          child: Column(
+//                            children: <Widget>[
+//                              Text(
+//                                "Kindly Proceed to your mail inbox\nto reset your password.",
+//                                style: TextStyle(
+//                                  color:  Hexcolor('#120A44'),
+//                                  fontSize: 14.0,
+//                                ),
+//                                textAlign: TextAlign.center,
+//                              ),
+//                            ],
+//                          ),
+//                        ),
+////
+//                        buttons: [
+//                          DialogButton(
+//                            child: Text(
+//                              "Back",
+//                              style: TextStyle(color: Colors.white, fontSize: 20),
+//                            ),
+//                            onPressed: () => Navigator.pop(context),
+//                            color:  Hexcolor('#120A44'),
+//                            radius: BorderRadius.circular(10.0),
+//                          ),
+//                        ],
+//                      ).show();
+//                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+
           // backgroundColor: Colors.white,
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-
             child: model.user.profile == null
                 ? profileNotSet(model)
                 : profileSetup(model),
@@ -80,157 +273,21 @@ class DashboardScreen extends StatelessWidget {
                 child: new ConstrainedBox(
                   constraints: new BoxConstraints(),
                   child: new Column(children: <Widget>[
-                    Container(
-                      height: 200,
-                     // width: 500,
-//                      decoration: BoxDecoration(
-//                        color: Hexcolor('#120A44'),
-//                      ),
-                      child: Stack(
-                        children: <Widget>[
-                          Positioned(
-                            height: 50,
-                            width: 30,
-                            right: 50,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Hexcolor('#120A44'),
-                                backgroundBlendMode: BlendMode.color,
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/avatar.png'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            height: 50,
-                            width: 30,
-                            right: 50,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Hexcolor('#120A44'),
-                                backgroundBlendMode: BlendMode.color,
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/avatar.png'),
-                                ),
-                              ),
-                            ),
-                          ),
 
-                          Positioned(
-                            top: 80,
-                            left: 20,
-                            height: 130,
-                            right: 14,
-                            child: Container(
-                              margin: EdgeInsets.only(top: 10,),
-                              padding: EdgeInsets.only(right: 45,bottom: 50),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromRGBO(
-                                        75,
-                                        97,
-                                        119,
-                                        .1,
-                                      ),
-                                      blurRadius: 20,
-                                      offset: Offset(0, 10),
-                                    )
-                                  ]),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 380.0,
-                                  ),
-//                              RaisedButton(
-//
-//                                onPressed: () {
-//                                  Navigator.push(
-//                                    context,
-//                                    MaterialPageRoute(
-//                                      builder: (context) => LoanPage(),
-//                                    ),
-//                                  );
-//                                },
-//                              ),
-                                  Text(
-                                    "Active Loans ",
-                                    style: TextStyle(
-                                      color: Colors.indigo[900],
-                                      fontSize: 17,
-                                    ),
-                                  ),
-
-                                  new Text(
-                                    model.activeLoan.totalPayback.toString(),
-                                    style: TextStyle(
-                                      color: Colors.indigo[900],
-                                      fontSize: 17,
-                                    ),
-                                  ),
-//
-
-                                  Icon(Icons.arrow_forward, color: Colors.indigo[900]),
-                                  Image(image: AssetImage('assets/images/icon3.png'),alignment: Alignment.topRight,),
-
-                                  //color: randomColor(),
-                                  //  SizedBox(width: 7.0),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    CardItem(
+                      titleText: "Active Loans",
+                      btnText: "100,000",
+                      icon: Icons.cloud_download,
+                      //onPressed: () => model.toRoute(UpdateKYC.routeName),
                     ),
                     SizedBox(
                       height: 15.0,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 15, right: 14),
-                      padding: EdgeInsets.only(left: 20, right: 40,bottom: 40),
-                      height: 110,
-                      width: 350,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color.fromRGBO(
-                                75,
-                                97,
-                                119,
-                                .1,
-                              ),
-                              blurRadius: 20,
-                              offset: Offset(0, 10),
-                            )
-                          ]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Text(
-                            "Guaranteed Loans ",
-                            style: TextStyle(
-                              color: Colors.indigo[900],
-                              fontSize: 17,
-                            ),
-                          ),
-//
-                          // ),
-
-                          Icon(Icons.arrow_forward, color: Colors.indigo[900],),
-                          Image(image: AssetImage('assets/images/icon4.png'),alignment: Alignment.topRight,),
-
-                          //  SizedBox(width: 7.0),
-                        ],
-                      ),
-
-
+                    CardItem(
+                      titleText: "Guaranteed Loans",
+                      btnText: "20000",
+                      icon: Icons.person,
+                     // onPressed: () => model.toRoute(UpdateKYC.routeName),
                     ),
                     SizedBox(
                       height: 15.0,
@@ -652,4 +709,6 @@ class DashboardScreen extends StatelessWidget {
 //    );
 //  }
 }
+
+
 
