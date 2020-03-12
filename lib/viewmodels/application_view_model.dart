@@ -26,6 +26,9 @@ class ApplicationViewModel extends BaseModel {
   Loan _currentActiveLoan;
   Loan get activeLoan => _currentActiveLoan;
 
+  int _userWallerBalance;
+  int get walletBalance => _userWallerBalance;
+
   User _user;
   User get user {
     _user = _application.getUser;
@@ -84,7 +87,33 @@ class ApplicationViewModel extends BaseModel {
 //    }
 //  }
 
+  Future getWalletBalance() async {
+    var walletRequestRes = await _application.getWallet();
+    if (walletRequestRes != null) {
+      if (walletRequestRes.statusCode == 200) {
+        var body = jsonDecode(walletRequestRes.body)['data'];
+        _userWallerBalance = body['balance'];
+      } else {
+        _dialogService.showDialog(
+          title: "Network error occured",
+          description: walletRequestRes.toString(),
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Network error occured",
+        description: walletRequestRes.toString(),
+      );
+    }
+  }
 
+  Future init() async {
+    setLoading(true);
+
+    await getWalletBalance();
+
+    setLoading(false);
+  }
 
   Future<bool> onWillPop() async {
     bool ans = false;

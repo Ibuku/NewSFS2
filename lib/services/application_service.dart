@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:sfscredit/const.dart';
 import 'package:sfscredit/locator.dart';
 import 'local_storage_service.dart';
 import 'network_service.dart';
+import 'token_service.dart';
 
 import '../models/user.dart';
 
@@ -11,6 +12,8 @@ class ApplicationService {
   final NetworkService _network = locator<NetworkService>();
   final LocalStorageService _localStorageService =
   locator<LocalStorageService>();
+  final TokenService _tokenService = locator<TokenService>();
+
   static StreamController _user$;
 
   static User user = User(); // store the current authenticated user
@@ -68,6 +71,19 @@ class ApplicationService {
       return await _network.get("$API_BASE_URL/loan-requests", headers: {
         "Accept": "application/json",
         "Content-Type": "application/json"
+      });
+    } catch(e) {
+      return e;
+    }
+  }
+
+  Future getWallet() async {
+    try{
+      var token = _tokenService.userToken;
+      return await _network.get("$API_BASE_URL/wallet", headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token.accessToken
       });
     } catch(e) {
       return e;

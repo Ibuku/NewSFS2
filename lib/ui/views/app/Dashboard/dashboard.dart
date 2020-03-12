@@ -5,6 +5,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
+import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
@@ -22,7 +23,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelProvider<ApplicationViewModel>.withConsumer(
       viewModel: ApplicationViewModel(),
-      //onModelReady: (model) => model.init(),
+      onModelReady: (model) => model.init(),
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async => await model.onWillPop(),
         child: Scaffold(
@@ -39,12 +40,15 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
           // backgroundColor: Colors.white,
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-
-            child: model.user.profile == null
+          body: BusyOverlay(
+            show: model.loading,
+            title: "Loading...",
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: model.user.profile == null
                 ? profileNotSet(model)
                 : profileSetup(model),
+            ),
           ),
         ),
       ),
@@ -166,7 +170,7 @@ class DashboardScreen extends StatelessWidget {
                                   ),
 
                                   new Text(
-                                    model.activeLoan.totalPayback.toString(),
+                                    "0.00",
                                     style: TextStyle(
                                       color: Colors.indigo[900],
                                       fontSize: 17,
@@ -286,7 +290,7 @@ class DashboardScreen extends StatelessWidget {
 //                                  borderRadius: BorderRadius.circular(20),
 //                                ),
                           Text(
-                            "N 0.00",
+                            "N " + (model.walletBalance.toString() ?? "0") + ".00",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.indigo[900],
