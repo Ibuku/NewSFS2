@@ -5,6 +5,9 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
+import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
+import 'package:sfscredit/ui/views/app/Loans/loan.dart';
+import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/text_link.dart';
@@ -93,7 +96,7 @@ class DashboardScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DashboardScreen(),
+                          builder: (context) => ApplyScreen1(),
                         ),
                       );
 
@@ -111,7 +114,7 @@ class DashboardScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DashboardScreen(),
+                          builder: (context) => MyLoanScreen(),
                         ),
                       );
 
@@ -128,7 +131,7 @@ class DashboardScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DashboardScreen(),
+                          builder: (context) => AllRequestScreen(),
                         ),
                       );
 
@@ -620,35 +623,21 @@ class DashboardScreen extends StatelessWidget {
 
 
                         ),
-
                       ],
-                    )
+                    ),
 
                   ],
                   ),
                 ),
               ),
             ),
-
           ),
-//          floatingActionButton: FloatingActionButton(
-//            backgroundColor: Hexcolor('#120A44'),
-//            child: Icon(Icons.add),
-//            onPressed: () {
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                  builder: (context) =>ApplyScreen1(),
-//                ),
-//              );
-//            },
-//          ),
-//
-//        ),
           ],
+
         );
 
     }
+
 
 //  Widget profileSetup() {
 //    return Column(
