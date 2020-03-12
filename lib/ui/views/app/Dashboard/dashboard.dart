@@ -10,6 +10,7 @@ import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:flutter/widgets.dart';
 
 //import 'profile/update_kyc.dart';
 //import 'package:sfscredit/ui/views/app/profile/settings.dart';
@@ -17,20 +18,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 
 class DashboardScreen extends StatelessWidget {
-  var alertStyle = AlertStyle(
-    overlayColor: Colors.white38,
-    animationType: AnimationType.fromTop,
-    isCloseButton: false,
-    isOverlayTapDismiss: false,
-    // descStyle: TextStyle(fontSize: 20.0),
-    animationDuration: Duration(milliseconds: 400),
-    alertBorder: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(40.0),
-      side: BorderSide(
-        color: Colors.white,
-      ),
-    ),
-  );
+
   static const routeName = '/app/dashboard';
 
   get value => null;
@@ -56,7 +44,7 @@ class DashboardScreen extends StatelessWidget {
             ],
 
           ),
-          endDrawer: new Drawer(
+          drawer: new Drawer(
             child: Container(
               color: Hexcolor('#120A44'),
               child: ListView(
@@ -187,45 +175,7 @@ class DashboardScreen extends StatelessWidget {
                         await model.logout();
                       },
                     ),
-//                    onTap: () {
-//                      return Alert(
-//                        context: context,
-//                        style: alertStyle,
-//                        // type: AlertType.info,
-//                        image: Image.asset(
-//                          'assets/images/pop2.png',alignment: Alignment.center,
-//                        ),
-//                        title: "Reset Password",
-//                        content: Container(
-//
-//                          //margin: EdgeInsets.only(top: 10.0),
-//                          child: Column(
-//                            children: <Widget>[
-//                              Text(
-//                                "Kindly Proceed to your mail inbox\nto reset your password.",
-//                                style: TextStyle(
-//                                  color:  Hexcolor('#120A44'),
-//                                  fontSize: 14.0,
-//                                ),
-//                                textAlign: TextAlign.center,
-//                              ),
-//                            ],
-//                          ),
-//                        ),
-////
-//                        buttons: [
-//                          DialogButton(
-//                            child: Text(
-//                              "Back",
-//                              style: TextStyle(color: Colors.white, fontSize: 20),
-//                            ),
-//                            onPressed: () => Navigator.pop(context),
-//                            color:  Hexcolor('#120A44'),
-//                            radius: BorderRadius.circular(10.0),
-//                          ),
-//                        ],
-//                      ).show();
-//                    },
+
                   ),
                 ],
               ),
