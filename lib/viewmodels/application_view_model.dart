@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:sfscredit/models/loan.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/views/auth/login_screen.dart';
 
@@ -22,13 +23,14 @@ class ApplicationViewModel extends BaseModel {
   final AuthenticationService _authenticationService =
   locator<AuthenticationService>();
 
-  User _user;
+  Loan _currentActiveLoan;
+  Loan get activeLoan => _currentActiveLoan;
 
+  User _user;
   User get user {
     _user = _application.getUser;
     return _user;
   }
-
 
   set user(userJson) {
     _authenticationService.loadUser(userJson);
@@ -53,6 +55,36 @@ class ApplicationViewModel extends BaseModel {
       default:
     }
   }
+
+//  Future getActiveLoan() async {
+//    var allLoanRequestsRes = await _application.getActiveLoanRequests();
+//    _dialogService.showDialog(
+//      title: "Network error occured",
+//      description: allLoanRequestsRes.toString(),
+//    );
+//    if (allLoanRequestsRes.statusCode) {
+//      if (allLoanRequestsRes.statusCode == 200) {
+//        var body = jsonDecode(allLoanRequestsRes.body);
+//        List allLoanRequests = body['data'];
+//        User authenticatedUser = _application.getUser;
+//        List userLoanRequests = allLoanRequests.where((loanRequest) => loanRequest.user_id == authenticatedUser.id && loanRequest.status == 'approved').toList();
+//        List<Loan> userLoanList = userLoanRequests.map((i) => Loan.fromMap(i)).toList();
+//        _currentActiveLoan = new List.from(userLoanList.reversed)[0];
+//      } else {
+//        _dialogService.showDialog(
+//          title: "Network error occured",
+//          description: allLoanRequestsRes.toString(),
+//        );
+//      }
+//    } else {
+//      _dialogService.showDialog(
+//        title: "Network error occured",
+//        description: allLoanRequestsRes.toString(),
+//      );
+//    }
+//  }
+
+
 
   Future<bool> onWillPop() async {
     bool ans = false;

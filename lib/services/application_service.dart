@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:sfscredit/const.dart';
 import 'package:sfscredit/locator.dart';
 import 'local_storage_service.dart';
@@ -58,6 +59,17 @@ class ApplicationService {
       );
       return updateResult;
     } catch (e) {
+      return e;
+    }
+  }
+  
+  Future getActiveLoanRequests() async {
+    try{
+      return await _network.get("$API_BASE_URL/loan-requests", headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      });
+    } catch(e) {
       return e;
     }
   }

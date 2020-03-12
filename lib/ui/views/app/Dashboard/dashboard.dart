@@ -6,6 +6,7 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
+import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
 //import 'profile/update_kyc.dart';
 //import 'package:sfscredit/ui/views/app/profile/settings.dart';
@@ -21,7 +22,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelProvider<ApplicationViewModel>.withConsumer(
       viewModel: ApplicationViewModel(),
-      onModelReady: (model) {},
+      //onModelReady: (model) => model.init(),
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async => await model.onWillPop(),
         child: Scaffold(
@@ -43,7 +44,7 @@ class DashboardScreen extends StatelessWidget {
 
             child: model.user.profile == null
                 ? profileNotSet(model)
-                : profileSetup(),
+                : profileSetup(model),
           ),
         ),
       ),
@@ -69,7 +70,7 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-    Widget profileSetup() {
+    Widget profileSetup(ApplicationViewModel model) {
       return Column (
         children: <Widget>[
         Container(
@@ -163,6 +164,15 @@ class DashboardScreen extends StatelessWidget {
                                       fontSize: 17,
                                     ),
                                   ),
+
+                                  new Text(
+                                    model.activeLoan.totalPayback.toString(),
+                                    style: TextStyle(
+                                      color: Colors.indigo[900],
+                                      fontSize: 17,
+                                    ),
+                                  ),
+//
 
                                   Icon(Icons.arrow_forward, color: Colors.indigo[900]),
                                   Image(image: AssetImage('assets/images/icon3.png'),alignment: Alignment.topRight,),
@@ -370,7 +380,7 @@ class DashboardScreen extends StatelessWidget {
                               fontSize: 17,
                             ),
                           ),
-//
+
                           // ),
 
                           //  SizedBox(width: 7.0),
