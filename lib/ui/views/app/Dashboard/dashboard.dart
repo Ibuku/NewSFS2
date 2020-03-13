@@ -170,7 +170,7 @@ class DashboardScreen extends StatelessWidget {
                                   ),
 
                                   new Text(
-                                    "0.00",
+                                    "N " + model.activeLoan.toString() + ".00",
                                     style: TextStyle(
                                       color: Colors.indigo[900],
                                       fontSize: 17,
@@ -290,7 +290,7 @@ class DashboardScreen extends StatelessWidget {
 //                                  borderRadius: BorderRadius.circular(20),
 //                                ),
                           Text(
-                            "N " + (model.walletBalance.toString() ?? "0") + ".00",
+                            "N " + model.walletBalance.toString() + ".00",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.indigo[900],

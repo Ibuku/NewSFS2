@@ -11,7 +11,7 @@ import '../models/user.dart';
 class ApplicationService {
   final NetworkService _network = locator<NetworkService>();
   final LocalStorageService _localStorageService =
-  locator<LocalStorageService>();
+      locator<LocalStorageService>();
   final TokenService _tokenService = locator<TokenService>();
 
   static StreamController _user$;
@@ -50,42 +50,44 @@ class ApplicationService {
 
   Future updateUserProfile(Map body) async {
     try {
-      var updateResult = await _network.post(
-          "$API_BASE_URL/user/update-profile",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: body,
-          encodeBody: false,
-          isAuth: true
-      );
+      var updateResult =
+          await _network.post("$API_BASE_URL/user/update-profile",
+              headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: body,
+              encodeBody: false,
+              isAuth: true);
       return updateResult;
     } catch (e) {
       return e;
     }
   }
-  
+
   Future getActiveLoanRequests() async {
-    try{
-      return await _network.get("$API_BASE_URL/loan-requests", headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      });
-    } catch(e) {
+    try {
+      return await _network.get("$API_BASE_URL/loan-requests",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          isAuth: true);
+    } catch (e) {
       return e;
     }
   }
 
   Future getWallet() async {
-    try{
+    try {
       var token = _tokenService.userToken;
-      return await _network.get("$API_BASE_URL/wallet", headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token.accessToken
-      });
-    } catch(e) {
+      return await _network.get("$API_BASE_URL/wallet",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          isAuth: true);
+    } catch (e) {
       return e;
     }
   }
