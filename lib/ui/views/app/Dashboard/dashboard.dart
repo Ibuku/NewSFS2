@@ -254,7 +254,7 @@ class DashboardScreen extends StatelessWidget {
                             "Wallet Balance ",
                             style: TextStyle(
                               color: Colors.indigo[900],
-                              fontSize: 17,
+                              fontSize: 17, 
                             ),
                           ),
 //
