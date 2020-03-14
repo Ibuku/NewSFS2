@@ -233,7 +233,7 @@ class DashboardScreen extends StatelessWidget {
 
                     CardItem(
                       titleText: "Active Loans",
-                      btnText: "N ${model.activeLoan}",
+                      btnText: "N ${model.activeLoan}.00",
                       icon: Icons.cloud_download,
                       //onPressed: () => model.toRoute(UpdateKYC.routeName),
                     ),
@@ -242,7 +242,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     CardItem(
                       titleText: "Guaranteed Loans",
-                      btnText: "N 20,000",
+                      btnText: "N ${model.currentGuarantorLoan}.00",
                       icon: Icons.person,
                      // onPressed: () => model.toRoute(UpdateKYC.routeName),
                     ),

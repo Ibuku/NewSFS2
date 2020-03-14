@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:sfscredit/models/loan.dart';
+import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/views/auth/login_screen.dart';
 
@@ -26,6 +27,9 @@ class ApplicationViewModel extends BaseModel {
   int _activeLoanPayback = 0;
   int get activeLoan => _activeLoanPayback;
 
+  int _activeGuarantorLoanPayback = 0;
+  int get currentGuarantorLoan => _activeGuarantorLoanPayback;
+
   int _userWallerBalance = 0;
   int get walletBalance => _userWallerBalance;
 
@@ -39,6 +43,9 @@ class ApplicationViewModel extends BaseModel {
     _authenticationService.loadUser(userJson);
     ApplicationService.user = User.fromJson(userJson);
   }
+
+  List<LoanPackage> _loanPackages = [];
+  List get loanPackages => _loanPackages;
 
   Future<void> getUserProfile() async {
     var userProfile = await _application.userProfile();
@@ -60,7 +67,7 @@ class ApplicationViewModel extends BaseModel {
   }
 
   Future<void> getActiveLoan() async {
-    var allLoanRequestsRes = await _application.getActiveLoanRequests();
+    var allLoanRequestsRes = await _application.getLoanRequests();
     if (allLoanRequestsRes is Error) {
       _dialogService.showDialog(
         title: "Network error occured",
@@ -74,7 +81,7 @@ class ApplicationViewModel extends BaseModel {
       User authenticatedUser = _application.getUser;
       List userLoanRequests = allLoanRequests.where((loanRequest) => loanRequest.user_id == authenticatedUser.id && loanRequest.status == 'approved').toList();
       List<Loan> userLoanList = userLoanRequests.map((i) => Loan.fromMap(i)).toList();
-      if(userLoanList.length != 0){
+      if(userLoanList.length != 0) {
         Loan currentActiveLoan = new List.from(userLoanList.reversed)[0];
         _activeLoanPayback = currentActiveLoan.totalPayback;
       }
@@ -106,12 +113,35 @@ class ApplicationViewModel extends BaseModel {
     }
   }
 
+  Future<void> getCurrentGuarantorLoan() async {
+    var guarantorRequestsRes = await _application.getGuarantorRequests();
+    if (guarantorRequestsRes is Error) {
+      _dialogService.showDialog(
+        title: "Network error occured",
+        description: guarantorRequestsRes.toString(),
+      );
+      return;
+    }
+    if (guarantorRequestsRes.statusCode == 200) {
+      var body = jsonDecode(guarantorRequestsRes.body);
+      List allGuarantorRequests = body['data'];
+      List userGuarantorRequests = allGuarantorRequests.where((guarantorRequest) => guarantorRequest.guarantor_approved == "true" && guarantorRequest.loan_request.status == 'approved').toList();
+      List<Loan> userGuarantorList = userGuarantorRequests.map((i) => Loan.fromMap(i)).toList();
+      if(userGuarantorList.length != 0) {
+        Loan currentGuarantorLoan = new List.from(userGuarantorList.reversed)[0];
+        _activeGuarantorLoanPayback = currentGuarantorLoan.totalPayback;
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Network error occured",
+        description: guarantorRequestsRes.toString(),
+      );
+    }
+  }
+
   Future<void> init() async {
     setLoading(true);
-
-    await getActiveLoan();
-    await getWalletBalance();
-
+    await Future.wait([getActiveLoan(), getWalletBalance(), getCurrentGuarantorLoan()]);
     setLoading(false);
   }
 
