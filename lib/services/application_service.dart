@@ -65,7 +65,7 @@ class ApplicationService {
     }
   }
 
-  Future getActiveLoanRequests() async {
+  Future getLoanRequests() async {
     try {
       return await _network.get("$API_BASE_URL/loan-requests",
           headers: {
@@ -82,6 +82,33 @@ class ApplicationService {
     try {
       var token = _tokenService.userToken;
       return await _network.get("$API_BASE_URL/wallet",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future getGuarantorRequests() async {
+    try {
+      return await _network.get("$API_BASE_URL/guarantor-requests",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
+
+
+  Future getLoanPackages() async {
+    try {
+      return await _network.get("$API_BASE_URL/loan-packages",
           headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
