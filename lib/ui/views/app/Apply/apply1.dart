@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider_architecture/viewmodel_provider.dart';
-import 'package:sfscredit/services/application_service.dart';
+import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
-import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
-//import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 import 'package:sfscredit/ui/views/app/Loans/loan.dart';
 import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
+import 'package:sfscredit/ui/widgets/loan_package_card.dart';
 import 'package:sfscredit/viewmodels/loan_application_view_model.dart';
 
 class ApplyScreen1 extends StatelessWidget {
@@ -19,7 +17,11 @@ class ApplyScreen1 extends StatelessWidget {
 
   get model => null;
 
-
+  List<LoanPackageWidget> buildPackagesContainer(BuildContext context, List<LoanPackage> loanPackages) {
+    return loanPackages.map((loanPackage) {
+      return LoanPackageWidget(package: loanPackage);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -332,14 +334,12 @@ class ApplyScreen1 extends StatelessWidget {
                         ],
                       ),
                     ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
+                      Column(children: model.loanPackages.map((loanPackage) => LoanPackageWidget(package: loanPackage)).toList()),
                       Container(
-                        margin: EdgeInsets.only(left: 15, right: 14),
-                        padding: EdgeInsets.only(left: 20, right: 40,bottom: 20),
-                        height: 125,
-                        width: 345,
+                        margin: EdgeInsets.only( top: 30,right: 30),
+                        padding: EdgeInsets.only(left: 5, ),
+                        height: 30,
+                        width: 100,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.white,
@@ -352,245 +352,9 @@ class ApplyScreen1 extends StatelessWidget {
                                   .1,
                                 ),
                                 blurRadius: 20,
-                                offset: Offset(0, 10),)
+                                offset: Offset(0, 10),
+                              )
                             ]),
-                        child: Column(
-                          children: <Widget>[
-
-                            new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Image(image: AssetImage('assets/images/circle2.png',),color: Colors.grey,alignment: Alignment.topLeft,),
-                                new Text('Package 1',
-                                  style: GoogleFonts.mavenPro(
-                                    textStyle: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal,
-                                      color: primaryColor,
-                                    ),
-                                  ),
-                                ),
-
-                                RaisedButton(
-                                  color: Hexcolor('#120A44'),
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "See terms ",
-                                    style: GoogleFonts.mavenPro(
-                                      textStyle: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Dashboard(),
-                                      ),
-                                    );
-                                  },
-                                ),
-
-                                // new Text('N25,000.00 monthly repayment'),
-    //                                    new Text('  Row'),
-                              ],
-                            ),
-                            //  Image(image: AssetImage('assets/images/icon4.png'),alignment: Alignment.topRight,)
-
-                            new Text('N 400,000.00',
-                              style: GoogleFonts.mavenPro(
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal,
-                                  color: primaryColor,
-                                ),
-                              ),
-
-                            ),
-                            new Text('N 25,000.00 monthly repayment',
-                              style: GoogleFonts.mavenPro(
-                                textStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
-                                  color: primaryColor,
-                                ),
-                              ),
-
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 15, right: 14),
-                        padding: EdgeInsets.only(left: 20, right: 40,bottom: 20),
-                        height: 125,
-                        width: 345,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color.fromRGBO(
-                                  75,
-                                  97,
-                                  119,
-                                  .1,
-                                ),
-                                blurRadius: 20,
-                                offset: Offset(0, 10),)
-                            ]),
-                        child: Column(
-                          children: <Widget>[
-
-                            new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                //Image(image: AssetImage('assets/images/circle2.png',),color: Colors.grey,alignment: Alignment.topLeft,),
-                                new Text('Package 2',
-                                  style: GoogleFonts.mavenPro(
-                                    textStyle: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal,
-                                      color: primaryColor,
-                                    ),
-                                  ),
-
-                                ),
-
-                                RaisedButton(
-                                  color: Hexcolor('#120A44'),
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "See terms ",
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Dashboard(),
-                                      ),
-                                    );
-                                  },
-                                ),
-
-                                // new Text('N25,000.00 monthly repayment'),
-    //                                    new Text('  Row'),
-                              ],
-                            ),
-                            //  Image(image: AssetImage('assets/images/icon4.png'),alignment: Alignment.topRight,)
-
-                            new Text('N 800,000.00',
-                              style: GoogleFonts.mavenPro(
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor,
-                                ),
-                              ),
-
-                            ),
-                            new Text('N 25,000.00 monthly repayment',
-                              style: GoogleFonts.mavenPro(
-                                textStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
-                                  color: primaryColor,
-                                ),
-                              ),
-
-                            ),
-
-
-    //
-    //                                new Text('Row'),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(top: 30, right: 25,left: 5),
-                            padding: EdgeInsets.only(left: 20, ),
-                            height: 30,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(
-                                      75,
-                                      97,
-                                      119,
-                                      .1,
-                                    ),
-                                    blurRadius: 20,
-                                    offset: Offset(0, 10),
-                                  )
-                                ]),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: <Widget>[
-                                // Image(image: AssetImage('assets/images/circle1.png'),alignment: Alignment.topRight,),
-                                //  Icon(Icons.radio_button_unchecked, color: Hexcolor('#120A44'),
-                                Text(
-                                  "Cancel ",
-                                  style: GoogleFonts.mavenPro(
-                                    textStyle: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: primaryColor,
-                                    ),
-                                  ),
-                                ),
-    //
-                                // ),
-
-
-                                //  SizedBox(width: 7.0),
-                              ],
-                            ),
-
-
-                          ),
-                          Container(
-                            margin: EdgeInsets.only( top: 30,right: 30),
-                            padding: EdgeInsets.only(left: 5, ),
-                            height: 30,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(
-                                      75,
-                                      97,
-                                      119,
-                                      .1,
-                                    ),
-                                    blurRadius: 20,
-                                    offset: Offset(0, 10),
-                                  )
-                                ]),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               //crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -617,35 +381,33 @@ class ApplyScreen1 extends StatelessWidget {
 
                           ),
 
-                        ],
-                      )
-                    ],
+                        ]
+                    ),
                   ),
                 ),
               ),
             ),
 
           ),
-        ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Hexcolor('#120A44'),
-            child: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ApplyScreen2(),
-                ),
-              );
-            },
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Hexcolor('#120A44'),
+              child: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ApplyScreen2(),
+                  ),
+                );
+              },
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat
         ),
       ),
     );
   }
-
 }
+
 class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
