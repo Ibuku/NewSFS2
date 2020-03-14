@@ -41,13 +41,10 @@ var appRoutes = <String, WidgetBuilder>{
   ApplyScreen2.routeName: (ctx) =>ApplyScreen2(),
   MyLoanScreen.routeName: (ctx) =>MyLoanScreen(),
   UpdateKYC.routeName: (ctx) => UpdateKYC(),
-  DashboardScreen.routeName: (ctx) =>DashboardScreen(),
   WalletScreen.routeName: (ctx) => WalletScreen(),
-  WalletScreen.routeName: (ctx) => TimelineScreen(),
-  AllRequestScreen.routeName: (ctx) =>AllRequestScreen(),
+  TimelineScreen.routeName: (ctx) => TimelineScreen(),
+  AllRequestScreen.routeName: (ctx) => AllRequestScreen(),
   ApprovedRequestScreen.routeName: (ctx) =>ApprovedRequestScreen(),
   DeclinedRequestScreen.routeName: (ctx) => DeclinedRequestScreen(),
   PendingRequestScreen.routeName: (ctx) => PendingRequestScreen(),
-
-
 };
