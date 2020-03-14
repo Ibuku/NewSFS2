@@ -34,7 +34,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelProvider<ApplicationViewModel>.withConsumer(
       viewModel: ApplicationViewModel(),
-      //onModelReady: (model) => model.init(),
+      onModelReady: (model) => model.init(),
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async => await model.onWillPop(),
         child: Scaffold(
@@ -59,7 +59,7 @@ class DashboardScreen extends StatelessWidget {
                   UserAccountsDrawerHeader(
 
                     accountName: new Text(
-                      "Allen Joe",
+                      "${model.user.firstname} ${model.user.lastname}",
                       style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                     ),
                     currentAccountPicture: CircleAvatar(
@@ -69,7 +69,7 @@ class DashboardScreen extends StatelessWidget {
                     decoration: new BoxDecoration(
                       color: Hexcolor('#120A44'),
                     ),
-                    accountEmail: new Text("babatundeibukun@gmail.com"),
+                    accountEmail: new Text("${model.user.email}"),
                   ),
                   ListTile(
 
@@ -233,7 +233,7 @@ class DashboardScreen extends StatelessWidget {
 
                     CardItem(
                       titleText: "Active Loans",
-                      btnText: "100,000",
+                      btnText: "N ${model.activeLoan}",
                       icon: Icons.cloud_download,
                       //onPressed: () => model.toRoute(UpdateKYC.routeName),
                     ),
@@ -242,7 +242,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     CardItem(
                       titleText: "Guaranteed Loans",
-                      btnText: "20000",
+                      btnText: "N 20,000",
                       icon: Icons.person,
                      // onPressed: () => model.toRoute(UpdateKYC.routeName),
                     ),
@@ -300,7 +300,7 @@ class DashboardScreen extends StatelessWidget {
 //                                  borderRadius: BorderRadius.circular(20),
 //                                ),
                           Text(
-                            "N 0.00",
+                            "N ${model.walletBalance}.00",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.indigo[900],
