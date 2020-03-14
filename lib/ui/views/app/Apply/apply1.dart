@@ -363,7 +363,7 @@ class ApplyScreen1 extends StatelessWidget {
                                 textStyle: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.normal,
-                                  color: primaryColor,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -527,7 +527,7 @@ class ApplyScreen1 extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(top: 30, right: 25,left: 5),
+                        margin: EdgeInsets.only(top: 30, right: 15,left: 5),
                         padding: EdgeInsets.only(left: 20, ),
                         height: 30,
                         width: 100,
@@ -552,17 +552,31 @@ class ApplyScreen1 extends StatelessWidget {
                           children: <Widget>[
                             // Image(image: AssetImage('assets/images/circle1.png'),alignment: Alignment.topRight,),
                             //  Icon(Icons.radio_button_unchecked, color: Hexcolor('#120A44'),
-                            Text(
-                              "Cancel ",
-                              style: GoogleFonts.mavenPro(
-                                textStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor,
+                            RaisedButton(
+                              color: Colors.white,
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                "Cancel",
+                                style: GoogleFonts.mavenPro(
+                                  textStyle: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Hexcolor('#120A44'),
+                                  ),
                                 ),
                               ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Dashboard(),
+                                  ),
+                                );
+                              },
                             ),
-//
                             // ),
 
 
@@ -600,16 +614,31 @@ class ApplyScreen1 extends StatelessWidget {
                             // Image(image: AssetImage('assets/images/circle2.png'),alignment: Alignment.topCenter,),
                             //Icon(Icons.radio_button_unchecked, color: Colors.white,),
 
-                            Text(
-                              "Continue",
-                              style: TextStyle(
-                                color: Hexcolor('#120A44'),
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            RaisedButton(
+                              color: Colors.white,
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
                               ),
+                              child: Text(
+                                "Continue",
+                                style: GoogleFonts.mavenPro(
+                                  textStyle: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Hexcolor('#120A44'),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ApplyScreen2(),
+                                  ),
+                                );
+                              },
                             ),
-//
-                            // ),
 
                             //  SizedBox(width: 7.0),
                           ],
