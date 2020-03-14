@@ -6,7 +6,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/dashboard.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
