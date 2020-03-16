@@ -10,16 +10,13 @@ import 'package:sfscredit/ui/views/app/Dashboard/timeline.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
 import 'package:sfscredit/ui/views/app/Loans/loan.dart';
 import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
+import 'package:sfscredit/ui/views/app/profile/settings.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter/widgets.dart';
-
-//import 'profile/update_kyc.dart';
-//import 'package:sfscredit/ui/views/app/profile/settings.dart';
-//import 'package:settings_ui/settings_ui.dart';
 
 
 class DashboardScreen extends StatelessWidget {
@@ -169,7 +166,7 @@ class DashboardScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DashboardScreen(),
+                          builder: (context) => SettingScreen(),
                         ),
                       );
 
@@ -334,8 +331,12 @@ class DashboardScreen extends StatelessWidget {
                       height: 50,
                       child: Center(
 
+
                           child: RaisedButton.icon(
                             color: Hexcolor('#120A44'),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                             icon: Icon(Icons.call_made,color: Colors.white,),
                             label: Text('My Wallet',
                               textAlign: TextAlign.center,
@@ -352,7 +353,7 @@ class DashboardScreen extends StatelessWidget {
                       height: 15.0,
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 5, left: 5,),
+                      margin: EdgeInsets.only(top: 5, left: 3,),
                       padding: EdgeInsets.only(right: 215),
                       height: 40,
                       child: Row(
@@ -370,7 +371,8 @@ class DashboardScreen extends StatelessWidget {
                             "Active Loans",
                             style: TextStyle(
                               color: Colors.indigo[900],
-                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
                             ),
                           ),
 
@@ -426,7 +428,7 @@ class DashboardScreen extends StatelessWidget {
 //                                  borderRadius: BorderRadius.circular(20),
 //                                ),
                           Text(
-                            "N 0.00",
+                            "N ${model.activeLoan}.00",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.indigo[900],
@@ -482,6 +484,36 @@ class DashboardScreen extends StatelessWidget {
                       height: 20.0,
                     ),
                     Container(
+                      margin: EdgeInsets.only(top: 5, left: 1),
+                      padding: EdgeInsets.only(right: 230),
+                      height: 20,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 380.0,
+                          ),
+                          // RaisedButton(
+//
+//                                shape: RoundedRectangleBorder(
+//                                  borderRadius: BorderRadius.circular(20),
+//                                ),
+                          Text(
+                            "Overview",
+                            style: TextStyle(
+                              color: Colors.indigo[900],
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          // ),
+
+                          //  SizedBox(width: 7.0),
+                        ],
+                      ),
+                    ),
+                    Container(
                       margin: EdgeInsets.only(top: 15, left: 20,),
                       padding: EdgeInsets.only(right: 220),
                       height: 50,
@@ -498,8 +530,8 @@ class DashboardScreen extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Container(
-                          margin: EdgeInsets.only( right: 10,left: 15),
-                          padding: EdgeInsets.only(right: 25, ),
+                          margin: EdgeInsets.only( right: 10,left: 25),
+                          padding: EdgeInsets.only(right: 10, ),
                           height: 100,
                           width: 150,
                           decoration: BoxDecoration(
@@ -517,13 +549,13 @@ class DashboardScreen extends StatelessWidget {
                                   offset: Offset(0, 10),
                                 )
                               ]),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             //crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               Image(image: AssetImage('assets/images/circle1.png'),alignment: Alignment.topRight,),
                               //  Icon(Icons.radio_button_unchecked, color: Hexcolor('#120A44'),
-                              Text(
+                             new Text(
                                 "Loans ",
                                 style: TextStyle(
                                   wordSpacing: 5,
@@ -532,6 +564,17 @@ class DashboardScreen extends StatelessWidget {
                                   //fontFamily: 'Nunito-Light',
                                 ),
                               ),
+                            new Text(
+                                "100 ",
+                                style: TextStyle(
+                                  wordSpacing: 5,
+                                  color: Hexcolor('#120A44'),
+                                  fontSize: 17,
+                                  //fontFamily: 'Nunito-Light',
+                                ),
+                              ),
+
+
 //
                               // ),
 
@@ -579,7 +622,8 @@ class DashboardScreen extends StatelessWidget {
                               ),
 //
                               // ),
-                              Text(
+
+                             new Text(
                                 "20",
                                 style: TextStyle(
                                   color: Colors.indigo[900],

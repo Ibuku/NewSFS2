@@ -13,14 +13,11 @@ import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 import 'package:sfscredit/ui/views/app/Loans/loan.dart';
 import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
 import 'package:sfscredit/viewmodels/loan_application_view_model.dart';
-
 class ApplyScreen1 extends StatelessWidget {
-  static const routeName = '/app/Apply/apply.dart';
 
-  get model => null;
+  static const routeName = '/app/Apply/apply1';
 
-
-
+  get value => null;
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<LoanApplicationViewModel>.withConsumer(
@@ -179,14 +176,6 @@ class ApplyScreen1 extends StatelessWidget {
           ),
         ),
 
-
-  //      body: SingleChildScrollView(
-  //        padding: EdgeInsets.symmetric(),
-  //        child: Text(ApplicationService.user.toJson().toString()),
-  //      ),
-  //    );
-  //  }
-  //}
           body: Container(
             child: SingleChildScrollView(
               child: new Container(
@@ -383,7 +372,7 @@ class ApplyScreen1 extends StatelessWidget {
                                       textStyle: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
-                                        color: primaryColor,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -595,7 +584,31 @@ class ApplyScreen1 extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               //crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: <Widget>[
-
+                                RaisedButton(
+                                  color: Hexcolor('#120A44'),
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    "See terms ",
+                                    style: GoogleFonts.mavenPro(
+                                      textStyle: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Dashboard(),
+                                      ),
+                                    );
+                                  },
+                                ),
                                 // Image(image: AssetImage('assets/images/circle2.png'),alignment: Alignment.topCenter,),
                                 //Icon(Icons.radio_button_unchecked, color: Colors.white,),
 
