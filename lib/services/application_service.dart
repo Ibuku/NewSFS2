@@ -106,15 +106,48 @@ class ApplicationService {
   }
 
 
-  Future getLoanPackages() async {
+  Future getApprovedLoanPackages() async {
     try {
-      return await _network.get("$API_BASE_URL/loan-packages",
+      return await _network.get("$API_BASE_URL/loan-packages?status=approved",
           headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
           },
           isAuth: true);
     } catch (e) {
+      return e;
+    }
+  }
+
+  Future getBanks() async {
+    try {
+      return await _network.get("https://api.paystack.co/bank", headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      });
+    } catch(e){
+      return e;
+    }
+  }
+
+  Future getUsersBankDetails() async {
+    try {
+      return await _network.get("$API_BASE_URL/bank", headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      }, isAuth: true);
+    } catch(e){
+      return e;
+    }
+  }
+
+  Future getUsersCards() async {
+    try {
+      return await _network.get("$API_BASE_URL/cards", headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      }, isAuth: true);
+    } catch(e){
       return e;
     }
   }

@@ -16,6 +16,7 @@ import 'package:sfscredit/ui/views/app/profile/Notifications.dart';
 import 'package:sfscredit/ui/views/app/profile/settings.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
+import 'package:sfscredit/ui/widgets/menu.dart';
 import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -53,7 +54,7 @@ class DashboardScreen extends StatelessWidget {
           ),
           drawer: new Drawer(
             child: Container(
-              color: primaryColor,
+              color: Hexcolor('#120A44'),
               child: ListView(
                 children: <Widget>[
                   UserAccountsDrawerHeader(
@@ -67,7 +68,7 @@ class DashboardScreen extends StatelessWidget {
                         "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",),
                     ),
                     decoration: new BoxDecoration(
-                      color: primaryColor,
+                      color: Hexcolor('#120A44'),
                     ),
                     accountEmail: new Text("${model.user.email}"),
                   ),
@@ -152,7 +153,7 @@ class DashboardScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NotificationScreen(),
+                          builder: (context) => WalletScreen(),
                         ),
                       );
 
@@ -169,29 +170,27 @@ class DashboardScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SettingScreen(),
+                          builder: (context) => DashboardScreen(),
                         ),
                       );
 
                     },
                   ),
                   ListTile(
-                    leading:Icon(Icons.cancel,color:Colors.white),
-                    title: Text("Logout",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                    leading: IconButton(
+                      icon: Icon(FeatherIcons.logOut),
+                      onPressed: () async {
+                        await model.logout();
+                      },
                     ),
-                    onTap: () async {
-                      await model.logout();
-                    },
+
                   ),
                 ],
               ),
             ),
           ),
 
-           backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             child: model.user.profile == null
@@ -226,7 +225,6 @@ class DashboardScreen extends StatelessWidget {
       return Column (
         children: <Widget>[
         Container(
-        //  child: SingleChildScrollView(
             child: new Container(
               child: new SingleChildScrollView(
                 child: new ConstrainedBox(
