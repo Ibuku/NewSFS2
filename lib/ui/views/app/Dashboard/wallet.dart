@@ -34,7 +34,7 @@ class _WalletScreenState extends State<WalletScreen> {
   Widget build(BuildContext context) {
     return ViewModelProvider<ApplicationViewModel>.withConsumer(
       viewModel: ApplicationViewModel(),
-      //onModelReady: (model) => model.init(),
+      onModelReady: (model) => model.init(),
       builder: (context, model, child) =>
           WillPopScope(
             onWillPop: () async => await model.onWillPop(),

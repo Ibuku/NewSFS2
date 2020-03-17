@@ -55,7 +55,9 @@ class DecisionScreen extends StatelessWidget {
               TextLink(
                 "Already have an account, Log in",
                 onPressed: () => model.toAuth('login'),
-              )
+              ),
+
+
             ],
           ),
         ),

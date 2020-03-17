@@ -20,7 +20,7 @@ import 'package:flutter/widgets.dart';
 //import 'package:settings_ui/settings_ui.dart';
 
 class TimelineScreen extends StatefulWidget {
-  static const routeName = '/app/Dashboard/wallet';
+  static const routeName = '/app/Dashboard/timeline';
   @override
   _TimelineScreenState createState() => _TimelineScreenState();
 }
@@ -175,10 +175,16 @@ class _TimelineScreenState extends State<TimelineScreen> {
                       ),
                       ListTile(
                         leading: IconButton(
-                          icon: Icon(FeatherIcons.logOut),
+                          icon: Icon(Icons.cancel,color:Colors.white),
+
                           onPressed: () async {
                             await model.logout();
                           },
+                        ),
+                        title: Text("Logout",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
 
                       ),
