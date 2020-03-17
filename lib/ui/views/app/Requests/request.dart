@@ -327,19 +327,7 @@ class Request1Screen extends StatelessWidget {
 
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Hexcolor('#120A44'),
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Dashboard(),
-            ),
-          );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
     );
   }
 

@@ -4,7 +4,10 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/dashboard.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
+
+import '../Apply/apply1.dart';
+import '../Apply/apply1.dart';
 
 class PolicyScreen extends StatelessWidget {
   static const routeName = '/app/privacypolicy.dart';
@@ -107,19 +110,6 @@ class PolicyScreen extends StatelessWidget {
 
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Hexcolor('#120A44'),
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Dashboard(),
-            ),
-          );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

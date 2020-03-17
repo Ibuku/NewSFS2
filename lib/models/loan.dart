@@ -1,30 +1,30 @@
 import 'package:flutter/foundation.dart';
 
 class Loan {
-  final int id;
-  final String name;
-  final int amount;
-  final int interestRate;
+  final String id;
+  final int userId;
+  final int packageId;
+  final String guarantorEmail;
   final int totalPayback;
-  final int tenure;
+  final String status;
 
   Loan({
     @required this.id,
-    @required this.name,
-    @required this.amount,
-    @required this.interestRate,
+    @required this.userId,
+    @required this.packageId,
+    @required this.guarantorEmail,
     @required this.totalPayback,
-    @required this.tenure
+    @required this.status
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': name,
-      'amount': amount,
-      'interest_rate': interestRate,
+      'user_id': userId,
+      'loan_package_id': packageId,
+      'guarantor_email': guarantorEmail,
       'total_payback': totalPayback,
-      'tenure': tenure
+      'status': status
     };
   }
 
@@ -33,11 +33,11 @@ class Loan {
 
     return Loan (
       id: map['id'],
-      name: map['name'],
-      amount: map['amount'],
-      interestRate: map['interest_rate'],
-      totalPayback: map['total_payback'],
-      tenure: map['tenure']
+      userId: map['user_id'],
+      packageId: map['loan_package_id'],
+      guarantorEmail: map['guarantor_email'],
+      totalPayback: map['loan_package']['total_payback'],
+      status: map['status']
     );
   }
 }
