@@ -67,7 +67,7 @@ class LoginViewModel extends BaseModel {
     } else {
       await _dialogService.showDialog(
         title: 'Application error',
-        description: result,
+        description: result.toString(),
       );
     }
   }
