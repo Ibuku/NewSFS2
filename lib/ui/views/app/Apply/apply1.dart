@@ -591,7 +591,7 @@ class ApplyScreen1 extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
-                                    "See terms ",
+                                    "Continue",
                                     style: GoogleFonts.mavenPro(
                                       textStyle: TextStyle(
                                         fontSize: 12,
