@@ -8,6 +8,7 @@ import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
 import 'package:sfscredit/ui/views/app/Requests/approvedRequest.dart';
 import 'package:sfscredit/ui/views/app/Requests/declinedRequest.dart';
 import 'package:sfscredit/ui/views/app/Requests/pendingRequest.dart';
+import 'package:sfscredit/ui/views/app/profile/settings.dart';
 //import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 
 import 'ui/views/app/profile/update_kyc.dart';
@@ -47,4 +48,5 @@ var appRoutes = <String, WidgetBuilder>{
   ApprovedRequestScreen.routeName: (ctx) =>ApprovedRequestScreen(),
   DeclinedRequestScreen.routeName: (ctx) => DeclinedRequestScreen(),
   PendingRequestScreen.routeName: (ctx) => PendingRequestScreen(),
+  SettingScreen.routeName: (ctx) => SettingScreen(),
 };
