@@ -49,6 +49,13 @@ class ApplicationViewModel extends BaseModel {
 
   Future<void> getUserProfile() async {
     var userProfile = await _application.userProfile();
+    if(userProfile is Error){
+      _dialogService.showDialog(
+        title: "Network error occured",
+        description: userProfile.toString(),
+      );
+      return;
+    }
     if (userProfile.statusCode == 200) {
       var body = jsonDecode(userProfile.body);
       user = body['data'];

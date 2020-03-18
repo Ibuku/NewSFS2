@@ -45,7 +45,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
   final _accountNoController = TextEditingController();
   final _accountNameController = TextEditingController();
   final _bankController = TextEditingController();
-  final  _cardController = TextEditingController();
+  final _cardController = TextEditingController();
 
   // Paystack
   final PaymentService _payment = locator<PaymentService>();
@@ -71,319 +71,342 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => WillPopScope(
         child: Scaffold(
-          appBar: AppBar(
-            title: Text("Apply"),
-            centerTitle: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(FeatherIcons.logOut),
-                onPressed: () async {
-                  await model.logout();
-                },
-              ),
-            ],
-          ),
-          backgroundColor: Colors.white,
-          body: BusyOverlay(
-            show: model.loading,
-            title: "Loading...",
-            child: Container(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
-                      decoration: BoxDecoration(
-                          color: primaryColor
-                      ),
-                      child: CardItem(
-                        customTitleTextWidget: Text(
-                          "Current Salary",
-                          style: GoogleFonts.mavenPro(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                          ).copyWith(color: primaryColor),
+            appBar: AppBar(
+              title: Text("Apply"),
+              centerTitle: false,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(FeatherIcons.logOut),
+                  onPressed: () async {
+                    await model.logout();
+                  },
+                ),
+              ],
+            ),
+            backgroundColor: Colors.white,
+            body: BusyOverlay(
+              show: model.loading,
+              title: "Loading...",
+              child: Container(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+                        decoration: BoxDecoration(color: primaryColor),
+                        child: CardItem(
+                          customTitleTextWidget: Text(
+                            "Current Salary",
+                            style: GoogleFonts.mavenPro(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ).copyWith(color: primaryColor),
+                          ),
+                          customBtnTextWidget: Text(
+                            "N 1,000.00",
+                            style: GoogleFonts.mavenPro(
+                              fontWeight: FontWeight.bold,
+                            ).copyWith(color: primaryColor, fontSize: 20),
+                          ),
+                          icon: Icons.person,
+                          paddingVertical: 30,
                         ),
-                        customBtnTextWidget: Text(
-                          "N 1,000.00",
-                          style: GoogleFonts.mavenPro(
-                            fontWeight: FontWeight.bold,
-                          ).copyWith(color: primaryColor, fontSize: 20),
-                        ),
-                        icon: Icons.person,
-                        paddingVertical: 30,
                       ),
-                    ),
-                    verticalSpaceTiny,
-                    Container(
-                      padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-                      child: CustomCard(
-                          padding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                          child: Column(
-                              textDirection: TextDirection.ltr,
-                              children: <Widget>[
-                                new Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        "Loan Type",
-                                        style: GoogleFonts.mavenPro(
-                                          fontSize: 17,
-                                        ).copyWith(color: Colors.indigo[900]),
-                                      ),
-                                      Text(
-                                        "${widget.loanPackage.name}",
-                                        style: GoogleFonts.mavenPro(
-                                          fontSize: 17,
-                                        ).copyWith(color: Colors.indigo[900]),
-                                      ),
-                                    ])
-                              ])),
-                    ),
-                    verticalSpace15,
-                    Container(
-                      margin: EdgeInsets.only(left: 20),
-                      child: Text(
-                        "Personal Information",
-                        style: GoogleFonts.mavenPro(
-                            fontSize: 18, fontWeight: FontWeight.bold)
-                            .copyWith(color: Colors.indigo[900]),
-                      ),
-                    ),
-                    verticalSpace15,
-                    Container(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Form(
-                          key: _formKey,
-                          child: Column(children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 4,
-                                  child: CustomTextField(
-                                    hintText: "Account Number",
-                                    hintTextStyle: TextStyle(
-                                        fontSize: 12
-                                    ),
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return "Account Number is required";
-                                      }
-                                      if (value.toString().length < 10) {
-                                        return "Account Number is not valid";
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      _bankDetailsReqData['account_number'] = value;
-                                    },
-                                    textController: _accountNoController,
-                                    inputType: TextInputType.number,
-                                    readOnly: model.bankDetails?.accountNo != null,
-                                    onChanged: (value) async {
-                                      if(model.selectedBank != null && value.toString().length == 10){
-                                        await model.resolveBankDetails(value, model.selectedBank);
-                                        _accountNameController.text = model.bankAccountName;
-                                      }
-                                    },
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 5,
-                                  child: CustomTextField(
-                                    hintText: model.loading
-                                        ? "Loading Banks ..."
-                                        : (model.selectedBank != null
-                                        ? model.selectedBank.display
-                                        : "Select a bank"),
-                                    hintTextStyle: TextStyle(
-                                        fontSize: 12
-                                    ),
-                                    textController: _bankController,
-                                    validator: (value) {
-                                      if (value == null || value == "") {
-                                        return "Please select a bank";
-                                      }
-                                      return null;
-                                    },
-                                    enabled:!model.loading,
-                                    onSaved: (value) {
-                                      model.setSelectedBank(value);
-                                    },
-                                    readOnly: true,
-                                    suffixIcon: Icon(
-                                      Icons.arrow_drop_down,
-                                    ),
-                                    onTap: () {
-                                      if (model.loading || model.banks.isEmpty) {
-                                        return;
-                                      }
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => FullScreenPicker(
-                                            title: "Select a bank",
-                                            dataSource: model.loading ? []: model.banks,
-                                          ),
-                                          fullscreenDialog: false,
+                      verticalSpaceTiny,
+                      Container(
+                        padding:
+                            EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                        child: CustomCard(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 20),
+                            child: Column(
+                                textDirection: TextDirection.ltr,
+                                children: <Widget>[
+                                  new Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          "Loan Type",
+                                          style: GoogleFonts.mavenPro(
+                                            fontSize: 17,
+                                          ).copyWith(color: Colors.indigo[900]),
                                         ),
-                                      ).then((value) async {
-                                        if (value != null) {
-                                          model.setSelectedBank(value);
-                                          print("Account No Controller " + _accountNoController.value.toString());
-                                          if(_accountNoController.text.length == 10){
-                                            await model.resolveBankDetails(_accountNoController.text, model.selectedBank);
-                                            _accountNameController.text = model.bankAccountName;
-                                          }
+                                        Text(
+                                          "${widget.loanPackage.name}",
+                                          style: GoogleFonts.mavenPro(
+                                            fontSize: 17,
+                                          ).copyWith(color: Colors.indigo[900]),
+                                        ),
+                                      ])
+                                ])),
+                      ),
+                      verticalSpace15,
+                      Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: Text(
+                          "Personal Information",
+                          style: GoogleFonts.mavenPro(
+                                  fontSize: 18, fontWeight: FontWeight.bold)
+                              .copyWith(color: Colors.indigo[900]),
+                        ),
+                      ),
+                      verticalSpace15,
+                      Container(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Form(
+                            key: _formKey,
+                            child: Column(children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 4,
+                                    child: CustomTextField(
+                                      hintText: "Account Number",
+                                      hintTextStyle: TextStyle(fontSize: 12),
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return "Account Number is required";
                                         }
-                                      });
-                                    },
+                                        if (value.toString().length < 10) {
+                                          return "Account Number is not valid";
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) {
+                                        _bankDetailsReqData['account_number'] =
+                                            value;
+                                      },
+                                      textController: _accountNoController,
+                                      inputType: TextInputType.number,
+                                      readOnly:
+                                          model.bankDetails?.accountNo != null,
+                                      onChanged: (value) async {
+                                        if (model.selectedBank != null &&
+                                            value.toString().length == 10) {
+                                          await model.resolveBankDetails(
+                                              value, model.selectedBank);
+                                          _accountNameController.text =
+                                              model.bankAccountName;
+                                        }
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            verticalSpace(15),
-                            Column(children: <Widget>[
-                              CustomTextField(
-                                hintText: "Account Name",
-                                hintTextStyle: TextStyle(
-                                    fontSize: 12
-                                ),
-                                textController: _accountNameController,
-                                readOnly: true,
-                                enabled: !model.loading
+                                  Expanded(
+                                    flex: 5,
+                                    child: CustomTextField(
+                                      hintText: model.loading
+                                          ? "Loading Banks ..."
+                                          : (model.selectedBank != null
+                                              ? model.selectedBank.display
+                                              : "Select a bank"),
+                                      hintTextStyle: TextStyle(fontSize: 12),
+                                      textController: _bankController,
+                                      validator: (value) {
+                                        if (value == null || value == "") {
+                                          return "Please select a bank";
+                                        }
+                                        return null;
+                                      },
+                                      enabled: !model.loading,
+                                      onSaved: (value) {
+                                        model.setSelectedBank(value);
+                                      },
+                                      readOnly: true,
+                                      suffixIcon: Icon(
+                                        Icons.arrow_drop_down,
+                                      ),
+                                      onTap: () {
+                                        if (model.loading ||
+                                            model.banks.isEmpty) {
+                                          return;
+                                        }
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                FullScreenPicker(
+                                              title: "Select a bank",
+                                              dataSource: model.loading
+                                                  ? []
+                                                  : model.banks,
+                                            ),
+                                            fullscreenDialog: false,
+                                          ),
+                                        ).then((value) async {
+                                          if (value != null) {
+                                            model.setSelectedBank(value);
+                                            print("Account No Controller " +
+                                                _accountNoController.value
+                                                    .toString());
+                                            if (_accountNoController
+                                                    .text.length ==
+                                                10) {
+                                              await model.resolveBankDetails(
+                                                  _accountNoController.text,
+                                                  model.selectedBank);
+                                              _accountNameController.text =
+                                                  model.bankAccountName;
+                                            }
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                               verticalSpace(15),
-                              CustomTextField(
-                                hintText: "Guarantor Email",
-                                hintTextStyle: TextStyle(
-                                    fontSize: 12
+                              Column(children: <Widget>[
+                                CustomTextField(
+                                    hintText: "Account Name",
+                                    hintTextStyle: TextStyle(fontSize: 12),
+                                    textController: _accountNameController,
+                                    readOnly: true,
+                                    enabled: !model.loading),
+                                verticalSpace(15),
+                                CustomTextField(
+                                  hintText: "Guarantor Email",
+                                  hintTextStyle: TextStyle(fontSize: 12),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Guarantor Email is required";
+                                    }
+                                    if (!EmailValidator.validate(value)) {
+                                      return "Email address is not valid";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _reqData['guarantor_email'] = value;
+                                  },
                                 ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "Guarantor Email is required";
-                                  }
-                                  if (!EmailValidator.validate(value)) {
-                                    return "Email address is not valid";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _reqData['guarantor_email'] = value;
-                                },
-                              ),
-                            ]),
-                            verticalSpace15,
-                            Container(
-                              margin: EdgeInsets.only(left: 20),
-                              child: Text(
-                                model.cards.length > 0 ? "Select A Card" : "Add Card",
-                                style: GoogleFonts.mavenPro(
-                                    fontSize: 18, fontWeight: FontWeight.bold)
-                                    .copyWith(color: Colors.indigo[900]),
-                              ),
-                            ),
-                            verticalSpace15,
-                            // When User has at least 1 verified card on the platform
-                            model.cards.length > 0 ? CustomTextField(
-                              hintText: model.loading
-                                  ? "Loading Cards ..."
-                                  : (model.selectedCard != null
-                                  ? model.selectedCard.display
-                                  : "Select a card"),
-                              hintTextStyle: TextStyle(
-                                  fontSize: 12
-                              ),
-                              textController: _cardController,
-                              validator: (value) {
-                                if (value == null || value == "") {
-                                  return "Please select a card";
-                                }
-                                return null;
-                              },
-                              enabled:!model.loading,
-                              onSaved: (value) {
-                                model.setSelectedCard(value);
-                              },
-                              readOnly: true,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                              ),
-                              onTap: () {
-                                if (model.loading || model.banks.isEmpty) {
-                                  return;
-                                }
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FullScreenPicker(
-                                      title: "Select a card",
-                                      dataSource: model.loading ? []: model.cards,
+                              ]),
+                              verticalSpace15,
+                              Column(children: <Widget>[
+                                Container(
+                                  margin: EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    model.cards.length > 0
+                                        ? "Select A Card"
+                                        : "Add Card",
+                                    style: GoogleFonts.mavenPro(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)
+                                        .copyWith(color: Colors.indigo[900]),
+                                  ),
+                                ),
+                                verticalSpace15,
+                                // When User has at least 1 verified card on the platform
+//                              model.cards.length > 0
+//                                  ? CustomTextField(
+//                                      hintText: model.loading
+//                                          ? "Loading Cards ..."
+//                                          : (model.selectedCard != null
+//                                              ? model.selectedCard.display
+//                                              : "Select a card"),
+//                                      hintTextStyle: TextStyle(fontSize: 12),
+//                                      textController: _cardController,
+//                                      validator: (value) {
+//                                        if (value == null || value == "") {
+//                                          return "Please select a card";
+//                                        }
+//                                        return null;
+//                                      },
+//                                      enabled: !model.loading,
+//                                      onSaved: (value) {
+//                                        model.setSelectedCard(value);
+//                                      },
+//                                      readOnly: true,
+//                                      suffixIcon: Icon(
+//                                        Icons.arrow_drop_down,
+//                                      ),
+//                                      onTap: () {
+//                                        if (model.loading ||
+//                                            model.banks.isEmpty) {
+//                                          return;
+//                                        }
+//                                        Navigator.push(
+//                                          context,
+//                                          MaterialPageRoute(
+//                                            builder: (context) =>
+//                                                FullScreenPicker(
+//                                              title: "Select a card",
+//                                              dataSource: model.loading
+//                                                  ? []
+//                                                  : model.cards,
+//                                            ),
+//                                            fullscreenDialog: false,
+//                                          ),
+//                                        ).then((value) {
+//                                          if (value != null) {
+//                                            model.setSelectedCard(value);
+//                                          }
+//                                        });
+//                                      },
+//                                    )
+//                                  :
+                                // When the user has no card on the platform
+                                // - FIND A WAY TO CALL PAYSTACK TO CHARGE THEM N10
+                                // TO VERIFY THEIR CARD and ADD IT TO THE PLATFORM.
+                                Container(
+                                    margin: EdgeInsets.only(top: 10),
+                                    height: 40,
+                                    width: 40,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 48,
+                                      vertical: 18,
                                     ),
-                                    fullscreenDialog: false,
-                                  ),
-                                ).then((value) {
-                                  if (value != null) {
-                                    model.setSelectedCard(value);
-                                  }
-                                });
-                              },
-                            ):
-                            // When the user has no card on the platform
-                            // - FIND A WAY TO CALL PAYSTACK TO CHARGE THEM N10
-                            // TO VERIFY THEIR CARD and ADD IT TO THE PLATFORM.
-                            BusyButton(
-                              title: "Add A Card",
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DashboardScreen()
-                                  ),
-                                );
-                              },
-                              busy: model.busy,
-                            ),
-                          ])),
-                    ),
-                    verticalSpace30,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        BusyButton(
-                          title: "Cancel",
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DashboardScreen()),
-                            );
-                          },
-                          busy: model.busy,
-                        ),
-                        BusyButton(
-                          title: "Finish",
-                          onPressed: () async {
-                            if (_reqData.isEmpty) {
-                              return;
-                            }
-                            await model.makeLoanRequest();
-                          },
-                          busy: model.busy,
-                        ),
-                      ],
-                    ),
-                    verticalSpace30
-                  ],
+                                    child: Center(
+                                        child: RaisedButton(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(20)),
+                                            color: primaryColor,
+                                            onPressed: () {
+                                              _startAfreshCharge();
+                                            },
+                                            child: Center(child: Text("Add Card")))
+                                    ))
+                              ])
+                            ])),
+                      ),
+                      verticalSpace30,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          BusyButton(
+                            title: "Cancel",
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DashboardScreen()),
+                              );
+                            },
+                            busy: model.busy,
+                          ),
+                          BusyButton(
+                            title: "Finish",
+                            onPressed: () async {
+                              if (_reqData.isEmpty) {
+                                return;
+                              }
+                              await model.makeLoanRequest();
+                            },
+                            busy: model.busy,
+                          ),
+                        ],
+                      ),
+                      verticalSpace30
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ),
+            )),
       ),
     );
   }
@@ -394,10 +417,10 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
     Charge charge = Charge()
       ..amount = 50 // In base currency
       ..email = 'customer@email.com';
-      //..card = _getCardFromUI();
+    //..card = _getCardFromUI();
 
-      var accessCode = await _payment.fetchAccessCodeFromServer();
-      charge.accessCode = accessCode;
+    var accessCode = await _payment.fetchAccessCodeFromServer();
+    charge.accessCode = accessCode;
 
     try {
       CheckoutResponse response = await PaystackPlugin.checkout(
@@ -424,10 +447,10 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
 
     setState(() => _inProgress = true);
 
-      // Perform transaction/initialize on Paystack server to get an access code
-      // documentation: https://developers.paystack.co/reference#initialize-a-transaction
-      charge.accessCode = await _payment.fetchAccessCodeFromServer();
-      _chargeCard(charge);
+    // Perform transaction/initialize on Paystack server to get an access code
+    // documentation: https://developers.paystack.co/reference#initialize-a-transaction
+    charge.accessCode = await _payment.fetchAccessCodeFromServer();
+    _chargeCard(charge);
   }
 
   _chargeCard(Charge charge) {
