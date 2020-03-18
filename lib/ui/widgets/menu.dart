@@ -8,6 +8,8 @@ import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
 import 'package:sfscredit/ui/views/app/Loans/loan.dart';
 import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
+import 'package:sfscredit/ui/views/app/profile/Notifications.dart';
+import 'package:sfscredit/ui/views/app/profile/settings.dart';
 
 class MenuDrawer extends StatelessWidget {
   MenuDrawer({@required this.user, @required this.logout});
@@ -132,7 +134,7 @@ class MenuDrawer extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => WalletScreen(),
+                    builder: (context) => NotificationScreen(),
                   ),
                 );
               },
@@ -152,18 +154,27 @@ class MenuDrawer extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DashboardScreen(),
+                    builder: (context) => SettingScreen(),
                   ),
                 );
               },
             ),
             ListTile(
-              leading: IconButton(
-                icon: Icon(FeatherIcons.logOut),
-                onPressed: () async {
-                  await logout();
-                },
+              leading: Icon(
+                Icons.cancel,
+                color: Colors.white,
+
               ),
+              title: Text(
+                "Log out",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () async {
+                await logout();
+              },
+
             ),
           ],
         ),
