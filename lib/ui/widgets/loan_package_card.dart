@@ -22,88 +22,101 @@ class LoanPackageWidget extends StatelessWidget {
       child: Column(children: <Widget>[
         verticalSpace20,
         CustomCard(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(textDirection: TextDirection.ltr, children: <Widget>[
             new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Radio(
-                    value: package,
-                    groupValue: selectedPackage,
-                    onChanged: (LoanPackage value) {
-                      onPressed(value);
-                    }),
-                Column(
-                  textDirection: TextDirection.ltr,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Text(
-                        'Package: ${package.name}',
-                        textDirection: TextDirection.ltr,
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.mavenPro(
-                          textStyle: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                            color: primaryColor,
-                          ),
-                        ),
-                      )
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Text(
-                        'N ${new NumberFormat('###,###').format(package.amount)}.00',
-                        textAlign: TextAlign.left,
-                        textDirection: TextDirection.ltr,
-                        style: GoogleFonts.mavenPro(
-                          textStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: primaryColor),
-                        ),
-                      )
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child:Text(
-                        'N 25,000.00 monthly repayment',
-                        textAlign: TextAlign.left,
-                        textDirection: TextDirection.ltr,
-                        style: GoogleFonts.mavenPro(
-                          textStyle: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                            color: lightGrey,
-                          ),
-                        ),
-                      )
-                    ),
-                  ],
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(
+                    width: 30,
+                    child:  Radio(
+                        value: package,
+                        groupValue: selectedPackage,
+                        onChanged: (LoanPackage value) {
+                          onPressed(value);
+                        }),
+                  ),
                 ),
-                RaisedButton(
-                  color: primaryColor,
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    "See terms ",
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Dashboard(),
+                Expanded(
+                  flex: 7,
+                  child: Column(
+                    textDirection: TextDirection.ltr,
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.symmetric(vertical: 5),
+                          child: Text(
+                            'Package: ${package.name}',
+                            textDirection: TextDirection.ltr,
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.mavenPro(
+                              textStyle: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal,
+                                color: primaryColor,
+                              ),
+                            ),
+                          )
                       ),
-                    );
-                  },
+                      Padding(
+                          padding: EdgeInsets.symmetric(vertical: 5),
+                          child: Text(
+                            'N ${new NumberFormat('###,###').format(package.amount)}.00',
+                            textAlign: TextAlign.left,
+                            textDirection: TextDirection.ltr,
+                            style: GoogleFonts.mavenPro(
+                              textStyle: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor),
+                            ),
+                          )
+                      ),
+                      Padding(
+                          padding: EdgeInsets.symmetric(vertical: 5),
+                          child:Text(
+                            'N 25,000.00 monthly repayment',
+                            textAlign: TextAlign.left,
+                            textDirection: TextDirection.ltr,
+                            style: GoogleFonts.mavenPro(
+                              textStyle: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal,
+                                color: lightGrey,
+                              ),
+                            ),
+                          )
+                      ),
+                    ],
+                  ),
                 ),
+                Expanded(
+                  flex: 2,
+                  child: RaisedButton(
+                      color: primaryColor,
+                      elevation: 4,
+                      padding: EdgeInsets.symmetric(horizontal: 2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        "See terms",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 10,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Dashboard(),
+                          ),
+                        );
+                      },
+                    ),
+                )
               ],
             ),
           ]),

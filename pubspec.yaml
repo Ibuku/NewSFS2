@@ -53,6 +53,7 @@ dependencies:
   # for settings
   settings_ui: ^0.1.1
   rflutter_alert: ^1.0.3
+  flutter_paystack:
 
 
 dev_dependencies:

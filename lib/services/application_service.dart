@@ -105,7 +105,6 @@ class ApplicationService {
     }
   }
 
-
   Future getApprovedLoanPackages() async {
     try {
       return await _network.get("$API_BASE_URL/loan-packages?status=approved",
@@ -125,29 +124,47 @@ class ApplicationService {
         "Accept": "application/json",
         "Content-Type": "application/json"
       });
-    } catch(e){
+    } catch (e) {
       return e;
     }
   }
 
   Future getUsersBankDetails() async {
     try {
-      return await _network.get("$API_BASE_URL/bank", headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      }, isAuth: true);
-    } catch(e){
+      return await _network.get("$API_BASE_URL/bank",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          isAuth: true);
+    } catch (e) {
       return e;
     }
   }
 
   Future getUsersCards() async {
     try {
-      return await _network.get("$API_BASE_URL/cards", headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      }, isAuth: true);
-    } catch(e){
+      return await _network.get("$API_BASE_URL/cards",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future resolveBankDetails(String accountNo, String bankCode) async {
+    try {
+      return await _network.get(
+          "$API_BASE_URL/user/bank_details/resolve?account_number=$accountNo&bank_code=$bankCode",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          isAuth: true);
+    } catch (e) {
       return e;
     }
   }

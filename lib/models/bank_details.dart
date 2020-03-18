@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class BankDetails {
   final int id;
-  final int accountNo;
+  final String accountNo;
   final String accountName;
   final String bankCode;
 
@@ -10,13 +10,13 @@ class BankDetails {
     @required this.id,
     @required this.accountNo,
     @required this.accountName,
-    @required this.bankCode
+    this.bankCode
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'account_no': accountNo,
+      'account_number': accountNo,
       'account_name': accountName,
       'bank_code': bankCode
     };
@@ -26,8 +26,8 @@ class BankDetails {
     if (map == null) return null;
 
     return BankDetails(
-        id: map['id'],
-        accountNo: map['account_no'],
+        id: map['bank_id'],
+        accountNo: map['account_number'],
         accountName: map['account_name'],
         bankCode: map['bank_code']
     );
