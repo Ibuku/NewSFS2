@@ -71,7 +71,7 @@ class CustomTextField extends StatelessWidget {
           fontSize: 14,
         ),
       ),
-      style: TextStyle(color: Colors.black, fontSize: hintTextStyle.fontSize ?? null),
+      style: hintTextStyle?.fontSize != null ? TextStyle(color: Colors.black, fontSize: hintTextStyle.fontSize) : TextStyle(color: Colors.black),
       enabled: enabled,
       obscureText: obscureText,
       readOnly: readOnly,

@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import 'services/payment_service.dart';
 import 'services/application_service.dart';
 import 'services/authentication_service.dart';
 import 'services/network_service.dart';
@@ -22,4 +23,5 @@ Future<void> setupLocator() async {
 
   locator.registerLazySingleton(() => AuthenticationService());
   locator.registerLazySingleton(() => ApplicationService());
+  locator.registerLazySingleton(() => PaymentService());
 }

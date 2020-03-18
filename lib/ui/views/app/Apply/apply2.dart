@@ -1,12 +1,18 @@
-import 'package:email_validator/email_validator.dart';
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:provider_architecture/viewmodel_provider.dart';
-import 'package:sfscredit/models/bank.dart';
+
+import 'package:email_validator/email_validator.dart';
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
+import 'package:sfscredit/locator.dart';
+
 import 'package:sfscredit/models/loan_package.dart';
+import 'package:sfscredit/services/payment_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
@@ -40,6 +46,12 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
   final _accountNameController = TextEditingController();
   final _bankController = TextEditingController();
   final  _cardController = TextEditingController();
+
+  // Paystack
+  final PaymentService _payment = locator<PaymentService>();
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
+  CheckoutMethod _method;
+  bool _inProgress = false;
 
   @override
   void dispose() {
@@ -374,5 +386,139 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
         ),
       ),
     );
+  }
+
+  _handleCheckout(BuildContext context) async {
+    setState(() => _inProgress = true);
+    _formKey.currentState.save();
+    Charge charge = Charge()
+      ..amount = 50 // In base currency
+      ..email = 'customer@email.com';
+      //..card = _getCardFromUI();
+
+      var accessCode = await _payment.fetchAccessCodeFromServer();
+      charge.accessCode = accessCode;
+
+    try {
+      CheckoutResponse response = await PaystackPlugin.checkout(
+        context,
+        method: _method,
+        charge: charge,
+        fullscreen: false,
+      );
+      print('Response = $response');
+      setState(() => _inProgress = false);
+      _updateStatus(response.reference, '$response');
+    } catch (e) {
+      setState(() => _inProgress = false);
+      _showMessage("Check console for error");
+      rethrow;
+    }
+  }
+
+  _startAfreshCharge() async {
+    _formKey.currentState.save();
+
+    Charge charge = Charge();
+    //charge.card = _getCardFromUI();
+
+    setState(() => _inProgress = true);
+
+      // Perform transaction/initialize on Paystack server to get an access code
+      // documentation: https://developers.paystack.co/reference#initialize-a-transaction
+      charge.accessCode = await _payment.fetchAccessCodeFromServer();
+      _chargeCard(charge);
+  }
+
+  _chargeCard(Charge charge) {
+    // This is called only before requesting OTP
+    // Save reference so you may send to server if error occurs with OTP
+    handleBeforeValidate(Transaction transaction) {
+      _updateStatus(transaction.reference, 'validating...');
+    }
+
+    handleOnError(Object e, Transaction transaction) {
+      // If an access code has expired, simply ask your server for a new one
+      // and restart the charge instead of displaying error
+      if (e is ExpiredAccessCodeException) {
+        _startAfreshCharge();
+        _chargeCard(charge);
+        return;
+      }
+
+      if (transaction.reference != null) {
+        _payment.verifyOnServer(transaction.reference);
+      } else {
+        setState(() => _inProgress = false);
+        _updateStatus(transaction.reference, e.toString());
+      }
+    }
+
+    // This is called only after transaction is successful
+    handleOnSuccess(Transaction transaction) {
+      _payment.verifyOnServer(transaction.reference);
+    }
+
+    PaystackPlugin.chargeCard(context,
+        charge: charge,
+        beforeValidate: (transaction) => handleBeforeValidate(transaction),
+        onSuccess: (transaction) => handleOnSuccess(transaction),
+        onError: (error, transaction) => handleOnError(error, transaction));
+  }
+
+  String _getReference() {
+    String platform;
+    if (Platform.isIOS) {
+      platform = 'iOS';
+    } else {
+      platform = 'Android';
+    }
+
+    return 'ChargedFrom${platform}_${DateTime.now().millisecondsSinceEpoch}';
+  }
+
+  Widget _getPlatformButton(String string, Function() function) {
+    // is still in progress
+    Widget widget;
+    if (Platform.isIOS) {
+      widget = new CupertinoButton(
+        onPressed: function,
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        color: CupertinoColors.activeBlue,
+        child: new Text(
+          string,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    } else {
+      widget = new RaisedButton(
+        onPressed: function,
+        color: Colors.blueAccent,
+        textColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 10.0),
+        child: new Text(
+          string.toUpperCase(),
+          style: const TextStyle(fontSize: 17.0),
+        ),
+      );
+    }
+    return widget;
+  }
+
+  _updateStatus(String reference, String message) {
+    _showMessage('Reference: $reference \n\ Response: $message',
+        const Duration(seconds: 7));
+  }
+
+  _showMessage(String message,
+      [Duration duration = const Duration(seconds: 4)]) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(message),
+      duration: duration,
+      action: new SnackBarAction(
+          label: 'CLOSE',
+          onPressed: () => _scaffoldKey.currentState.removeCurrentSnackBar()),
+    ));
   }
 }
