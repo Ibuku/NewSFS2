@@ -9,6 +9,7 @@ import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 import 'package:sfscredit/ui/widgets/busy_button.dart';
+import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/loan_package_card.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
@@ -60,7 +61,10 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
           ),
           backgroundColor: Colors.white,
           drawer: MenuDrawer(user: model.user, logout: model.logout),
-          body: Container(
+          body: BusyOverlay(
+          show: model.loading,
+           title: "Loading...",
+        child: Container(
             child: SingleChildScrollView(
               child: new ConstrainedBox(
                 constraints: new BoxConstraints(),
@@ -136,6 +140,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

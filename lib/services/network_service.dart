@@ -106,6 +106,6 @@ class NetworkService {
       _tokenService.token = jsonRes;
       return accessToken;
     }
-    return null;
+    //return null;
   }
 }
