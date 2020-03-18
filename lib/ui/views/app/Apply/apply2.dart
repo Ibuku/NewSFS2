@@ -324,7 +324,18 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                             // When the user has no card on the platform
                             // - FIND A WAY TO CALL PAYSTACK TO CHARGE THEM N10
                             // TO VERIFY THEIR CARD and ADD IT TO THE PLATFORM.
-                            Container(),
+                            BusyButton(
+                              title: "Add A Card",
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DashboardScreen()
+                                  ),
+                                );
+                              },
+                              busy: model.busy,
+                            ),
                           ])),
                     ),
                     verticalSpace30,
