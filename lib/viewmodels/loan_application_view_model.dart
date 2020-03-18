@@ -27,6 +27,9 @@ class LoanApplicationViewModel extends ApplicationViewModel {
   BankDetails _userBankDetails;
   BankDetails get bankDetails => _userBankDetails;
 
+  String _bankAccountName = "";
+  String get bankAccountName => _bankAccountName;
+
   List<Bank> _banksList = [];
   List get banks => _banksList;
 
@@ -46,6 +49,12 @@ class LoanApplicationViewModel extends ApplicationViewModel {
 
   void setSelectedCard(UserCard card) {
     _selectedCard = card;
+    notifyListeners();
+  }
+
+  void setBankDetails(BankDetails details) {
+    _userBankDetails = details;
+    _bankAccountName = details.accountName;
     notifyListeners();
   }
 
@@ -106,7 +115,7 @@ class LoanApplicationViewModel extends ApplicationViewModel {
       if (bankDetailsRes.statusCode == 200) {
         var body = jsonDecode(bankDetailsRes.body);
         if(!body['data'].isEmpty) {
-          _userBankDetails = BankDetails.fromMap(body['data'][0]);
+          setBankDetails(BankDetails.fromMap(body['data']));
         }
       } else {
         _dialogService.showDialog(
@@ -144,17 +153,18 @@ class LoanApplicationViewModel extends ApplicationViewModel {
   }
 
   Future<void> resolveBankDetails(String accountNo, Bank bank) async {
+    setLoading(true);
     var resolveDetailsRes = await _application.resolveBankDetails(accountNo, bank.code);
     if(resolveDetailsRes.runtimeType == Response) {
+      var body = jsonDecode(resolveDetailsRes.body);
       if (resolveDetailsRes.statusCode == 200) {
-        var body = jsonDecode(resolveDetailsRes.body);
         if(!body['data'].isEmpty) {
-          _userBankDetails = BankDetails.fromMap(body['data'][0]);
+          setBankDetails(BankDetails.fromMap(body['data']));
         }
       } else {
         _dialogService.showDialog(
           title: "Bank Account Verification Failed",
-          description: resolveDetailsRes.toString(),
+          description: body['message']
         );
       }
     } else {
@@ -163,6 +173,7 @@ class LoanApplicationViewModel extends ApplicationViewModel {
         description: resolveDetailsRes.toString(),
       );
     }
+    setLoading(false);
   }
 
   Future<void> makeLoanRequest({@required Map reqData}) async {

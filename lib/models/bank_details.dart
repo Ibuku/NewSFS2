@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class BankDetails {
   final int id;
-  final int accountNo;
+  final String accountNo;
   final String accountName;
   final String bankCode;
 

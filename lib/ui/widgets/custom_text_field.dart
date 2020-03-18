@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final bool enabled;
   final bool readOnly;
   final int maxLines;
+  final TextStyle hintTextStyle;
   final TextInputAction keyboardAction;
   final FocusNode focusNode;
   final Function validator;
@@ -22,6 +23,7 @@ class CustomTextField extends StatelessWidget {
 
   CustomTextField({
     @required this.hintText,
+    this.hintTextStyle,
     this.initialValue,
     this.textController,
     this.inputType = TextInputType.text,
@@ -60,9 +62,7 @@ class CustomTextField extends StatelessWidget {
           ),
         ),
         filled: true,
-        hintStyle: TextStyle(
-          // color: Colors.white,
-        ),
+        hintStyle: hintTextStyle,
         hintText: hintText,
         fillColor: Colors.white30,
         contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -71,7 +71,7 @@ class CustomTextField extends StatelessWidget {
           fontSize: 14,
         ),
       ),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: Colors.black, fontSize: hintTextStyle.fontSize ?? null),
       enabled: enabled,
       obscureText: obscureText,
       readOnly: readOnly,
