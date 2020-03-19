@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:provider_architecture/viewmodel_provider.dart';
 
 import 'package:email_validator/email_validator.dart';
@@ -300,6 +301,38 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                   ),
                                 ),
                                 verticalSpace15,
+                                Container(
+                                  child: Center(
+                                  child:Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      RaisedButton(
+                                        color: primaryColor,
+                                        elevation: 4,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Text(
+                                          "Add Card",
+                                          style: GoogleFonts.mavenPro(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.normal)
+                                              .copyWith(color: Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          _startAfreshCharge();
+                                        },
+//                                        onPressed: () =>
+//                                            model.toRoute(TimelineScreen.routeName)
+                                      ),
+
+                                      //Icon(Icons.arrow_forward, color: Colors.indigo[900]),
+                                      //  SizedBox(width: 7.0),
+//
+                                    ],
+                                  ),
+                                ),
+                                ),
                                 // When User has at least 1 verified card on the platform
 //                              model.cards.length > 0
 //                                  ? CustomTextField(
@@ -352,25 +385,27 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                 // When the user has no card on the platform
                                 // - FIND A WAY TO CALL PAYSTACK TO CHARGE THEM N10
                                 // TO VERIFY THEIR CARD and ADD IT TO THE PLATFORM.
-                                Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    height: 40,
-                                    width: 40,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 48,
-                                      vertical: 18,
-                                    ),
-                                    child: Center(
-                                        child: RaisedButton(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(20)),
-                                            color: primaryColor,
-                                            onPressed: () {
-                                              _startAfreshCharge();
-                                            },
-                                            child: Center(child: Text("Add Card")))
-                                    ))
+
+
+//                                Container(
+//                                   // margin: EdgeInsets.only(top: 5),
+//                                    height: 30,
+//                                    width: 40,
+//                                    padding: EdgeInsets.symmetric(
+//                                      horizontal: 48,
+//                                      vertical: 5,
+//                                    ),
+//                                    child: Center(
+//                                        child: RaisedButton(
+//                                            shape: RoundedRectangleBorder(
+//                                                borderRadius:
+//                                                BorderRadius.circular(20)),
+//                                            color: primaryColor,
+//                                            onPressed: () {
+//                                              _startAfreshCharge();
+//                                            },
+//                                            child: Center(child: Text("Add Card")))
+//                                    ))
                               ])
                             ])),
                       ),

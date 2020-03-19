@@ -91,11 +91,13 @@ class DashboardScreen extends StatelessWidget {
                 constraints: new BoxConstraints(),
                 child: new Column(
                   children: <Widget>[
-                    CardItem(
+                    Container(
+                  child: CardItem(
                       titleText: "Active Loans",
                       btnText: "N ${model.activeLoan}.00",
                       icon: Icons.cloud_download,
                       //onPressed: () => model.toRoute(UpdateKYC.routeName),
+                    ),
                     ),
                     SizedBox(
                       height: 15.0,
@@ -106,9 +108,7 @@ class DashboardScreen extends StatelessWidget {
                       icon: Icons.person,
                       // onPressed: () => model.toRoute(UpdateKYC.routeName),
                     ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
+                    verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(
                         top: 5,
@@ -181,9 +181,7 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
+                  verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(
                         top: 5,
@@ -224,15 +222,13 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
+                   verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(
                         top: 5,
                         left: 3,
                       ),
-                      padding: EdgeInsets.only(right: 215),
+                      padding: EdgeInsets.only(right: 200),
                       height: 40,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -267,7 +263,7 @@ class DashboardScreen extends StatelessWidget {
                       margin: EdgeInsets.only(
                         left: 10,
                       ),
-                      padding: EdgeInsets.only(right: 10, top: 5),
+                      padding: EdgeInsets.only(right: 8, top: 5),
                       height: 150,
                       width: 250,
                       child: Row(
@@ -315,7 +311,7 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 1.0),
+                   verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(right: 30.0, top: 5),
                       child: Row(
@@ -344,14 +340,9 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
+                   verticalSpace30,
                     Container(
-                      margin: EdgeInsets.only(
-                        top: 5,
-                      ),
-                      padding: EdgeInsets.only(right: 235),
+                      padding: EdgeInsets.only(right: 230),
                       height: 20,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -398,9 +389,9 @@ class DashboardScreen extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Container(
-                          margin: EdgeInsets.only(left: 30),
+                          //margin: EdgeInsets.only(left: 10),
                           height: 100,
-                          width: 160,
+                          width: 150,
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
@@ -423,9 +414,9 @@ class DashboardScreen extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(right: 20),
+                          //margin: EdgeInsets.only(right: 20),
                           height: 100,
-                          width: 160,
+                          width: 155,
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
