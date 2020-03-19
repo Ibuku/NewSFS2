@@ -10,21 +10,25 @@ import '../../../../ui/widgets/custom_card.dart';
 import '../../../../ui/widgets/text_link.dart';
 import '../../../../viewmodels/forgot_password_view_model.dart';
 
-class ActivateAccount extends StatefulWidget {
+class ActivatePassword extends StatefulWidget {
   static const routeName = '/auth/verify/activate-password';
 
   @override
-  _ActivateAccountState createState() => _ActivateAccountState();
+  _ActivatePasswordState createState() => _ActivatePasswordState();
 }
 
-class _ActivateAccountState extends State<ActivateAccount> {
-  Map _verifyData = {};
+class _ActivatePasswordState extends State<ActivatePassword> {
+  Map _passwordReset = {};
   final _otpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<ForgotPasswordViewModel>.withConsumer(
       viewModel: ForgotPasswordViewModel(),
+      onModelReady: (model) {
+        model.init(email: ModalRoute.of(context).settings.arguments);
+        _passwordReset['email'] = model.userEmail;
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -96,13 +100,13 @@ class _ActivateAccountState extends State<ActivateAccount> {
                           fieldWidth: 40,
                           onChanged: (value) {
                             if (value.length == 6) {
-                              _verifyData['otp'] = value;
+                              _passwordReset['otp'] = value;
                             }
                           },
                           activeColor: primaryColor,
                           onCompleted: (value) {
                             if (value.length == 6) {
-                              _verifyData['otp'] = value;
+                              _passwordReset['otp'] = value;
                             }
                           },
                           controller: _otpController,
@@ -110,17 +114,17 @@ class _ActivateAccountState extends State<ActivateAccount> {
 
                         verticalSpace20,
                         BusyButton(
-                          title: "Reset",
+                          title: "Reset Password",
                           busy: model.busy,
                           onPressed: () => model.forgotPassword(
-                            authData: _verifyData,
+                            authData: _passwordReset,
                             otpText: _otpController.text,
                           ),
                         ),
                         verticalSpace(20),
                         TextLink(
                           "Resend OTP",
-                          onPressed: () => model.resendOTP(),
+                          onPressed: () => model.resendOTP2(),
                           color: Colors.red,
                         ),
                       ],

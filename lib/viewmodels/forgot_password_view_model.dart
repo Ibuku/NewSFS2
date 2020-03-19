@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:sfscredit/ui/views/auth/forgot_password.dart';
 import 'package:sfscredit/ui/views/auth/verify/activate_password.dart';
 
 import '../ui/views/auth/login_screen.dart';
@@ -41,47 +42,60 @@ class ForgotPasswordViewModel extends BaseModel {
   }) async {
     setBusy(true);
 
-    var result = await _authenticationService.forgotPassword(
-      body: authData,
-      type: "mobile",
+    if (otpText == '' || otpText == null) {
+      await _dialogService.showDialog(
+        title: 'validation error',
+        description: "OTP is required",
     );
-
+      return;
+    } else {
+      if (otpText.length > 6 || otpText.length < 6) {
+        await _dialogService.showDialog(
+          title: 'validation error',
+          description: "PIN is greater or less than 6 digits",
+        );
+        return;
+      }
+    }
+    authData['otp'] = otpText;
+    setBusy(true);
+    var result = await _authenticationService.forgotPassword(
+      authData: authData,
+      type: "password/email",
+    );
     setBusy(false);
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
-        await _dialogService.showDialog(
-          title: 'Password reset successful',
-          description: body['message'],
-        );
         _navigationService.navigateTo(LoginScreen.routeName, replace: true);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
-          title: 'Password reset failed',
+          title: 'Password Reset failed',
           description: body['message'],
         );
       } else {
         await _dialogService.showDialog(
-          title: 'Password reset failed',
+          title: 'Password Reset failed',
           description: body['message'],
         );
       }
     } else {
       await _dialogService.showDialog(
-        title: 'Application error',
-        description: result,
+        title: 'Password Reset failed',
+        description: result.toString(),
       );
     }
   }
 
-  void goBack() {
-    _navigationService.pop();
-  }
 
-  Future resendOTP() async {
+//  void goBack() {
+//    _navigationService.pop();
+//  }
+
+  Future resendOTP2() async {
     setLoading(true);
 
-    var result = await _authenticationService.resendOTP(
+    var result = await _authenticationService.resendOTP2(
       email: userEmail,
       type: "password/email",
     );
@@ -119,16 +133,16 @@ class ForgotPasswordViewModel extends BaseModel {
       case "cancel":
         _navigationService.pop();
         break;
-      case "activate-account":
+      case "activate-password":
         if (userEmail != null) {
           _navigationService.navigateTo(
-            ActivateAccount.routeName,
+            ForgotPassword.routeName,
             arguments: userEmail,
           );
         } else {
           _dialogService.showDialog(
-            title: "Validation error",
-            description: "You have not selected a company",
+            title: "Password Reset error",
+            description: "You have not reset password",
           );
         }
         break;

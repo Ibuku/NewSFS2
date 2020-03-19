@@ -21,9 +21,11 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
 
-  Map _authData = {
-    'callback_url': BASE_URL,
-  };
+//  Map _passwordReset = {
+//    'callback_url': BASE_URL,
+//  };
+//  final _otpController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   child: Column(
                     children: <Widget>[
                       CustomTextField(
-                        hintText: "Email",
+                        hintText: "Email address",
                         validator: (value) {
                           if (value.isEmpty) {
                             return "Email is required";
@@ -96,7 +98,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           return null;
                         },
                         onSaved: (value) {
-                          _authData['email'] = value;
+                          model.setUserEmail(value);
                         },
                       ),
                       verticalSpace(30),
@@ -107,7 +109,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             return;
                           }
                           _formKey.currentState.save();
-                          model.forgotPassword(authData: _authData);
+                          model.toRoute("activate-password");
                         },
                         busy: model.busy,
                       ),
@@ -115,7 +117,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       Center(
                         child: TextLink(
                           "Cancel",
-                          onPressed: () => model.goBack(),
+                          onPressed: () => model.toRoute("Cancel"),
+                          color: Colors.red,
                         ),
                       ),
                     ],

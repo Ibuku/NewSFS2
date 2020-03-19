@@ -17,6 +17,8 @@ class AuthenticationService {
 
   final String baseURL = API_BASE_URL;
 
+
+
   Future getCompanies() async {
     try {
       return await _networkService.get("$baseURL/companies", headers: {
@@ -78,15 +80,16 @@ class AuthenticationService {
     }
   }
 
-  Future forgotPassword({@required Map body, @required String type}) async {
+  Future forgotPassword({@required Map authData, @required String type}) async {
     try {
       var authResult = await _networkService.post(
         "$API_BASE_URL/$type",
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded",
+          //"type": "mobile",
         },
-        body: body,
+        body: authData,
         encodeBody: false,
       );
       return authResult;
@@ -94,6 +97,23 @@ class AuthenticationService {
       return e;
     }
   }
+  Future resendOTP2({@required String email, @required String type}) async {
+    try {
+      var authResult = await _networkService.put(
+        "$API_BASE_URL/$type",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: {"email": email},
+        encodeBody: false,
+      );
+      return authResult;
+    } catch (e) {
+      return e;
+    }
+  }
+
 
   Future<bool> isUserLoggedIn() async {
     var token = _tokenService.userToken;
