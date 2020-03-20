@@ -5,6 +5,7 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/const.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
+import 'package:sfscredit/ui/views/auth/verify/activate_password.dart';
 import 'package:sfscredit/ui/widgets/busy_button.dart';
 import 'package:sfscredit/ui/widgets/custom_card.dart';
 import 'package:sfscredit/ui/widgets/custom_text_field.dart';
@@ -21,12 +22,10 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
 
-
-
   Map _authData = {
+    'type': 'mobile',
     'callback_url': BASE_URL,
   };
-
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<ForgotPasswordViewModel>.withConsumer(
@@ -109,7 +108,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             return;
                           }
                           _formKey.currentState.save();
-                          model.toRoute("activate-account");
+                          model.toRoute("activate-password");
                         },
                         busy: model.busy,
                       ),
@@ -117,8 +116,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       Center(
                         child: TextLink(
                           "Cancel",
-                          onPressed: () => model.toRoute("Cancel"),
-                          color: Colors.red,
+                          onPressed: () => model.goBack(),
                         ),
                       ),
                     ],

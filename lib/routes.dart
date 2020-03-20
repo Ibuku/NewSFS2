@@ -9,6 +9,7 @@ import 'package:sfscredit/ui/views/app/Requests/approvedRequest.dart';
 import 'package:sfscredit/ui/views/app/Requests/declinedRequest.dart';
 import 'package:sfscredit/ui/views/app/Requests/pendingRequest.dart';
 import 'package:sfscredit/ui/views/app/profile/settings.dart';
+import 'package:sfscredit/ui/views/auth/verify/activate_password.dart';
 //import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 
 import 'ui/views/app/profile/update_kyc.dart';
@@ -36,6 +37,7 @@ var appRoutes = <String, WidgetBuilder>{
   RegisterScreen.routeName: (ctx) => RegisterScreen(),
   VerifyIndex.routeName: (ctx) => VerifyIndex(),
   ActivateAccount.routeName: (ctx) => ActivateAccount(),
+  ActivatePassword.routeName: (ctx) => ActivatePassword(),
   ForgotPassword.routeName: (ctx) => ForgotPassword(),
   DashboardScreen.routeName: (ctx) =>DashboardScreen(),
   ApplyScreen1.routeName: (ctx) =>ApplyScreen1(),

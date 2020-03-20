@@ -17,6 +17,8 @@ class AuthenticationService {
 
   final String baseURL = API_BASE_URL;
 
+  get authData => null;
+
 
 
   Future getCompanies() async {
@@ -80,16 +82,16 @@ class AuthenticationService {
     }
   }
 
-  Future forgotPassword({@required Map authData, @required String type}) async {
+  Future forgotPassword({@required Map body, @required String type}) async {
     try {
       var authResult = await _networkService.post(
         "$API_BASE_URL/$type",
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded",
-          "type": "mobile",
+          'type': 'mobile',
         },
-        body: authData,
+        body: body,
         encodeBody: false,
       );
       return authResult;
