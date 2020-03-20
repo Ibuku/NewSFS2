@@ -60,7 +60,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
   void initState() {
     PaystackPlugin.initialize(publicKey: PAYSTACK_PUBLIC_KEY);
     _reqData['loan_package_id'] = widget.loanPackage.id.toString();
-    _reqData['current_salary'] = widget.currentSalary;
+    _reqData['current_salary'] = int.parse(widget.currentSalary);
     super.initState();
   }
 
@@ -257,9 +257,6 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                         ).then((value) async {
                                           if (value != null) {
                                             model.setSelectedBank(value);
-                                            print("Account No Controller " +
-                                                _accountNoController.value
-                                                    .toString());
                                             if (_accountNoController
                                                     .text.length ==
                                                 10) {

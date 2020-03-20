@@ -180,7 +180,6 @@ class LoanApplicationViewModel extends ApplicationViewModel {
   }
 
   Future<void> makeLoanRequest({@required Map reqData}) async {
-    print("Request Data: $reqData");
     reqData['current_salary'] = reqData['current_salary'].toString();
     var loanRequestRes = await _application.requestForALoan(loanReqData: reqData);
     if(loanRequestRes.runtimeType == Response){
@@ -192,14 +191,12 @@ class LoanApplicationViewModel extends ApplicationViewModel {
         );
         _navigationService.navigateAndClearRoute(DashboardScreen.routeName);
       } else {
-        print("Error: ${body.toString()}");
         _dialogService.showDialog(
           title: "Failed to make a Loan Request",
           description: body['message'].toString(),
         );
       }
     } else {
-      print("E: $loanRequestRes");
       _dialogService.showDialog(
         title: "Application error",
         description: loanRequestRes.toString(),

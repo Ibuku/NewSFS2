@@ -85,8 +85,7 @@ class ApplicationViewModel extends BaseModel {
     if (allLoanRequestsRes.statusCode == 200) {
       var body = jsonDecode(allLoanRequestsRes.body);
       List allLoanRequests = body['data'];
-      User authenticatedUser = _application.getUser;
-      List userLoanRequests = allLoanRequests.where((loanRequest) => loanRequest.user_id == authenticatedUser.id && loanRequest.status == 'approved').toList();
+      List userLoanRequests = allLoanRequests.where((loanRequest) => loanRequest['status'] == 'approved').toList();
       List<Loan> userLoanList = userLoanRequests.map((i) => Loan.fromMap(i)).toList();
       if(userLoanList.length != 0) {
         Loan currentActiveLoan = new List.from(userLoanList.reversed)[0];
