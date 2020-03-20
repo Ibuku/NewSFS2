@@ -89,9 +89,9 @@ class AuthenticationService {
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded",
-          "type": "mobile",
+          'type': 'mobile',
         },
-        body: authData,
+        body: body,
         encodeBody: false,
       );
       return authResult;

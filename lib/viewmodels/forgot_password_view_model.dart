@@ -20,7 +20,6 @@ class ForgotPasswordViewModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
   String _userEmail;
-
   String get userEmail => _userEmail;
 
   Future init({String email}) async {
@@ -37,12 +36,29 @@ class ForgotPasswordViewModel extends BaseModel {
   }
 
   Future forgotPassword({
-    @required Map authData, String otpText,
+    @required Map authData,
+    @required String otpText,
   }) async {
+    if (otpText == '' || otpText == null) {
+      await _dialogService.showDialog(
+        title: 'validation error',
+        description: "OTP is required",
+      );
+      return;
+    } else {
+      if (otpText.length > 6 || otpText.length < 6) {
+        await _dialogService.showDialog(
+          title: 'validation error',
+          description: "PIN is greater or less than 6 digits",
+        );
+        return;
+      }
+    }
+    authData['otp'] = otpText;
     setBusy(true);
 
-    var result = await _authenticationService.forgotPassword(
-      body: authData,
+    var result = await _authenticationService.verifyAccount(
+      authData: authData,
       type: "password/email",
     );
 
@@ -51,26 +67,22 @@ class ForgotPasswordViewModel extends BaseModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
-        await _dialogService.showDialog(
-          title: 'Password reset successful',
-          description: body['message'],
-        );
         _navigationService.navigateTo(LoginScreen.routeName, replace: true);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
-          title: 'Password reset failed',
+          title: 'Account verification failed',
           description: body['message'],
         );
       } else {
         await _dialogService.showDialog(
-          title: 'Password reset failed',
+          title: 'Account verification failed',
           description: body['message'],
         );
       }
     } else {
       await _dialogService.showDialog(
-        title: 'Application error',
-        description: result,
+        title: 'Account verification failed',
+        description: result.toString(),
       );
     }
   }
