@@ -12,7 +12,7 @@ import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/forgot_password_view_model.dart';
 
 class ForgotPassword extends StatefulWidget {
-  static const routeName = '/auth/forgot-password';
+  static const routeName = '/auth/verify/forgot-password';
 
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
@@ -20,6 +20,8 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
+
+
 
   Map _authData = {
     'callback_url': BASE_URL,
@@ -85,7 +87,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   child: Column(
                     children: <Widget>[
                       CustomTextField(
-                        hintText: "Email",
+                        hintText: "Email address",
                         validator: (value) {
                           if (value.isEmpty) {
                             return "Email is required";
@@ -96,7 +98,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           return null;
                         },
                         onSaved: (value) {
-                          _authData['email'] = value;
+                          model.setUserEmail(value);
                         },
                       ),
                       verticalSpace(30),
@@ -107,7 +109,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             return;
                           }
                           _formKey.currentState.save();
-                          model.forgotPassword(authData: _authData);
+                          model.toRoute("activate-account");
                         },
                         busy: model.busy,
                       ),
@@ -115,7 +117,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       Center(
                         child: TextLink(
                           "Cancel",
-                          onPressed: () => model.goBack(),
+                          onPressed: () => model.toRoute("Cancel"),
+                          color: Colors.red,
                         ),
                       ),
                     ],

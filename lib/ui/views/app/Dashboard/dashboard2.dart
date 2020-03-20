@@ -414,9 +414,9 @@ class DashboardScreen extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          //margin: EdgeInsets.only(right: 20),
+                          padding: EdgeInsets.only(right: 10),
                           height: 100,
-                          width: 155,
+                          width: 160,
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
