@@ -54,11 +54,11 @@ class ForgotPasswordViewModel extends BaseModel {
         return;
       }
     }
-    authData['otp'] = otpText;
+    authData['email'] = _userEmail;
     setBusy(true);
 
-    var result = await _authenticationService.verifyAccount(
-      authData: authData,
+    var result = await _authenticationService.forgotPassword(
+      body: authData,
       type: "password/email",
     );
 
@@ -67,21 +67,21 @@ class ForgotPasswordViewModel extends BaseModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
-        _navigationService.navigateTo(LoginScreen.routeName, replace: true);
+        _navigationService.navigateTo(ActivatePassword.routeName, replace: true);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
-          title: 'Account verification failed',
+          title: 'Account Reset Failed',
           description: body['message'],
         );
       } else {
         await _dialogService.showDialog(
-          title: 'Account verification failed',
+          title:  'Account Reset Failed',
           description: body['message'],
         );
       }
     } else {
       await _dialogService.showDialog(
-        title: 'Account verification failed',
+        title: 'Account Reset Failed',
         description: result.toString(),
       );
     }
@@ -131,7 +131,7 @@ class ForgotPasswordViewModel extends BaseModel {
       case "cancel":
         _navigationService.pop();
         break;
-      case "activate-account":
+      case "activate-password":
         if (userEmail != null) {
           _navigationService.navigateTo(
             ActivatePassword.routeName,
