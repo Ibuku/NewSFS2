@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 import '../viewmodels/application_view_model.dart';
 import '../ui/views/auth/verify/index.dart';
-import '../ui/views/auth/forgot_password.dart';
+import '../ui/views/auth/verify/forgot_password.dart';
 import '../ui/views/auth/signup/select_company.dart';
 
 import '../services/authentication_service.dart';

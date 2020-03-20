@@ -12,7 +12,7 @@ import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/forgot_password_view_model.dart';
 
 class ForgotPassword extends StatefulWidget {
-  static const routeName = '/auth/forgot-password';
+  static const routeName = '/auth/verify/forgot-password';
 
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
@@ -21,11 +21,11 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
 
-//  Map _passwordReset = {
-//    'callback_url': BASE_URL,
-//  };
-//  final _otpController = TextEditingController();
 
+
+  Map _authData = {
+    'callback_url': BASE_URL,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +109,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             return;
                           }
                           _formKey.currentState.save();
-                          model.toRoute("activate-password");
+                          model.toRoute("activate-account");
                         },
                         busy: model.busy,
                       ),
