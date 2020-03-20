@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart' show NumberFormat;
 import 'package:provider_architecture/viewmodel_provider.dart';
 
 import 'package:email_validator/email_validator.dart';
@@ -30,8 +30,11 @@ class ApplyScreen2 extends StatefulWidget {
   static const routeName = '/app/Apply/apply2';
 
   final LoanPackage loanPackage;
+  final String currentSalary;
 
-  ApplyScreen2({Key key, @required this.loanPackage}) : super(key: key);
+  ApplyScreen2(
+      {Key key, @required this.loanPackage, @required this.currentSalary})
+      : super(key: key);
 
   @override
   _ApplyScreen2State createState() => _ApplyScreen2State();
@@ -56,7 +59,8 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
   @override
   void initState() {
     PaystackPlugin.initialize(publicKey: PAYSTACK_PUBLIC_KEY);
-    _reqData['loan_package_id'] = widget.loanPackage.id;
+    _reqData['loan_package_id'] = widget.loanPackage.id.toString();
+    _reqData['current_salary'] = widget.currentSalary;
     super.initState();
   }
 
@@ -113,7 +117,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                             ).copyWith(color: primaryColor),
                           ),
                           customBtnTextWidget: Text(
-                            "N 1,000.00",
+                            "N ${new NumberFormat('###,###').format(int.parse(widget.currentSalary))}.00",
                             style: GoogleFonts.mavenPro(
                               fontWeight: FontWeight.bold,
                             ).copyWith(color: primaryColor, fontSize: 20),
@@ -186,8 +190,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                         return null;
                                       },
                                       onSaved: (value) {
-                                        _reqData['account_number'] =
-                                            value;
+                                        _reqData['account_number'] = value;
                                       },
                                       textController: _accountNoController,
                                       inputType: TextInputType.number,
@@ -222,8 +225,13 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                       },
                                       enabled: !model.loading,
                                       onSaved: (value) {
-                                        model.setSelectedBank(value);
-                                        _reqData['bank_name'] = value.bank_code;
+                                        _bankController.value =
+                                            new TextEditingController
+                                                .fromValue(
+                                                new TextEditingValue(
+                                                    text:
+                                                    value))
+                                                .value;
                                       },
                                       readOnly: true,
                                       suffixIcon: Icon(
@@ -261,6 +269,14 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                               _accountNameController.text =
                                                   model.bankAccountName;
                                             }
+                                            _bankController.value =
+                                                new TextEditingController
+                                                            .fromValue(
+                                                        new TextEditingValue(
+                                                            text:
+                                                                value.display))
+                                                    .value;
+                                            _reqData['bank_name'] = value.code;
                                           }
                                         });
                                       },
@@ -275,7 +291,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                     hintTextStyle: TextStyle(fontSize: 12),
                                     textController: _accountNameController,
                                     readOnly: true,
-                                    onSaved: (value){
+                                    onSaved: (value) {
                                       _reqData['account_name'] = value;
                                     },
                                     enabled: !model.loading),
@@ -330,7 +346,12 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                         },
                                         enabled: !model.loading,
                                         onSaved: (value) {
-                                          model.setSelectedCard(value);
+                                          _cardController.value =
+                                              new TextEditingController
+                                                  .fromValue(
+                                                  new TextEditingValue(
+                                                      text: value))
+                                                  .value;
                                         },
                                         readOnly: true,
                                         suffixIcon: Icon(
@@ -356,7 +377,16 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                           ).then((value) {
                                             if (value != null) {
                                               model.setSelectedCard(value);
-                                              _reqData['gw_authorization_code'] = value.id;
+                                              _reqData[
+                                                      'gw_authorization_code'] =
+                                                  value.id.toString();
+                                              _cardController.value =
+                                                  new TextEditingController
+                                                              .fromValue(
+                                                          new TextEditingValue(
+                                                              text: value
+                                                                  .display))
+                                                      .value;
                                             }
                                           });
                                         },
@@ -399,7 +429,11 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                               if (_reqData.isEmpty) {
                                 return;
                               }
-                              await model.makeLoanRequest();
+                              if (!_formKey.currentState.validate()) {
+                                return;
+                              }
+                              _formKey.currentState.save();
+                              await model.makeLoanRequest(reqData: _reqData);
                             },
                             busy: model.busy,
                           ),
@@ -427,7 +461,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
     // setting them after setting an access code would throw an exception
     _reference = await _payment.fetchReferenceFromServer();
     charge
-      ..amount = (50*100) // In base currency
+      ..amount = (50 * 100) // In base currency
       ..email = userEmail
       ..reference = _reference
       ..putCustomField('Charged From', 'Flutter SDK');

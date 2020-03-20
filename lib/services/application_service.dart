@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:sfscredit/const.dart';
 import 'package:sfscredit/locator.dart';
 import 'local_storage_service.dart';
@@ -165,6 +167,24 @@ class ApplicationService {
           },
           isAuth: true);
     } catch (e) {
+      return e;
+    }
+  }
+
+  Future requestForALoan({@required loanReqData}) async {
+    try{
+      var reqResult = await _network.post(
+        "$API_BASE_URL/loan-request/new",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: loanReqData,
+        encodeBody: false,
+        isAuth: true
+      );
+      return reqResult;
+    } catch(e) {
       return e;
     }
   }

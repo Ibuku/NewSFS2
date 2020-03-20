@@ -2,7 +2,7 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart' show NumberFormat;
 import 'package:provider_architecture/viewmodel_provider.dart';
 import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
@@ -25,6 +25,10 @@ class ApplyScreen1 extends StatefulWidget {
 }
 
 class _ApplyScreen1State extends State<ApplyScreen1> {
+  bool _isEditingSalary = false;
+  TextEditingController _salaryTextController;
+  String initialSalaryValue = "0";
+
   LoanPackage _selectedPackage;
 
   List<LoanPackageWidget> buildPackagesContainer(
@@ -38,6 +42,18 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
     setState(() {
       _selectedPackage = loanPackage;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _salaryTextController = TextEditingController(text: initialSalaryValue);
+  }
+
+  @override
+  void dispose() {
+    _salaryTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -62,85 +78,102 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
           backgroundColor: Colors.white,
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           body: BusyOverlay(
-          show: model.loading,
-           title: "Loading...",
-        child: Container(
-            child: SingleChildScrollView(
-              child: new ConstrainedBox(
-                constraints: new BoxConstraints(),
-                child: new Column(children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
-                    decoration: BoxDecoration(
-                        color: primaryColor
-                    ),
-                    child: CardItem(
-                      customTitleTextWidget: Text(
-                        "Current Salary",
-                        style: GoogleFonts.mavenPro(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                        ).copyWith(color: primaryColor),
-                      ),
-                      customBtnTextWidget: Text(
-                        "N 1,000.00",
-                        style: GoogleFonts.mavenPro(
-                          fontWeight: FontWeight.bold,
-                        ).copyWith(color: primaryColor, fontSize: 20),
-                      ),
-                      icon: Icons.person,
-                      paddingVertical: 30,
-                    ),
-                  ),
-                  verticalSpace15,
-                  Container(
-                      margin: EdgeInsets.only(
-                        top: 15,
-                      ),
-                      padding: EdgeInsets.only(right: 20, left: 20),
-                      child: Column(
-                          children: <Widget>[
-                        Text(
-                          "Loan Options",
+            show: model.loading,
+            title: "Loading...",
+            child: Container(
+              child: SingleChildScrollView(
+                child: new ConstrainedBox(
+                  constraints: new BoxConstraints(),
+                  child: new Column(children: <Widget>[
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+                      decoration: BoxDecoration(color: primaryColor),
+                      child: CardItem(
+                        customTitleTextWidget: Text(
+                          "Current Salary",
                           style: GoogleFonts.mavenPro(
-                            textStyle: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.normal,
-                              color: primaryColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                          ).copyWith(color: primaryColor),
+                        ),
+                        customBtnTextWidget: _isEditingSalary
+                            ? TextField(
+                                onSubmitted: (newValue) {
+                                  setState(() {
+                                    initialSalaryValue = newValue;
+                                    _isEditingSalary = false;
+                                  });
+                                },
+                                autofocus: true,
+                                controller: _salaryTextController,
+                                keyboardType: TextInputType.number)
+                            : InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _isEditingSalary = true;
+                                  });
+                                },
+                                child: Text(
+                                  "N ${new NumberFormat('###,###').format(int.parse(initialSalaryValue))}.00",
+                                  style: GoogleFonts.mavenPro(
+                                    fontWeight: FontWeight.bold,
+                                  ).copyWith(color: primaryColor, fontSize: 20),
+                                ),
+                              ),
+                        icon: Icons.person,
+                        paddingVertical: 30,
+                      ),
+                    ),
+                    verticalSpace15,
+                    Container(
+                        margin: EdgeInsets.only(
+                          top: 15,
+                        ),
+                        padding: EdgeInsets.only(right: 20, left: 20),
+                        child: Column(children: <Widget>[
+                          Text(
+                            "Loan Options",
+                            style: GoogleFonts.mavenPro(
+                              textStyle: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                                color: primaryColor,
+                              ),
                             ),
                           ),
-                        ),
-                        Column(
-                            children: model.loanPackages
-                                .map((loanPackage) => LoanPackageWidget(
-                                    package: loanPackage,
-                                    selectedPackage: _selectedPackage,
-                                    onPressed: this.selectLoanPackage))
-                                .toList()),
-                        verticalSpace30,
-                        BusyButton(
-                          title: "Continue",
-                          onPressed: () {
-                            if (_selectedPackage == null) {
-                              return;
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ApplyScreen2(
-                                      loanPackage: _selectedPackage)),
-                            );
-                          },
-                          busy: model.busy,
-                        ),
-                        verticalSpace30
-                      ])),
-                ]),
+                          Column(
+                              children: model.loanPackages
+                                  .map((loanPackage) => LoanPackageWidget(
+                                      package: loanPackage,
+                                      selectedPackage: _selectedPackage,
+                                      onPressed: this.selectLoanPackage))
+                                  .toList()),
+                          verticalSpace30,
+                          BusyButton(
+                            title: "Continue",
+                            onPressed: () {
+                              if (_selectedPackage == null) {
+                                return;
+                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ApplyScreen2(
+                                        loanPackage: _selectedPackage,
+                                        currentSalary: initialSalaryValue)),
+                              );
+                            },
+                            busy: model.busy,
+                          ),
+                          verticalSpace30
+                        ])),
+                  ]),
+                ),
               ),
             ),
           ),
         ),
-      ),
       ),
     );
   }

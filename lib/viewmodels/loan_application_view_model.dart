@@ -8,6 +8,7 @@ import 'package:sfscredit/models/bank_details.dart';
 import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/models/user_card.dart';
 import 'package:sfscredit/services/payment_service.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 
 import '../services/dialog_service.dart';
@@ -180,6 +181,30 @@ class LoanApplicationViewModel extends ApplicationViewModel {
 
   Future<void> makeLoanRequest({@required Map reqData}) async {
     print("Request Data: $reqData");
+    reqData['current_salary'] = reqData['current_salary'].toString();
+    var loanRequestRes = await _application.requestForALoan(loanReqData: reqData);
+    if(loanRequestRes.runtimeType == Response){
+      var body = jsonDecode(loanRequestRes.body);
+      if(loanRequestRes.statusCode == 200){
+        _dialogService.showDialog(
+          title: "Loan Request Successful",
+          description: "Request under review...",
+        );
+        _navigationService.navigateAndClearRoute(DashboardScreen.routeName);
+      } else {
+        print("Error: ${body.toString()}");
+        _dialogService.showDialog(
+          title: "Failed to make a Loan Request",
+          description: body['message'].toString(),
+        );
+      }
+    } else {
+      print("E: $loanRequestRes");
+      _dialogService.showDialog(
+        title: "Application error",
+        description: loanRequestRes.toString(),
+      );
+    }
   }
 
   Future<void> initPackages() async {
