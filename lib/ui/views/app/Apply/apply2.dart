@@ -10,6 +10,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
+import 'package:sfscredit/const.dart';
 import 'package:sfscredit/locator.dart';
 
 import 'package:sfscredit/models/loan_package.dart';
@@ -40,8 +41,6 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
   final _formKey = GlobalKey<FormState>();
 
   Map _reqData = {};
-  Map _cardReqData = {};
-  Map _bankDetailsReqData = {};
 
   final _accountNoController = TextEditingController();
   final _accountNameController = TextEditingController();
@@ -51,8 +50,15 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
   // Paystack
   final PaymentService _payment = locator<PaymentService>();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
-  CheckoutMethod _method;
   bool _inProgress = false;
+  String _reference;
+
+  @override
+  void initState() {
+    PaystackPlugin.initialize(publicKey: PAYSTACK_PUBLIC_KEY);
+    _reqData['loan_package_id'] = widget.loanPackage.id;
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -72,6 +78,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => WillPopScope(
         child: Scaffold(
+            key: _scaffoldKey,
             appBar: AppBar(
               title: Text("Apply"),
               centerTitle: false,
@@ -179,7 +186,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                         return null;
                                       },
                                       onSaved: (value) {
-                                        _bankDetailsReqData['account_number'] =
+                                        _reqData['account_number'] =
                                             value;
                                       },
                                       textController: _accountNoController,
@@ -216,6 +223,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                       enabled: !model.loading,
                                       onSaved: (value) {
                                         model.setSelectedBank(value);
+                                        _reqData['bank_name'] = value.bank_code;
                                       },
                                       readOnly: true,
                                       suffixIcon: Icon(
@@ -267,6 +275,9 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                     hintTextStyle: TextStyle(fontSize: 12),
                                     textController: _accountNameController,
                                     readOnly: true,
+                                    onSaved: (value){
+                                      _reqData['account_name'] = value;
+                                    },
                                     enabled: !model.loading),
                                 verticalSpace(15),
                                 CustomTextField(
@@ -295,117 +306,75 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                         ? "Select A Card"
                                         : "Add Card",
                                     style: GoogleFonts.mavenPro(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold)
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold)
                                         .copyWith(color: Colors.indigo[900]),
                                   ),
                                 ),
                                 verticalSpace15,
-                                Container(
-                                  child: Center(
-                                  child:Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      RaisedButton(
-                                        color: primaryColor,
-                                        elevation: 4,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          "Add Card",
-                                          style: GoogleFonts.mavenPro(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.normal)
-                                              .copyWith(color: Colors.white),
-                                        ),
-                                        onPressed: () {
-                                          _startAfreshCharge();
-                                        },
-//                                        onPressed: () =>
-//                                            model.toRoute(TimelineScreen.routeName)
-                                      ),
-
-                                      //Icon(Icons.arrow_forward, color: Colors.indigo[900]),
-                                      //  SizedBox(width: 7.0),
-//
-                                    ],
-                                  ),
-                                ),
-                                ),
                                 // When User has at least 1 verified card on the platform
-//                              model.cards.length > 0
-//                                  ? CustomTextField(
-//                                      hintText: model.loading
-//                                          ? "Loading Cards ..."
-//                                          : (model.selectedCard != null
-//                                              ? model.selectedCard.display
-//                                              : "Select a card"),
-//                                      hintTextStyle: TextStyle(fontSize: 12),
-//                                      textController: _cardController,
-//                                      validator: (value) {
-//                                        if (value == null || value == "") {
-//                                          return "Please select a card";
-//                                        }
-//                                        return null;
-//                                      },
-//                                      enabled: !model.loading,
-//                                      onSaved: (value) {
-//                                        model.setSelectedCard(value);
-//                                      },
-//                                      readOnly: true,
-//                                      suffixIcon: Icon(
-//                                        Icons.arrow_drop_down,
-//                                      ),
-//                                      onTap: () {
-//                                        if (model.loading ||
-//                                            model.banks.isEmpty) {
-//                                          return;
-//                                        }
-//                                        Navigator.push(
-//                                          context,
-//                                          MaterialPageRoute(
-//                                            builder: (context) =>
-//                                                FullScreenPicker(
-//                                              title: "Select a card",
-//                                              dataSource: model.loading
-//                                                  ? []
-//                                                  : model.cards,
-//                                            ),
-//                                            fullscreenDialog: false,
-//                                          ),
-//                                        ).then((value) {
-//                                          if (value != null) {
-//                                            model.setSelectedCard(value);
-//                                          }
-//                                        });
-//                                      },
-//                                    )
-//                                  :
-                                // When the user has no card on the platform
-                                // - FIND A WAY TO CALL PAYSTACK TO CHARGE THEM N10
-                                // TO VERIFY THEIR CARD and ADD IT TO THE PLATFORM.
-
-
-//                                Container(
-//                                   // margin: EdgeInsets.only(top: 5),
-//                                    height: 30,
-//                                    width: 40,
-//                                    padding: EdgeInsets.symmetric(
-//                                      horizontal: 48,
-//                                      vertical: 5,
-//                                    ),
-//                                    child: Center(
-//                                        child: RaisedButton(
-//                                            shape: RoundedRectangleBorder(
-//                                                borderRadius:
-//                                                BorderRadius.circular(20)),
-//                                            color: primaryColor,
-//                                            onPressed: () {
-//                                              _startAfreshCharge();
-//                                            },
-//                                            child: Center(child: Text("Add Card")))
-//                                    ))
+                                model.cards.length > 0
+                                    ? CustomTextField(
+                                        hintText: model.loading
+                                            ? "Loading Cards ..."
+                                            : (model.selectedCard != null
+                                                ? model.selectedCard.display
+                                                : "Select a card"),
+                                        hintTextStyle: TextStyle(fontSize: 12),
+                                        textController: _cardController,
+                                        validator: (value) {
+                                          if (value == null || value == "") {
+                                            return "Please select a card";
+                                          }
+                                          return null;
+                                        },
+                                        enabled: !model.loading,
+                                        onSaved: (value) {
+                                          model.setSelectedCard(value);
+                                        },
+                                        readOnly: true,
+                                        suffixIcon: Icon(
+                                          Icons.arrow_drop_down,
+                                        ),
+                                        onTap: () {
+                                          if (model.loading ||
+                                              model.banks.isEmpty) {
+                                            return;
+                                          }
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FullScreenPicker(
+                                                title: "Select a card",
+                                                dataSource: model.loading
+                                                    ? []
+                                                    : model.cards,
+                                              ),
+                                              fullscreenDialog: false,
+                                            ),
+                                          ).then((value) {
+                                            if (value != null) {
+                                              model.setSelectedCard(value);
+                                              _reqData['gw_authorization_code'] = value.id;
+                                            }
+                                          });
+                                        },
+                                      )
+                                    : Container(
+                                        child: Center(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              _getPlatformButton(
+                                                  'Add a New Card',
+                                                  () => _startAfreshCharge(
+                                                      model.user.email))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                               ])
                             ])),
                       ),
@@ -446,45 +415,22 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
     );
   }
 
-  _handleCheckout(BuildContext context) async {
-    setState(() => _inProgress = true);
-    _formKey.currentState.save();
-    Charge charge = Charge()
-      ..amount = 50 // In base currency
-      ..email = 'customer@email.com';
-    //..card = _getCardFromUI();
-
-    var accessCode = await _payment.fetchAccessCodeFromServer();
-    charge.accessCode = accessCode;
-
-    try {
-      CheckoutResponse response = await PaystackPlugin.checkout(
-        context,
-        method: _method,
-        charge: charge,
-        fullscreen: false,
-      );
-      print('Response = $response');
-      setState(() => _inProgress = false);
-      _updateStatus(response.reference, '$response');
-    } catch (e) {
-      setState(() => _inProgress = false);
-      _showMessage("Check console for error");
-      rethrow;
-    }
-  }
-
-  _startAfreshCharge() async {
-    _formKey.currentState.save();
+  _startAfreshCharge(String userEmail) async {
+    //_formKey.currentState.save();
 
     Charge charge = Charge();
-    //charge.card = _getCardFromUI();
+    charge.card = _getCardDefaults();
 
     setState(() => _inProgress = true);
-
-    // Perform transaction/initialize on Paystack server to get an access code
-    // documentation: https://developers.paystack.co/reference#initialize-a-transaction
-    charge.accessCode = await _payment.fetchAccessCodeFromServer();
+    // Set transaction params directly in app (note that these params
+    // are only used if an access_code is not set. In debug mode,
+    // setting them after setting an access code would throw an exception
+    _reference = await _payment.fetchReferenceFromServer();
+    charge
+      ..amount = (50*100) // In base currency
+      ..email = userEmail
+      ..reference = _reference
+      ..putCustomField('Charged From', 'Flutter SDK');
     _chargeCard(charge);
   }
 
@@ -495,17 +441,16 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
       _updateStatus(transaction.reference, 'validating...');
     }
 
-    handleOnError(Object e, Transaction transaction) {
+    handleOnError(Object e, Transaction transaction) async {
       // If an access code has expired, simply ask your server for a new one
       // and restart the charge instead of displaying error
       if (e is ExpiredAccessCodeException) {
-        _startAfreshCharge();
         _chargeCard(charge);
         return;
       }
 
       if (transaction.reference != null) {
-        _payment.verifyOnServer(transaction.reference);
+        await _payment.verifyOnServer(transaction.reference);
       } else {
         setState(() => _inProgress = false);
         _updateStatus(transaction.reference, e.toString());
@@ -513,8 +458,8 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
     }
 
     // This is called only after transaction is successful
-    handleOnSuccess(Transaction transaction) {
-      _payment.verifyOnServer(transaction.reference);
+    handleOnSuccess(Transaction transaction) async {
+      await _payment.verifyOnServer(transaction.reference);
     }
 
     PaystackPlugin.chargeCard(context,
@@ -524,15 +469,14 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
         onError: (error, transaction) => handleOnError(error, transaction));
   }
 
-  String _getReference() {
-    String platform;
-    if (Platform.isIOS) {
-      platform = 'iOS';
-    } else {
-      platform = 'Android';
-    }
-
-    return 'ChargedFrom${platform}_${DateTime.now().millisecondsSinceEpoch}';
+  PaymentCard _getCardDefaults() {
+    // Using just the must-required parameters.
+    return PaymentCard(
+      number: null,
+      cvc: null,
+      expiryMonth: 0,
+      expiryYear: 0,
+    );
   }
 
   Widget _getPlatformButton(String string, Function() function) {
@@ -552,12 +496,16 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
     } else {
       widget = new RaisedButton(
         onPressed: function,
-        color: Colors.blueAccent,
-        textColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 10.0),
+        color: primaryColor,
+        padding: EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         child: new Text(
-          string.toUpperCase(),
-          style: const TextStyle(fontSize: 17.0),
+          string,
+          style:
+              GoogleFonts.mavenPro(fontSize: 15, fontWeight: FontWeight.normal)
+                  .copyWith(color: Colors.white),
         ),
       );
     }
