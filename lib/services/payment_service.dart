@@ -19,17 +19,28 @@ class PaymentService {
 
   Future verifyOnServer(String reference) async {
     try {
-      return _network.get('$BASE_URL/verify/$reference', headers: headers);
+      return _network.post('$API_BASE_URL/card-authorization',
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          body: {'ref_code': reference},
+          isAuth: true);
     } catch (e) {
       return e;
     }
   }
 
-  Future<String> fetchAccessCodeFromServer() async {
+  Future fetchReferenceFromServer() async {
     try {
-      Response res = await _network.get('$API_BASE_URL/cards/initialize', headers: headers);
+      Response res = await _network.post('$API_BASE_URL/cards/initialize',
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          isAuth: true);
       var body = jsonDecode(res.body);
-      return body['data']['ref_code'];
+      return body['data']['reference'];
     } catch (e) {
       return e;
     }
