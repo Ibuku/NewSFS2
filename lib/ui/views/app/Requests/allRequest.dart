@@ -63,7 +63,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
     return ViewModelProvider<GuarantorRequestViewModel>.withConsumer(
       viewModel: GuarantorRequestViewModel(),
       onModelReady: (model) {
-        model.initReq().then((val) {
+        model.init().then((val) {
           setState(() {
             _allRequests = model.guarantorRequests;
             _currentRequestsList = _allRequests
@@ -132,8 +132,6 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
                     verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(top: 5, left: 30),
-                      //padding: EdgeInsets.only(right: 280),
-                      // height: 40,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +153,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
                         itemCount: _currentRequestsList.length,
                         itemBuilder: (context, index) {
                           return GuarantorRequestWidget(
-                              request: _currentRequestsList[index]);
+                              request: _currentRequestsList[index], modifyRequest: model.modifyGuarantorRequest);
                         },
                         separatorBuilder: (context, index) {
                           return verticalSpace15;

@@ -85,7 +85,6 @@ class NotificationScreen extends StatelessWidget {
                                   color: primaryColor,
                                 ),
                               ),
-
                             ),
                           ],
                         ),

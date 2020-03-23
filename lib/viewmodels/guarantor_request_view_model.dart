@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:sfscredit/models/guarantor_request.dart';
+import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
 
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 
@@ -59,7 +60,35 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
     }
   }
 
-  Future<void> initReq() async {
+  Future modifyGuarantorRequest({@required reqData, @required action}) async {
+    setBusy(true);
+
+    var modifyGuarantorRequestRes = await _application.approveOrDeclineLoanRequest(reqData: reqData, action: action);
+    if(modifyGuarantorRequestRes.runtimeType == Response) {
+      var body = jsonDecode(modifyGuarantorRequestRes.body);
+      if (modifyGuarantorRequestRes.statusCode == 200) {
+        _dialogService.showDialog(
+          title: "Guarantor Request",
+          description: body['message']
+        );
+        _navigationService.navigateAndClearRoute(AllRequestScreen.routeName);
+      } else {
+        _dialogService.showDialog(
+          title: "Network error occured",
+          description: body['message'],
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: modifyGuarantorRequestRes.toString(),
+      );
+    }
+    setBusy(false);
+  }
+
+  @override
+  Future<void> init() async {
     setLoading(true);
 
     await getGuarantorRequests();

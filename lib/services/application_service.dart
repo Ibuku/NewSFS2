@@ -188,4 +188,25 @@ class ApplicationService {
       return e;
     }
   }
+
+  Future approveOrDeclineLoanRequest({@required reqData, @required action}) async {
+    try{
+      if(action != 'approve' && action != 'declined') {
+        return;
+      }
+      var reqResult = await _network.post(
+          "$API_BASE_URL/guarantor-request/$action/loan",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: reqData,
+          encodeBody: false,
+          isAuth: true
+      );
+      return reqResult;
+    } catch(e) {
+      return e;
+    }
+  }
 }
