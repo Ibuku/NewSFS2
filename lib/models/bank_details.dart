@@ -26,9 +26,9 @@ class BankDetails {
     if (map == null) return null;
 
     return BankDetails(
-        id: map['bank_id'],
-        accountNo: map['account_number'],
-        accountName: map['account_name'],
+        id: map['bank_id'] != null ? map['bank_id'] : map['id'],
+        accountNo: map['account_number'].toString(),
+        accountName: map['account_name'] != null ? map['account_name'] : "",
         bankCode: map['bank_code']
     );
   }

@@ -118,7 +118,8 @@ class LoanApplicationViewModel extends ApplicationViewModel {
       if (bankDetailsRes.statusCode == 200) {
         var body = jsonDecode(bankDetailsRes.body);
         if(!body['data'].isEmpty) {
-          setBankDetails(BankDetails.fromMap(body['data']));
+          print("Body: ${body['data']}");
+          setBankDetails(BankDetails.fromMap(body['data'][0]));
         }
       } else {
         _dialogService.showDialog(

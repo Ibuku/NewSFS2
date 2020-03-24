@@ -15,6 +15,9 @@ import 'package:sfscredit/ui/widgets/loan_package_card.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
 import 'package:sfscredit/viewmodels/loan_application_view_model.dart';
 
+import '../../../../locator.dart';
+import '../../../../services/dialog_service.dart';
+
 class ApplyScreen1 extends StatefulWidget {
   static const routeName = '/app/Apply/apply1';
 
@@ -25,9 +28,10 @@ class ApplyScreen1 extends StatefulWidget {
 }
 
 class _ApplyScreen1State extends State<ApplyScreen1> {
+  final DialogService _dialogService = locator<DialogService>();
   bool _isEditingSalary = false;
   TextEditingController _salaryTextController;
-  String initialSalaryValue = "0";
+  String _salaryValue = "0";
 
   LoanPackage _selectedPackage;
 
@@ -47,7 +51,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
   @override
   void initState() {
     super.initState();
-    _salaryTextController = TextEditingController(text: initialSalaryValue);
+    _salaryTextController = TextEditingController(text: _salaryValue);
   }
 
   @override
@@ -101,7 +105,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                             ? TextField(
                                 onSubmitted: (newValue) {
                                   setState(() {
-                                    initialSalaryValue = newValue;
+                                    _salaryValue = newValue;
                                     _isEditingSalary = false;
                                   });
                                 },
@@ -115,7 +119,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                                   });
                                 },
                                 child: Text(
-                                  "N ${new NumberFormat('###,###').format(int.parse(initialSalaryValue))}.00",
+                                  "N ${new NumberFormat('###,###').format(int.parse(_salaryValue))}.00",
                                   style: GoogleFonts.mavenPro(
                                     fontWeight: FontWeight.bold,
                                   ).copyWith(color: primaryColor, fontSize: 20),
@@ -153,7 +157,13 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                           BusyButton(
                             title: "Continue",
                             onPressed: () {
-                              if (_selectedPackage == null) {
+                              print("Salary: $_salaryValue");
+                              if (_selectedPackage == null ||
+                                  _salaryValue == "0") {
+                                _dialogService.showDialog(
+                                    title: 'Warning!',
+                                    description:
+                                        "Add Your Salary and Select a Loan Package");
                                 return;
                               }
                               Navigator.push(
@@ -161,7 +171,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                                 MaterialPageRoute(
                                     builder: (context) => ApplyScreen2(
                                         loanPackage: _selectedPackage,
-                                        currentSalary: initialSalaryValue)),
+                                        currentSalary: _salaryValue)),
                               );
                             },
                             busy: model.busy,

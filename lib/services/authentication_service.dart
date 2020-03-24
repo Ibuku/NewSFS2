@@ -61,6 +61,7 @@ class AuthenticationService {
       );
       return authResult;
     } catch (e) {
+      print("E: $e");
       return e;
     }
   }
@@ -98,6 +99,24 @@ class AuthenticationService {
       return e;
     }
   }
+
+  Future resetPassword({@required Map body}) async {
+    try {
+      var authResult = await _networkService.post(
+        "$API_BASE_URL/password/reset",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: body,
+        encodeBody: false,
+      );
+      return authResult;
+    } catch (e) {
+      return e;
+    }
+  }
+
   Future resendOTP2({@required String email, @required String type}) async {
     try {
       var authResult = await _networkService.put(

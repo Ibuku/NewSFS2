@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/timeline.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
-import 'package:sfscredit/ui/views/app/Loans/loan.dart';
-import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
-import 'package:sfscredit/ui/views/app/Requests/approvedRequest.dart';
-import 'package:sfscredit/ui/views/app/Requests/declinedRequest.dart';
-import 'package:sfscredit/ui/views/app/Requests/pendingRequest.dart';
-import 'package:sfscredit/ui/views/app/profile/settings.dart';
-import 'package:sfscredit/ui/views/auth/verify/activate_password.dart';
-//import 'package:sfscredit/ui/views/app/Apply/apply2.dart';
 
+import 'ui/views/app/Loans/loan.dart';
+
+import 'ui/views/app/profile/settings.dart';
 import 'ui/views/app/profile/update_kyc.dart';
 
 import 'ui/views/app/Dashboard/dashboard2.dart';
+import 'ui/views/app/Dashboard/timeline.dart';
+import 'ui/views/app/Dashboard/wallet.dart';
 
 import 'ui/views/intro/startup_view.dart';
 import 'ui/views/intro/splash_screen.dart';
@@ -26,7 +19,16 @@ import 'ui/views/auth/signup/register_screen.dart';
 import 'ui/views/auth/verify/index.dart';
 import 'ui/views/auth/verify/activate_account.dart';
 import 'ui/views/auth/verify/forgot_password.dart';
+import 'ui/views/auth/verify/activate_password.dart';
+import 'ui/views/auth/reset_password.dart';
+
 import 'ui/views/app/Apply/apply1.dart';
+import 'ui/views/app/Apply/apply2.dart';
+
+import 'ui/views/app/Requests/allRequest.dart';
+import 'ui/views/app/Requests/approvedRequest.dart';
+import 'ui/views/app/Requests/declinedRequest.dart';
+import 'ui/views/app/Requests/pendingRequest.dart';
 
 var appRoutes = <String, WidgetBuilder>{
   '/': (ctx) => StartUpView(),
@@ -39,6 +41,7 @@ var appRoutes = <String, WidgetBuilder>{
   ActivateAccount.routeName: (ctx) => ActivateAccount(),
   ActivatePassword.routeName: (ctx) => ActivatePassword(),
   ForgotPassword.routeName: (ctx) => ForgotPassword(),
+  ResetPassword.routeName: (ctx) => ResetPassword(),
   DashboardScreen.routeName: (ctx) =>DashboardScreen(),
   ApplyScreen1.routeName: (ctx) =>ApplyScreen1(),
   ApplyScreen2.routeName: (ctx) =>ApplyScreen2(),

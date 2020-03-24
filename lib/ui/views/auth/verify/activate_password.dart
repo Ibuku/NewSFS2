@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider_architecture/provider_architecture.dart';
-import '../../../../ui/shared/app_colors.dart';
-import '../../../../ui/shared/ui_helpers.dart';
-import '../../../../ui/widgets/busy_button.dart';
-import '../../../../ui/widgets/busy_overlay.dart';
-import '../../../../ui/widgets/custom_card.dart';
-import '../../../../ui/widgets/text_link.dart';
-import '../../../../viewmodels/forgot_password_view_model.dart';
+
+import 'package:sfscredit/ui/shared/app_colors.dart';
+import 'package:sfscredit/ui/shared/ui_helpers.dart';
+import 'package:sfscredit/ui/widgets/busy_button.dart';
+import 'package:sfscredit/ui/widgets/busy_overlay.dart';
+import 'package:sfscredit/ui/widgets/custom_card.dart';
+import 'package:sfscredit/ui/widgets/text_link.dart';
+import 'package:sfscredit/viewmodels/forgot_password_view_model.dart';
 
 class ActivatePassword extends StatefulWidget {
   static const routeName = '/auth/verify/activate-password';
@@ -26,7 +27,8 @@ class _ActivatePasswordState extends State<ActivatePassword> {
     return ViewModelProvider<ForgotPasswordViewModel>.withConsumer(
       viewModel: ForgotPasswordViewModel(),
       onModelReady: (model) {
-        model.init(email: ModalRoute.of(context).settings.arguments);
+        model.initEmail(email: ModalRoute.of(context).settings.arguments);
+        print("[Activate Password] Email: ${model.userEmail}");
         _passwordReset['email'] = model.userEmail;
       },
       builder: (context, model, child) => Scaffold(
@@ -110,16 +112,14 @@ class _ActivatePasswordState extends State<ActivatePassword> {
                             }
                           },
                           controller: _otpController,
+                          textInputType: TextInputType.number
                         ),
 
                         verticalSpace20,
                         BusyButton(
-                          title: "Reset Password",
+                          title: "Verify OTP",
                           busy: model.busy,
-                          onPressed: () => model.forgotPassword(
-                            authData: _passwordReset,
-                            otpText: _otpController.text,
-                          ),
+                          onPressed: () => model.verifyOtp(authData: _passwordReset, otpText: _otpController.text),
                         ),
                         verticalSpace(20),
                         TextLink(

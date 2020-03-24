@@ -1,36 +1,36 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider_architecture/provider_architecture.dart';
-import 'package:sfscredit/const.dart';
+
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
-import 'package:sfscredit/ui/views/auth/verify/activate_password.dart';
 import 'package:sfscredit/ui/widgets/busy_button.dart';
 import 'package:sfscredit/ui/widgets/custom_card.dart';
 import 'package:sfscredit/ui/widgets/custom_text_field.dart';
-import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/forgot_password_view_model.dart';
 
-class ForgotPassword extends StatefulWidget {
-  static const routeName = '/auth/verify/forgot-password';
+class ResetPassword extends StatefulWidget {
+  static const routeName = '/auth/reset-password';
 
   @override
-  _ForgotPasswordState createState() => _ForgotPasswordState();
+  _ResetPasswordState createState() => _ResetPasswordState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
-  final _forgotFormKey = GlobalKey<FormState>();
+class _ResetPasswordState extends State<ResetPassword> {
+  final _resetFormKey = GlobalKey<FormState>();
+  final passwordController = TextEditingController();
 
-  Map _authData = {
-    'type': 'mobile',
-    'callback_url': BASE_URL,
-  };
+  Map _authData = {};
+
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<ForgotPasswordViewModel>.withConsumer(
       viewModel: ForgotPasswordViewModel(),
-      onModelReady: (model) {},
+      onModelReady: (model) {
+        model.initEmail(email: ModalRoute.of(context).settings.arguments);
+        print("[Reset Password] Email: ${model.userEmail}");
+        _authData['email'] = model.userEmail;
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -53,24 +53,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Image.asset('assets/images/login.png'),
               verticalSpace(30),
               Text(
-                "Sorry to hear that",
+                "Create a new password",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.mavenPro(
                   textStyle: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: primaryColor,
-                  ),
-                ),
-              ),
-              verticalSpaceTiny,
-              Text(
-                "Please enter your email address",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.nunito(
-                  textStyle: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
                     color: primaryColor,
                   ),
                 ),
@@ -82,43 +70,68 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   vertical: 40,
                 ),
                 child: Form(
-                  key: _forgotFormKey,
+                  key: _resetFormKey,
                   child: Column(
                     children: <Widget>[
                       CustomTextField(
-                        hintText: "Email address",
+                        hintText: "Password",
+                        textController: passwordController,
                         validator: (value) {
                           if (value.isEmpty) {
-                            return "Email is required";
-                          }
-                          if (!EmailValidator.validate(value)) {
-                            return "Email address is not valid";
+                            return "Password is required";
                           }
                           return null;
                         },
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.remove_red_eye,
+                          ),
+                          onPressed: () => model.setPasswordVisible(
+                            !model.passwordVisible,
+                          ),
+                        ),
+                        obscureText: model.passwordVisible,
                         onSaved: (value) {
-                          model.setUserEmail(value);
+                          _authData['password'] = value;
                         },
                       ),
-                      verticalSpace(30),
+                      verticalSpace(15),
+                      CustomTextField(
+                        hintText: "Confirm Password",
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Confirm password is required";
+                          }
+                          if (value != passwordController.text) {
+                            return "Passwords do not match";
+                          }
+                          return null;
+                        },
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.remove_red_eye,
+                          ),
+                          onPressed: () => model.setPasswordVisible(
+                            !model.password2Visible,
+                            type: 2,
+                          ),
+                        ),
+                        obscureText: model.password2Visible,
+                      ),
+                      verticalSpace(15),
                       BusyButton(
-                        title: "Reset Password",
+                        title: "Reset",
                         onPressed: () async {
-                          if (!_forgotFormKey.currentState.validate()) {
+                          if (!_resetFormKey.currentState.validate()) {
                             return;
                           }
-                          _forgotFormKey.currentState.save();
-                          await model.forgotPassword();
+                          _resetFormKey.currentState.save();
+                          print("Data: $_authData");
+                          await model.resetPassword(authData: _authData);
                         },
                         busy: model.busy,
                       ),
                       verticalSpace(20),
-                      Center(
-                        child: TextLink(
-                          "Cancel",
-                          onPressed: () => model.goBack(),
-                        ),
-                      ),
                     ],
                   ),
                 ),
