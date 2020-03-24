@@ -119,7 +119,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                                   });
                                 },
                                 child: Text(
-                                  "N ${new NumberFormat('###,###').format(int.parse(_salaryValue))}.00",
+                                  "N $_salaryValue",
                                   style: GoogleFonts.mavenPro(
                                     fontWeight: FontWeight.bold,
                                   ).copyWith(color: primaryColor, fontSize: 20),
@@ -157,7 +157,6 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                           BusyButton(
                             title: "Continue",
                             onPressed: () {
-                              print("Salary: $_salaryValue");
                               if (_selectedPackage == null ||
                                   _salaryValue == "0") {
                                 _dialogService.showDialog(

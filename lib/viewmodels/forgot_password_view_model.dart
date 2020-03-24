@@ -24,17 +24,25 @@ class ForgotPasswordViewModel extends SignUpViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   String _userEmail;
   String get userEmail => _userEmail;
+  String _otp;
+  String get otp => _otp;
 
-  void initEmail({String email}) {
+  void initParams({String email, String otp}) {
     setLoading(true);
 
     if (email != null) setUserEmail(email);
+    if(otp != null) setOtp(otp);
 
     setLoading(false);
   }
 
   void setUserEmail(String email) {
     _userEmail = email;
+    notifyListeners();
+  }
+
+  void setOtp(String otp) {
+    _otp = otp;
     notifyListeners();
   }
 
@@ -57,8 +65,6 @@ class ForgotPasswordViewModel extends SignUpViewModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
-        print("[Forgot Password] Result: ${body.toString()}");
-        print("[Forgot Password] - Routing to Verify Otp...");
         return toRoute("activate-password");
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
@@ -81,7 +87,6 @@ class ForgotPasswordViewModel extends SignUpViewModel {
 
   Future resetPassword({@required Map authData}) async {
     authData['type'] = 'mobile';
-    authData['callback_url'] = BASE_URL;
     print("Auth: $authData");
     setBusy(true);
 
@@ -139,8 +144,7 @@ class ForgotPasswordViewModel extends SignUpViewModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
-        print("[Verify Otp] Result: ${body.toString()}");
-        print("[Verify Otp] - Routing to Reset Password...");
+        setOtp(otpText);
         return toRoute("reset-password");
       } else {
         await _dialogService.showDialog(
@@ -207,7 +211,6 @@ class ForgotPasswordViewModel extends SignUpViewModel {
         _navigationService.pop();
         break;
       case "activate-password":
-        print("[To Route] - Activate");
         if (userEmail != null) {
           _navigationService.navigateTo(
             ActivatePassword.routeName,
@@ -222,11 +225,10 @@ class ForgotPasswordViewModel extends SignUpViewModel {
         }
         break;
        case 'reset-password':
-         print("[To Route] - Reset");
          if (userEmail != null) {
            _navigationService.navigateTo(
              ResetPassword.routeName,
-             arguments: userEmail,
+             arguments: {'email': userEmail, 'otp': otp},
              replace: true
            );
          } else {
@@ -238,5 +240,12 @@ class ForgotPasswordViewModel extends SignUpViewModel {
        break;
       default:
     }
+  }
+
+  void alert({@required String title, @required String description}) {
+    _dialogService.showDialog(
+      title: title,
+      description: description,
+    );
   }
 }

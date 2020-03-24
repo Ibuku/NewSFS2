@@ -27,9 +27,9 @@ class _ResetPasswordState extends State<ResetPassword> {
     return ViewModelProvider<ForgotPasswordViewModel>.withConsumer(
       viewModel: ForgotPasswordViewModel(),
       onModelReady: (model) {
-        model.initEmail(email: ModalRoute.of(context).settings.arguments);
-        print("[Reset Password] Email: ${model.userEmail}");
-        _authData['email'] = model.userEmail;
+        Map modelArgs = ModalRoute.of(context).settings.arguments;
+        _authData['email'] = modelArgs['email'];
+        _authData['token'] = modelArgs['otp'];
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(

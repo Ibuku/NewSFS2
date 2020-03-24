@@ -27,7 +27,7 @@ class _ActivatePasswordState extends State<ActivatePassword> {
     return ViewModelProvider<ForgotPasswordViewModel>.withConsumer(
       viewModel: ForgotPasswordViewModel(),
       onModelReady: (model) {
-        model.initEmail(email: ModalRoute.of(context).settings.arguments);
+        model.initParams(email: ModalRoute.of(context).settings.arguments);
         print("[Activate Password] Email: ${model.userEmail}");
         _passwordReset['email'] = model.userEmail;
       },
@@ -117,9 +117,22 @@ class _ActivatePasswordState extends State<ActivatePassword> {
 
                         verticalSpace20,
                         BusyButton(
-                          title: "Verify OTP",
+                          title: "Add OTP",
                           busy: model.busy,
-                          onPressed: () => model.verifyOtp(authData: _passwordReset, otpText: _otpController.text),
+                          onPressed: () {
+                            String otpText = _otpController.text;
+                            if (otpText == '' || otpText == null) {
+                              model.alert(title: "Validation Error", description: "OTP is required");
+                              return;
+                            } else {
+                              if (otpText.length > 6 || otpText.length < 6) {
+                                model.alert(title: "Validation Error", description: "PIN is greater or less than 6 digits");
+                                return;
+                              }
+                            }
+                            model.setOtp(_otpController.text);
+                            model.toRoute('reset-password');
+                          }
                         ),
                         verticalSpace(20),
                         TextLink(
