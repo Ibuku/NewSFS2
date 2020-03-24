@@ -33,6 +33,10 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
   TextEditingController _salaryTextController;
   String _salaryValue = "0";
 
+  bool isEligible(int salary, int packageAmount) {
+    return packageAmount < (0.35 * (3 * salary));
+  }
+
   LoanPackage _selectedPackage;
 
   List<LoanPackageWidget> buildPackagesContainer(
@@ -148,6 +152,9 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                           ),
                           Column(
                               children: model.loanPackages
+                                  .where((loanPackage) => isEligible(
+                                      int.parse(_salaryValue),
+                                      loanPackage.amount))
                                   .map((loanPackage) => LoanPackageWidget(
                                       package: loanPackage,
                                       selectedPackage: _selectedPackage,

@@ -15,7 +15,11 @@ class LoanPackageWidget extends StatelessWidget {
 
   final LoanPackage package, selectedPackage;
   final Function onPressed;
-
+  
+  int monthlyRepayment(LoanPackage package) {
+      return (package.totalPayback / package.tenure).round();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,7 +80,7 @@ class LoanPackageWidget extends StatelessWidget {
                       Padding(
                           padding: EdgeInsets.symmetric(vertical: 5),
                           child:Text(
-                            'N 25,000.00 monthly repayment',
+                            'N ${new NumberFormat('###,###').format(monthlyRepayment(package))}.00 monthly repayment',
                             textAlign: TextAlign.left,
                             textDirection: TextDirection.ltr,
                             style: GoogleFonts.mavenPro(
