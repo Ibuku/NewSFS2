@@ -8,14 +8,9 @@ import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/timeline.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
-import 'package:sfscredit/ui/views/app/Loans/loan.dart';
-import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
-import 'package:sfscredit/ui/views/app/profile/Notifications.dart';
-import 'package:sfscredit/ui/views/app/profile/settings.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
-import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter/widgets.dart';
@@ -26,6 +21,8 @@ class DashboardScreen extends StatelessWidget {
   get value => null;
 
   BuildContext get context => null;
+
+  String text = "";
 
   @override
   Widget build(BuildContext context) {
@@ -162,11 +159,6 @@ class DashboardScreen extends StatelessWidget {
                           SizedBox(
                             height: 380.0,
                           ),
-                          // RaisedButton(
-//
-//                                shape: RoundedRectangleBorder(
-//                                  borderRadius: BorderRadius.circular(20),
-//                                ),
                           Text(
                             "N ${model.walletBalance}.00",
                             style: TextStyle(
@@ -182,20 +174,6 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                   verticalSpace15,
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: 5,
-                        left: 5,
-                      ),
-                      padding: EdgeInsets.only(right: 225),
-                      height: 40,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          //  SizedBox(width: 7.0),
-                        ],
-                      ),
-                    ),
                     Container(
                       margin: EdgeInsets.only(top: 10, left: 15, right: 14),
                       height: 50,
@@ -217,8 +195,9 @@ class DashboardScreen extends StatelessWidget {
                             ),
                           ),
                           splashColor: Colors.white,
-                          onPressed: () =>
-                              model.toRoute(WalletScreen.routeName),
+                          onPressed: () {
+                            model.toRoute(WalletScreen.routeName);
+                          }
                         ),
                       ),
                     ),
@@ -292,12 +271,6 @@ class DashboardScreen extends StatelessWidget {
                           SizedBox(
                             height: 5.0,
                           ),
-
-                          // RaisedButton(
-//
-//                                shape: RoundedRectangleBorder(
-//                                  borderRadius: BorderRadius.circular(20),
-//                                ),
                           Text(
                             "N ${model.activeLoan}.00",
                             style: TextStyle(
@@ -350,11 +323,6 @@ class DashboardScreen extends StatelessWidget {
                           SizedBox(
                             height: 380.0,
                           ),
-                          // RaisedButton(
-//
-//                                shape: RoundedRectangleBorder(
-//                                  borderRadius: BorderRadius.circular(20),
-//                                ),
                           Text(
                             "Overview",
                             style: TextStyle(
@@ -363,10 +331,6 @@ class DashboardScreen extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-
-                          // ),
-
-                          //  SizedBox(width: 7.0),
                         ],
                       ),
                     ),
@@ -406,8 +370,10 @@ class DashboardScreen extends StatelessWidget {
                                       size: 20, color: primaryColor),
                                   title: Text('Loan',
                                       style: TextStyle(color: primaryColor)),
-                                  subtitle: Text('20',
-                                      style: TextStyle(color: primaryColor)),
+                                  subtitle: Text(
+                                      "10",
+                                      style: TextStyle(color: primaryColor)
+                                  ),
                                 ),
                               ],
                             ),
@@ -434,7 +400,7 @@ class DashboardScreen extends StatelessWidget {
                                   ),
                                   title: Text('Request',
                                       style: TextStyle(color: Colors.white)),
-                                  subtitle: Text('200',
+                                  subtitle: Text("5",
                                       style: TextStyle(color: Colors.white)),
                                 ),
                               ],
