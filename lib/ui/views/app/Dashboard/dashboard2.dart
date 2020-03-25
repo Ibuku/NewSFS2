@@ -91,7 +91,7 @@ class DashboardScreen extends StatelessWidget {
                   children: <Widget>[
                     Container(
                   child: CardItem(
-                      titleText: "Active Loans",
+                      titleText: "Total Borrowed Loans",
                       btnText: "N ${model.activeLoan}.00",
                       icon: Icons.cloud_download,
                       //onPressed: () => model.toRoute(UpdateKYC.routeName),
@@ -101,7 +101,7 @@ class DashboardScreen extends StatelessWidget {
                       height: 15.0,
                     ),
                     CardItem(
-                      titleText: "Guaranteed Loans",
+                      titleText: "Total Guaranteed Loans",
                       btnText: "N ${model.currentGuarantorLoan}.00",
                       icon: Icons.person,
                       // onPressed: () => model.toRoute(UpdateKYC.routeName),
@@ -251,102 +251,102 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                    verticalSpace15,
-                    Container(
-                      margin: EdgeInsets.only(right: 30.0, top: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          RaisedButton(
-                            color: Colors.white,
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              "Timeline",
-                              style: TextStyle(
-                                color: primaryColor,
-                                fontSize: 17,
-                              ),
-                            ),
-                            onPressed: () =>
-                                model.toRoute(TimelineScreen.routeName),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(right: 230),
-                      height: 25,
-                      child: Text(
-                        "Overview",
-                        style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    verticalSpace15,
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          //margin: EdgeInsets.only(left: 10),
-                          height: 100,
-                          width: 150,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            color: Colors.white,
-                            elevation: 10,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                ListTile(
-                                  leading: Icon(Icons.radio_button_checked,
-                                      size: 15, color: primaryColor),
-                                  title: Text('Loan',
-                                      style: TextStyle(color: primaryColor, fontSize: 14)),
-                                  subtitle: Text(
-                                      "${model.totalApprovedLoans}",
-                                      style: TextStyle(color: primaryColor)
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(right: 10),
-                          height: 100,
-                          width: 160,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            color: primaryColor,
-                            elevation: 10,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                ListTile(
-                                  leading: Icon(
-                                    Icons.radio_button_checked,
-                                    size: 15,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text('Request',
-                                      style: TextStyle(color: Colors.white, fontSize: 14)),
-                                  subtitle: Text("${model.totalGuarantorRequests}",
-                                      style: TextStyle(color: Colors.white)),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+//                    Container(
+//                      margin: EdgeInsets.only(right: 30.0, top: 5),
+//                      child: Row(
+//                        mainAxisAlignment: MainAxisAlignment.end,
+//                        children: <Widget>[
+//                          RaisedButton(
+//                            color: Colors.white,
+//                            elevation: 4,
+//                            shape: RoundedRectangleBorder(
+//                              borderRadius: BorderRadius.circular(20),
+//                            ),
+//                            child: Text(
+//                              "Timeline",
+//                              style: TextStyle(
+//                                color: primaryColor,
+//                                fontSize: 17,
+//                              ),
+//                            ),
+//                            onPressed: () =>
+//                                model.toRoute(TimelineScreen.routeName),
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+//                    Container(
+//                      padding: EdgeInsets.only(right: 230),
+//                      height: 25,
+//                      child: Text(
+//                        "Overview",
+//                        style: TextStyle(
+//                          color: primaryColor,
+//                          fontSize: 20,
+//                          fontWeight: FontWeight.bold,
+//                        ),
+//                      ),
+//                    ),
+//                    verticalSpace15,
+//                    Row(
+//                      children: <Widget>[
+//                        Container(
+//                          //margin: EdgeInsets.only(left: 10),
+//                          height: 100,
+//                          width: 150,
+//                          child: Card(
+//                            shape: RoundedRectangleBorder(
+//                              borderRadius: BorderRadius.circular(15.0),
+//                            ),
+//                            color: Colors.white,
+//                            elevation: 10,
+//                            child: Column(
+//                              mainAxisSize: MainAxisSize.max,
+//                              children: <Widget>[
+//                                ListTile(
+//                                  leading: Icon(Icons.radio_button_checked,
+//                                      size: 15, color: primaryColor),
+//                                  title: Text('Loan',
+//                                      style: TextStyle(color: primaryColor, fontSize: 14)),
+//                                  subtitle: Text(
+//                                      "${model.totalApprovedLoans}",
+//                                      style: TextStyle(color: primaryColor)
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                          ),
+//                        ),
+//                        Container(
+//                          padding: EdgeInsets.only(right: 10),
+//                          height: 100,
+//                          width: 160,
+//                          child: Card(
+//                            shape: RoundedRectangleBorder(
+//                              borderRadius: BorderRadius.circular(15.0),
+//                            ),
+//                            color: primaryColor,
+//                            elevation: 10,
+//                            child: Column(
+//                              mainAxisSize: MainAxisSize.max,
+//                              children: <Widget>[
+//                                ListTile(
+//                                  leading: Icon(
+//                                    Icons.radio_button_checked,
+//                                    size: 15,
+//                                    color: Colors.white,
+//                                  ),
+//                                  title: Text('Request',
+//                                      style: TextStyle(color: Colors.white, fontSize: 14)),
+//                                  subtitle: Text("${model.totalGuarantorRequests}",
+//                                      style: TextStyle(color: Colors.white)),
+//                                ),
+//                              ],
+//                            ),
+//                          ),
+//                        ),
+//                      ],
+//                    ),
                   ],
                 ),
               ),
