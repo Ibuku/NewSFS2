@@ -92,12 +92,12 @@ class DashboardScreen extends StatelessWidget {
                 child: new Column(
                   children: <Widget>[
                     Container(
-                  child: CardItem(
-                      titleText: "Active Loans",
-                      btnText: "N ${model.activeLoan}.00",
-                      icon: Icons.cloud_download,
-                      //onPressed: () => model.toRoute(UpdateKYC.routeName),
-                    ),
+                      child: CardItem(
+                        titleText: "Active Loans",
+                        btnText: "N ${model.activeLoan}.00",
+                        icon: Icons.cloud_download,
+                        //onPressed: () => model.toRoute(UpdateKYC.routeName),
+                      ),
                     ),
                     SizedBox(
                       height: 15.0,
@@ -181,7 +181,7 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                  verticalSpace15,
+                    verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(
                         top: 5,
@@ -222,7 +222,7 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                   verticalSpace15,
+                    verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(
                         top: 5,
@@ -311,7 +311,7 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                   verticalSpace15,
+                    verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(right: 30.0, top: 5),
                       child: Row(
@@ -340,7 +340,7 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                   verticalSpace30,
+                    verticalSpace30,
                     Container(
                       padding: EdgeInsets.only(right: 230),
                       height: 20,
