@@ -1,13 +1,14 @@
 import 'package:flutter/foundation.dart';
 
+import 'loan_request.dart';
+
 class GuarantorRequest {
   final int id;
   final String loanRequestId;
   final int guarantorSalary;
   final String guarantorBankStatement;
   final String guarantorApproved;
-  final int loanAmount;
-  final String loanStatus;
+  final LoanRequest loanRequest;
   final String createdAt;
 
   GuarantorRequest({
@@ -16,8 +17,7 @@ class GuarantorRequest {
     this.guarantorSalary,
     this.guarantorBankStatement,
     @required this.guarantorApproved,
-    @required this.loanAmount,
-    @required this.loanStatus,
+    @required this.loanRequest,
     @required this.createdAt
   });
 
@@ -28,9 +28,8 @@ class GuarantorRequest {
       'guarantor_salary': guarantorSalary,
       'guarantor_bank_statement': guarantorBankStatement,
       'guarantor_approved': guarantorApproved,
-      'loan_amount': loanAmount,
-      'loan_status': loanStatus,
-      'created_at': createdAt
+      'created_at': createdAt,
+      'loan_request': loanRequest.toMap(),
     };
   }
 
@@ -43,9 +42,7 @@ class GuarantorRequest {
         guarantorSalary: map['guarantor_salary'],
         guarantorBankStatement: map['guarantor_bank_statement'],
         guarantorApproved: map['guarantor_approved'],
-        loanAmount: map['loan_request']['loan_package']['total_payback'],
-        loanStatus: map['loan_request']['status'],
-        createdAt: map['loan_request']['created_at']
+        loanRequest: LoanRequest.fromMap(map['loan_request'])
     );
   }
 }

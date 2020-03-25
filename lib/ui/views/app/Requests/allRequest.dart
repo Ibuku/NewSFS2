@@ -29,7 +29,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
               _currentStatus = status;
               _currentRequestsList = _allRequests.where((guarantorRequest) =>
                   _currentStatus == 'all' ||
-                  guarantorRequest.loanStatus == _currentStatus).toList();
+                  guarantorRequest.loanRequest.status == _currentStatus).toList();
             });
           },
           child: Container(
@@ -69,7 +69,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
             _currentRequestsList = _allRequests
                 .where((guarantorRequest) =>
                     _currentStatus == 'all' ||
-                    guarantorRequest.loanStatus == _currentStatus)
+                    guarantorRequest.loanRequest.status == _currentStatus)
                 .toList();
           });
         });

@@ -5,7 +5,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:sfscredit/models/user.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
 import 'package:sfscredit/ui/views/app/Loans/loan.dart';
 import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
 import 'package:sfscredit/ui/views/app/profile/Notifications.dart';

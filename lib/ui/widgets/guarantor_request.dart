@@ -8,8 +8,6 @@ import 'package:sfscredit/models/guarantor_request.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 
-import 'busy_button.dart';
-
 class GuarantorRequestWidget extends StatefulWidget {
   final GuarantorRequest request;
   final Function modifyRequest;
@@ -127,7 +125,7 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
                       Column(
                         children: <Widget>[
                           Text(
-                            "N ${new NumberFormat('###,###').format(widget.request.loanAmount)}.00",
+                            "N ${new NumberFormat('###,###').format(widget.request.loanRequest.loanPackage.totalPayback)}.00",
                             style: GoogleFonts.mavenPro(
                               textStyle: TextStyle(
                                 fontSize: 15,
@@ -170,7 +168,7 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
                 )
               ],
             )),
-        _clicked && widget.request.loanStatus == 'pending' ? buildActionWidget() : Container()
+        _clicked && widget.request.loanRequest.status == 'pending' ? buildActionWidget() : Container()
       ],
     );
   }

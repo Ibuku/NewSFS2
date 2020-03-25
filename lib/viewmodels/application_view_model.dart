@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
+import 'package:sfscredit/models/guarantor_request.dart';
 import 'package:sfscredit/models/loan.dart';
 import 'package:sfscredit/models/loan_package.dart';
+import 'package:sfscredit/models/loan_request.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/views/auth/login_screen.dart';
 
@@ -33,12 +36,6 @@ class ApplicationViewModel extends BaseModel {
   int _userWallerBalance = 0;
   int get walletBalance => _userWallerBalance;
 
-  int _totalApprovedLoans = 0;
-  int get totalApprovedLoans => _totalApprovedLoans;
-
-  int _totalGuarantorRequests = 0;
-  int get totalGuarantorRequests => _totalGuarantorRequests;
-
   User _user;
   User get user {
     _user = _application.getUser;
@@ -52,6 +49,14 @@ class ApplicationViewModel extends BaseModel {
 
   List<LoanPackage> _loanPackages = [];
   List get loanPackages => _loanPackages;
+
+  List<LoanRequest> _userLoanRequests = [];
+  List<LoanRequest> get loanRequests => _userLoanRequests;
+
+  void setUserLoanRequests(List<LoanRequest> requests) {
+    _userLoanRequests = requests;
+    notifyListeners();
+  }
 
   Future<void> getUserProfile() async {
     var userProfile = await _application.userProfile();
@@ -94,9 +99,8 @@ class ApplicationViewModel extends BaseModel {
       var body = jsonDecode(allLoanRequestsRes.body);
       List allLoanRequests = body['data'];
       List userLoanRequests = allLoanRequests.where((loanRequest) => loanRequest['status'] == 'approved').toList();
-      List<Loan> userLoanList = userLoanRequests.map((i) => Loan.fromMap(i)).toList();
+      List<LoanRequest> userLoanList = userLoanRequests.map((i) => LoanRequest.fromMap(i)).toList();
       if(userLoanList.length != 0) {
-        _totalApprovedLoans = userLoanList.length;
         Loan currentActiveLoan = new List.from(userLoanList.reversed)[0];
         _activeLoanPayback = currentActiveLoan.totalPayback;
       }
@@ -141,11 +145,10 @@ class ApplicationViewModel extends BaseModel {
       var body = jsonDecode(guarantorRequestsRes.body);
       List allGuarantorRequests = body['data'];
       List userGuarantorRequests = allGuarantorRequests.where((guarantorRequest) => guarantorRequest.guarantor_approved == "true" && guarantorRequest.loan_request.status == 'approved').toList();
-      List<Loan> userGuarantorList = userGuarantorRequests.map((i) => Loan.fromMap(i)).toList();
-      if(userGuarantorList.length != 0) {
-        _totalGuarantorRequests = userGuarantorList.length;
-        Loan currentGuarantorLoan = new List.from(userGuarantorList.reversed)[0];
-        _activeGuarantorLoanPayback = currentGuarantorLoan.totalPayback;
+      List<GuarantorRequest> requests = userGuarantorRequests.map((i) => GuarantorRequest.fromMap((i))).toList();
+      if(requests.length != 0) {
+        GuarantorRequest currentGuarantorLoan = new List.from(requests.reversed)[0];
+        _activeGuarantorLoanPayback = currentGuarantorLoan.loanRequest.loanPackage.totalPayback;
       }
     } else {
       _dialogService.showDialog(
@@ -153,6 +156,33 @@ class ApplicationViewModel extends BaseModel {
         description: guarantorRequestsRes.toString(),
       );
     }
+  }
+
+
+  Future<void> getUserLoanRequests() async {
+    setLoading(true);
+    var allLoanRequestsRes = await _application.getLoanRequests();
+    if (allLoanRequestsRes.runtimeType == Response) {
+      if (allLoanRequestsRes.statusCode == 200) {
+        var body = jsonDecode(allLoanRequestsRes.body);
+        List allLoanRequests = body['data'];
+        List<LoanRequest> userLoanRequestList = allLoanRequests.map((i) => LoanRequest.fromMap(i)).toList();
+        if(userLoanRequestList.length != 0) {
+          setUserLoanRequests(userLoanRequestList);
+        }
+      } else {
+        _dialogService.showDialog(
+          title: "Network error occured",
+          description: allLoanRequestsRes.toString(),
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: allLoanRequestsRes.toString(),
+      );
+    }
+    setLoading(false);
   }
 
   Future<void> init() async {

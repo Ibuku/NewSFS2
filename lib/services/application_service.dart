@@ -82,7 +82,6 @@ class ApplicationService {
 
   Future getWallet() async {
     try {
-      var token = _tokenService.userToken;
       return await _network.get("$API_BASE_URL/wallet",
           headers: {
             "Accept": "application/json",

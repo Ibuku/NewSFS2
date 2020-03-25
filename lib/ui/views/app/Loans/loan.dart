@@ -1,391 +1,282 @@
-
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart' show NumberFormat;
 import 'package:hexcolor/hexcolor.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+
+import 'package:sfscredit/models/loan_request.dart';
+import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
-import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
-import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
-import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
+import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
+import 'package:sfscredit/ui/widgets/custom_list_item.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
-import 'package:sfscredit/ui/widgets/text_link.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
 import 'package:flutter/widgets.dart';
 
-//import 'profile/update_kyc.dart';
-//import 'package:sfscredit/ui/views/app/profile/settings.dart';
-//import 'package:settings_ui/settings_ui.dart';
-
-
 class MyLoanScreen extends StatelessWidget {
-
   static const routeName = '/app/Loans/loan';
-
   get value => null;
+
+  int getCurrentSalary(List<LoanRequest> requests) {
+    LoanRequest latestRequest = new List.from(requests.reversed)[0];
+    return latestRequest.currentSalary;
+  }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<ApplicationViewModel>.withConsumer(
       viewModel: ApplicationViewModel(),
-      //onModelReady: (model) => model.init(),
-      builder: (context, model, child) =>
-          WillPopScope(
-            onWillPop: () async => await model.onWillPop(),
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text("My Loans"),
-                centerTitle: false,
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(FeatherIcons.logOut),
-                    onPressed: () async {
-                      await model.logout();
-                    },
-                  ),
-                ],
-
+      onModelReady: (model) => model.getUserLoanRequests(),
+      builder: (context, model, child) => WillPopScope(
+        onWillPop: () async => await model.onWillPop(),
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("My Loans"),
+            centerTitle: false,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(FeatherIcons.logOut),
+                onPressed: () async {
+                  await model.logout();
+                },
               ),
-              drawer: MenuDrawer(user: model.user, logout: model.logout),
-
-              // backgroundColor: Colors.white,
-              body: Container(
-                child: SingleChildScrollView(
-                  child: new Container(
-                    child: new SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      physics: ClampingScrollPhysics(),
-                      child: new ConstrainedBox(
-                        constraints: new BoxConstraints(),
-                        child: new Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          //mainAxisAlignment: MainAxisAlignment.spaceAround,
+            ],
+          ),
+          drawer: MenuDrawer(user: model.user, logout: model.logout),
+          body: BusyOverlay(
+            show: model.loading,
+            title: "Loading...",
+            child: Container(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: ClampingScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: new BoxConstraints(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('assets/images/background.png'),
+                              fit: BoxFit.fill),
+                        ),
+                        child: CardItem(
+                          customTitleTextWidget: Text(
+                            "Current Salary",
+                            style: GoogleFonts.mavenPro(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ).copyWith(color: primaryColor),
+                          ),
+                          customBtnTextWidget: Text(
+                            "N ${new NumberFormat('###,###').format(getCurrentSalary(model.loanRequests))}.00",
+                            style: GoogleFonts.mavenPro(
+                              fontWeight: FontWeight.bold,
+                            ).copyWith(color: primaryColor, fontSize: 20),
+                          ),
+                          icon: Icons.person,
+                          paddingVertical: 30,
+                        ),
+                      ),
+                      verticalSpace15,
+                      Container(
+                        margin: EdgeInsets.only(top: 5, left: 30),
+                        height: 20,
+                        child: Text(
+                          "Loans",
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Hexcolor('#120A44'),
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 20.0),
+                        height: 150,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
                           children: <Widget>[
                             Container(
-                              //padding: EdgeInsets.only(top: 20),
-                              height: 200,
-                              // width:400 ,
+                              width: 120,
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              padding: EdgeInsets.only(top: 15),
                               decoration: BoxDecoration(
-                                //color: randomColor(),
+                                  color: primaryColor,
+                                  image: DecorationImage(
+                                    alignment: Alignment.topLeft,
+                                    image: AssetImage('assets/images/up1.png'),
+                                  ),
+                                  borderRadius: BorderRadius.circular(15.0)),
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "${model.loanRequests.where((loanRequest) => loanRequest.status == 'approved').length}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 17),
+                                  ),
+                                  Text(
+                                    "Active",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 17),
+                                  ),
+                                ],
+                              )),
+                            ),
+                            Container(
+                              width: 120,
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              padding: EdgeInsets.only(top: 15),
+                              decoration: BoxDecoration(
+                                  color: Hexcolor('#70C6FF'),
+                                  image: DecorationImage(
+                                    alignment: Alignment.topLeft,
+                                    image: AssetImage('assets/images/up1.png'),
+                                  ),
+                                  borderRadius: BorderRadius.circular(15.0)),
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "${model.loanRequests.where((loanRequest) => loanRequest.status == 'approved').length}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 17),
+                                  ),
+                                  Text(
+                                    "Approved",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 17),
+                                  ),
+                                ],
+                              )),
+                            ),
+                            Container(
+                              width: 120,
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              padding: EdgeInsets.only(top: 15),
+                              decoration: BoxDecoration(
+                                color: Hexcolor('#7787FC'),
+                                borderRadius: BorderRadius.circular(15.0),
                                 image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/background.png'),
-                                    fit: BoxFit.fill),
+                                  alignment: Alignment.topLeft,
+                                  image: AssetImage('assets/images/up2.png'),
+                                ),
                               ),
-                              child: Stack(
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Positioned(
-                                    height: 50,
-                                    width: 20,
-                                    right: 50,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Hexcolor('#120A44'),
-                                        backgroundBlendMode: BlendMode.color,
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/avatar.png'),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    height: 50,
-                                    width: 30,
-                                    right: 50,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Hexcolor('#120A44'),
-                                        backgroundBlendMode: BlendMode.color,
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/avatar.png'),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                                  Positioned(
-                                    top: 70,
-                                    left: 30,
-                                    height: 130,
-                                    right: 25,
-                                    child: Container(
-                                      margin: EdgeInsets.only(top: 10,),
-                                      padding: EdgeInsets.only(
-                                          right: 50, bottom: 50),
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              15),
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Color.fromRGBO(
-                                                75,
-                                                97,
-                                                119,
-                                                .1,
-                                              ),
-                                              blurRadius: 20,
-                                              offset: Offset(0, 10),
-                                            )
-                                          ]),
-
-                                      child: Column(
-
-                                        textDirection: TextDirection.ltr,
-                                        children: <Widget>[
-
-                                          new Text('Current Salary',
-                                            style: TextStyle(fontSize: 15,
-                                                color: Colors.indigo[900]),
-
-                                          ),
-
-                                          new Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .start,
-                                            children: <Widget>[
-                                              new Text('N 0.00',
-                                                style: TextStyle(
-                                                  fontSize: 25,
-                                                  color: Colors.indigo[900],
-                                                  fontWeight: FontWeight.bold,),
-
-                                              ),
-//                                    new Text('  is  '),
-//                                    new Text('  Row'),
-                                            ],
-                                          ),
-//                                new Text('Row'),
-                                        ],
-                                      ),
-
-                                    ),
-
-
-                                  ),
-
-
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 15.0,
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 5, left: 30),
-                              //padding: EdgeInsets.only(right: 280),
-                              height: 40,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 380.0,
-                                  ),
-                                  // RaisedButton(
-//
-//                                shape: RoundedRectangleBorder(
-//                                  borderRadius: BorderRadius.circular(20),
-//                                ),
                                   Text(
-                                    "Loans",
+                                    "${model.loanRequests.where((loanRequest) => loanRequest.status == 'declined').length}",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Hexcolor('#120A44'),
-                                      fontSize: 17,
-                                    ),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 17),
                                   ),
-//
-                                  // ),
-
-                                  //  SizedBox(width: 7.0),
-                                ],
-                              ),
-                            ),
-
-//
-                            Container(
-                              margin: EdgeInsets.symmetric(vertical: 20.0),
-                              height: 150,
-//                    width: 250,
-                              child: ListView(
-                                // controller: PageController(viewportFraction: 0.0),
-                                scrollDirection: Axis.horizontal,
-                                // pageSnapping: true,
-                                children: <Widget>[
-                                  Container(
-                                    width: 150,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    padding: EdgeInsets.only(top: 15),
-                                    decoration: BoxDecoration(
-                                        color: Hexcolor('#120A44'),
-                                        image: DecorationImage(
-                                          alignment: Alignment.topLeft,
-                                          image: AssetImage(
-                                              'assets/images/up1.png'),
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                            15.0)
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Active",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 17),
-                                      ),
-                                    ),
-
-                                  ),
-                                  Container(
-                                    width: 150,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    padding: EdgeInsets.only(top: 25),
-                                    decoration: BoxDecoration(
-                                        color: Hexcolor('#70C6FF'),
-                                        image: DecorationImage(
-                                          alignment: Alignment.topLeft,
-                                          image: AssetImage(
-                                              'assets/images/up1.png'),
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                            15.0)
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Approved",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 17),
-                                      ),
-                                    ),
-
-
-                                  ),
-                                  Container(
-                                    width: 150,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    //padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      color: Hexcolor('#7787FC'),
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      image: DecorationImage(
-                                        alignment: Alignment.topLeft,
-                                        image: AssetImage(
-                                            'assets/images/up2.png'),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Declined",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 17),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 150,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    //padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      color: Hexcolor('#E2E2E2'),
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      image: DecorationImage(
-                                        alignment: Alignment.topLeft,
-                                        image: AssetImage(
-                                            'assets/images/up1.png'),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Pending",
-                                        style: TextStyle(
-                                            color: Hexcolor('#120A44'),
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 17),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 15.0,
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 5, left: 30),
-                              //padding: EdgeInsets.only(right: 280),
-                              height: 40,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 380.0,
-                                  ),
-                                  // RaisedButton(
-//
-//                                shape: RoundedRectangleBorder(
-//                                  borderRadius: BorderRadius.circular(20),
-//                                ),
                                   Text(
-                                    "History",
+                                    "Declined",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Hexcolor('#120A44'),
-                                      fontSize: 17,
-                                    ),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 17),
                                   ),
-//
-                                  // ),
-
-                                  //  SizedBox(width: 7.0),
                                 ],
-                              ),
+                              )),
                             ),
-
-                            // SizedBox(height: 5,),
-                            ListView.separated(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: Text("Package 1",
-                                      style: TextStyle(
-                                          color: Hexcolor('#120A44'),
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    subtitle: Text("Date"),
-                                    trailing: Text("N0.00"),
-                                  );
-                                }, separatorBuilder: (context, index) {
-                              return Divider(height: 16,);
-                            }, itemCount: 10),
-
+                            Container(
+                              width: 120,
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              padding: EdgeInsets.only(top: 15),
+                              decoration: BoxDecoration(
+                                color: Hexcolor('#E2E2E2'),
+                                borderRadius: BorderRadius.circular(15.0),
+                                image: DecorationImage(
+                                  alignment: Alignment.topLeft,
+                                  image: AssetImage('assets/images/up1.png'),
+                                ),
+                              ),
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "${model.loanRequests.where((loanRequest) => loanRequest.status == 'pending').length}",
+                                    style: TextStyle(
+                                        color: Hexcolor('#120A44'),
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 17),
+                                  ),
+                                  Text(
+                                    "Pending",
+                                    style: TextStyle(
+                                        color: Hexcolor('#120A44'),
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 17),
+                                  ),
+                                ],
+                              )),
+                            ),
                           ],
                         ),
                       ),
-                    ),
+                      verticalSpace15,
+                      Container(
+                        margin: EdgeInsets.only(top: 5, left: 30),
+                        height: 20,
+                        child: Text(
+                          "History",
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Hexcolor('#120A44'),
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      verticalSpace15,
+                      ListView.separated(
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return CustomListItem(
+                                leadingIcon: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",
+                                  ),
+                                ),
+                                title:
+                                    model.loanRequests[index].loanPackage.name,
+                                amount: model
+                                    .loanRequests[index].loanPackage.amount,
+                                date: model.loanRequests[index].createdAt,
+                                arrowIconColor: primaryColor);
+                          },
+                          separatorBuilder: (context, index) {
+                            return verticalSpace15;
+                          },
+                          itemCount: model.loanRequests.length),
+                    ],
                   ),
-
                 ),
               ),
             ),
           ),
+        ),
+      ),
     );
   }
 }
