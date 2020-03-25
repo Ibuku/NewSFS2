@@ -107,6 +107,11 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                         ),
                         customBtnTextWidget: _isEditingSalary
                             ? TextField(
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _salaryValue = newValue;
+                                  });
+                                },
                                 onSubmitted: (newValue) {
                                   setState(() {
                                     _salaryValue = newValue;
@@ -152,8 +157,8 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                           ),
                           Column(
                               children: model.loanPackages
-                                  .where((loanPackage) => isEligible(
-                                      int.parse(_salaryValue),
+                                  .where((loanPackage) => isEligible(_salaryValue != "" ?
+                                      int.parse(_salaryValue) : 0,
                                       loanPackage.amount))
                                   .map((loanPackage) => LoanPackageWidget(
                                       package: loanPackage,
