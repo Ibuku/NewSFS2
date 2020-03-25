@@ -117,7 +117,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                             ).copyWith(color: primaryColor),
                           ),
                           customBtnTextWidget: Text(
-                            "N ${new NumberFormat('###,###').format(widget.currentSalary)}",
+                            "N ${new NumberFormat('###,###').format(int.parse(widget.currentSalary))}",
                             style: GoogleFonts.mavenPro(
                               fontWeight: FontWeight.bold,
                             ).copyWith(color: primaryColor, fontSize: 20),
