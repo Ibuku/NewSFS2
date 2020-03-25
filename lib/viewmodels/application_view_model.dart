@@ -33,6 +33,12 @@ class ApplicationViewModel extends BaseModel {
   int _userWallerBalance = 0;
   int get walletBalance => _userWallerBalance;
 
+  int _totalApprovedLoans = 0;
+  int get totalApprovedLoans => _totalApprovedLoans;
+
+  int _totalGuarantorRequests = 0;
+  int get totalGuarantorRequests => _totalGuarantorRequests;
+
   User _user;
   User get user {
     _user = _application.getUser;
@@ -70,6 +76,8 @@ class ApplicationViewModel extends BaseModel {
         _navigationService.navigateTo(UpdateKYC.routeName);
         break;
       default:
+        _navigationService.navigateTo(type);
+        break;
     }
   }
 
@@ -88,6 +96,7 @@ class ApplicationViewModel extends BaseModel {
       List userLoanRequests = allLoanRequests.where((loanRequest) => loanRequest['status'] == 'approved').toList();
       List<Loan> userLoanList = userLoanRequests.map((i) => Loan.fromMap(i)).toList();
       if(userLoanList.length != 0) {
+        _totalApprovedLoans = userLoanList.length;
         Loan currentActiveLoan = new List.from(userLoanList.reversed)[0];
         _activeLoanPayback = currentActiveLoan.totalPayback;
       }
@@ -134,6 +143,7 @@ class ApplicationViewModel extends BaseModel {
       List userGuarantorRequests = allGuarantorRequests.where((guarantorRequest) => guarantorRequest.guarantor_approved == "true" && guarantorRequest.loan_request.status == 'approved').toList();
       List<Loan> userGuarantorList = userGuarantorRequests.map((i) => Loan.fromMap(i)).toList();
       if(userGuarantorList.length != 0) {
+        _totalGuarantorRequests = userGuarantorList.length;
         Loan currentGuarantorLoan = new List.from(userGuarantorList.reversed)[0];
         _activeGuarantorLoanPayback = currentGuarantorLoan.totalPayback;
       }

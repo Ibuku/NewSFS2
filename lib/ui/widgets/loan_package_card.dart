@@ -66,7 +66,7 @@ class LoanPackageWidget extends StatelessWidget {
                       Padding(
                           padding: EdgeInsets.symmetric(vertical: 5),
                           child: Text(
-                            'N ${new NumberFormat('###,###').format(package.amount)}.00',
+                            'N ${package.amount}',
                             textAlign: TextAlign.left,
                             textDirection: TextDirection.ltr,
                             style: GoogleFonts.mavenPro(
@@ -80,7 +80,7 @@ class LoanPackageWidget extends StatelessWidget {
                       Padding(
                           padding: EdgeInsets.symmetric(vertical: 5),
                           child:Text(
-                            'N ${new NumberFormat('###,###').format(monthlyRepayment(package))}.00 monthly repayment',
+                            'Interest Rate(%) = ${package.interestRate} | Tenure = ${package.tenure}',
                             textAlign: TextAlign.left,
                             textDirection: TextDirection.ltr,
                             style: GoogleFonts.mavenPro(
@@ -95,32 +95,32 @@ class LoanPackageWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  flex: 2,
-                  child: RaisedButton(
-                      color: primaryColor,
-                      elevation: 4,
-                      padding: EdgeInsets.symmetric(horizontal: 2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        "See terms",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 10,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Dashboard(),
-                          ),
-                        );
-                      },
-                    ),
-                )
+//                Expanded(
+//                  flex: 2,
+//                  child: RaisedButton(
+//                      color: primaryColor,
+//                      elevation: 4,
+//                      padding: EdgeInsets.symmetric(horizontal: 2),
+//                      shape: RoundedRectangleBorder(
+//                        borderRadius: BorderRadius.circular(20),
+//                      ),
+//                      child: Text(
+//                        "See terms",
+//                        style: TextStyle(
+//                          color: Colors.white70,
+//                          fontSize: 10,
+//                        ),
+//                      ),
+//                      onPressed: () {
+//                        Navigator.push(
+//                          context,
+//                          MaterialPageRoute(
+//                            builder: (context) => Dashboard(),
+//                          ),
+//                        );
+//                      },
+//                    ),
+//                )
               ],
             ),
           ]),
