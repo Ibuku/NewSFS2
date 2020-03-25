@@ -123,7 +123,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                                   });
                                 },
                                 child: Text(
-                                  "N $_salaryValue",
+                                  "N ${new NumberFormat('###,###').format(_salaryValue)}",
                                   style: GoogleFonts.mavenPro(
                                     fontWeight: FontWeight.bold,
                                   ).copyWith(color: primaryColor, fontSize: 20),
