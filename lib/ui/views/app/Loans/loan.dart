@@ -60,11 +60,7 @@ class MyLoanScreen extends StatelessWidget {
                       Container(
                         padding:
                             EdgeInsets.symmetric(vertical: 30, horizontal: 15),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/images/background.png'),
-                              fit: BoxFit.fill),
-                        ),
+                          decoration: BoxDecoration(color: primaryColor),
                         child: CardItem(
                           customTitleTextWidget: Text(
                             "Current Salary",
