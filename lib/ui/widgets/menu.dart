@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sfscredit/models/user.dart';
+import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 import 'package:sfscredit/ui/views/app/Loans/loan.dart';
@@ -20,7 +21,7 @@ class MenuDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Drawer(
       child: Container(
-        color: Hexcolor('#120A44'),
+        color: primaryColor,
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
