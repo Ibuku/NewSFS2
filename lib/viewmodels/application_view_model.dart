@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:intl/intl.dart' show NumberFormat;
 import 'package:sfscredit/models/guarantor_request.dart';
 import 'package:sfscredit/models/loan.dart';
 import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/models/loan_request.dart';
+import 'package:sfscredit/models/payback_schedule.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/views/auth/login_screen.dart';
 
@@ -25,7 +27,7 @@ class ApplicationViewModel extends BaseModel {
   final ApplicationService _application = locator<ApplicationService>();
   final LocalStorageService _storageService = locator<LocalStorageService>();
   final AuthenticationService _authenticationService =
-  locator<AuthenticationService>();
+      locator<AuthenticationService>();
 
   int _activeLoanPayback = 0;
   int get activeLoan => _activeLoanPayback;
@@ -50,6 +52,11 @@ class ApplicationViewModel extends BaseModel {
   List<LoanPackage> _loanPackages = [];
   List get loanPackages => _loanPackages;
 
+  void setLoanPackages(List<LoanPackage> packages) {
+    _loanPackages = packages;
+    notifyListeners();
+  }
+
   List<LoanRequest> _userLoanRequests = [];
   List<LoanRequest> get loanRequests => _userLoanRequests;
 
@@ -58,9 +65,28 @@ class ApplicationViewModel extends BaseModel {
     notifyListeners();
   }
 
+  int _activeLoansTotal = 0;
+  int get activeLoansTotal => _activeLoansTotal;
+
+  int _activeLoansAmountLeft = 0;
+  int get activeLoansAmountLeft => _activeLoansAmountLeft;
+
+  int _activeLoansTotalPaid = 0;
+  int get activeLoansTotalPaid => _activeLoansTotalPaid;
+
+  void setActiveLoanParams(List<PaybackSchedule> pendingSchedules, List<LoanRequest> requests) {
+    pendingSchedules.forEach((schedule) {
+      LoanRequest request = requests.where((request) => request.id == schedule.loanRequestId).toList()[0];
+      _activeLoansTotal += request.loanPackage.totalPayback;
+      _activeLoansAmountLeft += schedule.amountDue;
+    });
+    _activeLoansTotalPaid = _activeLoansTotal - _activeLoansAmountLeft;
+    notifyListeners();
+  }
+
   Future<void> getUserProfile() async {
     var userProfile = await _application.userProfile();
-    if(userProfile is Error){
+    if (userProfile is Error) {
       _dialogService.showDialog(
         title: "Network error occured",
         description: userProfile.toString(),
@@ -98,9 +124,12 @@ class ApplicationViewModel extends BaseModel {
     if (allLoanRequestsRes.statusCode == 200) {
       var body = jsonDecode(allLoanRequestsRes.body);
       List allLoanRequests = body['data'];
-      List userLoanRequests = allLoanRequests.where((loanRequest) => loanRequest['status'] == 'approved').toList();
-      List<LoanRequest> userLoanList = userLoanRequests.map((i) => LoanRequest.fromMap(i)).toList();
-      if(userLoanList.length != 0) {
+      List userLoanRequests = allLoanRequests
+          .where((loanRequest) => loanRequest['status'] == 'approved')
+          .toList();
+      List<LoanRequest> userLoanList =
+          userLoanRequests.map((i) => LoanRequest.fromMap(i)).toList();
+      if (userLoanList.length != 0) {
         Loan currentActiveLoan = new List.from(userLoanList.reversed)[0];
         _activeLoanPayback = currentActiveLoan.totalPayback;
       }
@@ -144,11 +173,19 @@ class ApplicationViewModel extends BaseModel {
     if (guarantorRequestsRes.statusCode == 200) {
       var body = jsonDecode(guarantorRequestsRes.body);
       List allGuarantorRequests = body['data'];
-      List userGuarantorRequests = allGuarantorRequests.where((guarantorRequest) => guarantorRequest.guarantor_approved == "true" && guarantorRequest.loan_request.status == 'approved').toList();
-      List<GuarantorRequest> requests = userGuarantorRequests.map((i) => GuarantorRequest.fromMap((i))).toList();
-      if(requests.length != 0) {
-        GuarantorRequest currentGuarantorLoan = new List.from(requests.reversed)[0];
-        _activeGuarantorLoanPayback = currentGuarantorLoan.loanRequest.loanPackage.totalPayback;
+      List userGuarantorRequests = allGuarantorRequests
+          .where((guarantorRequest) =>
+              guarantorRequest.guarantor_approved == "true" &&
+              guarantorRequest.loan_request.status == 'approved')
+          .toList();
+      List<GuarantorRequest> requests = userGuarantorRequests
+          .map((i) => GuarantorRequest.fromMap((i)))
+          .toList();
+      if (requests.length != 0) {
+        GuarantorRequest currentGuarantorLoan =
+            new List.from(requests.reversed)[0];
+        _activeGuarantorLoanPayback =
+            currentGuarantorLoan.loanRequest.loanPackage.totalPayback;
       }
     } else {
       _dialogService.showDialog(
@@ -158,7 +195,6 @@ class ApplicationViewModel extends BaseModel {
     }
   }
 
-
   Future<void> getUserLoanRequests() async {
     setLoading(true);
     var allLoanRequestsRes = await _application.getLoanRequests();
@@ -166,10 +202,9 @@ class ApplicationViewModel extends BaseModel {
       if (allLoanRequestsRes.statusCode == 200) {
         var body = jsonDecode(allLoanRequestsRes.body);
         List allLoanRequests = body['data'];
-        List<LoanRequest> userLoanRequestList = allLoanRequests.map((i) => LoanRequest.fromMap(i)).toList();
-        if(userLoanRequestList.length != 0) {
+        List<LoanRequest> userLoanRequestList =
+            allLoanRequests.map((i) => LoanRequest.fromMap(i)).toList();
           setUserLoanRequests(userLoanRequestList);
-        }
       } else {
         _dialogService.showDialog(
           title: "Network error occured",
@@ -185,9 +220,60 @@ class ApplicationViewModel extends BaseModel {
     setLoading(false);
   }
 
+  Future getLoanPaybackSchedules(List<LoanRequest> requests) async {
+    var paybackSchedulesRes = await _application.getPaybackSchedules();
+    if (paybackSchedulesRes.runtimeType == Response) {
+      if (paybackSchedulesRes.statusCode == 200) {
+        var body = jsonDecode(paybackSchedulesRes.body);
+        if (!body['data'].isEmpty) {
+          List rawRequests = body['data'];
+          List<PaybackSchedule> pendingSchedules = rawRequests
+              .where((schedule) => schedule.paymentStatus == 'pending')
+              .map((i) => PaybackSchedule.fromMap((i)))
+              .toList();
+          setActiveLoanParams(pendingSchedules, requests);
+        }
+      } else {
+        _dialogService.showDialog(
+          title: "Network error occured",
+          description: paybackSchedulesRes.toString(),
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: paybackSchedulesRes.toString(),
+      );
+    }
+  }
+
+  Future getAllLoanPackages(Function setLoanPackages) async {
+    var approvedLoanPackagesRes = await _application.getApprovedLoanPackages();
+    if (approvedLoanPackagesRes is Error) {
+      _dialogService.showDialog(
+        title: "Network error occured",
+        description: approvedLoanPackagesRes.toString(),
+      );
+      return;
+    }
+    if (approvedLoanPackagesRes.statusCode == 200) {
+      var body = jsonDecode(approvedLoanPackagesRes.body);
+      List approvedLoanPackages = body['data'];
+      List<LoanPackage> loanPackages = approvedLoanPackages.map((i) => LoanPackage.fromMap((i))).toList();
+      setLoanPackages(loanPackages);
+    } else {
+      _dialogService.showDialog(
+        title: "Network error occured",
+        description: approvedLoanPackagesRes.toString(),
+      );
+    }
+  }
+
   Future<void> init() async {
     setLoading(true);
-    await Future.wait([getActiveLoan(), getWalletBalance(), getCurrentGuarantorLoan()]);
+    await getUserLoanRequests();
+    await Future.wait(
+        [getActiveLoan(), getWalletBalance(), getCurrentGuarantorLoan(), getLoanPaybackSchedules(_userLoanRequests)]);
     setLoading(false);
   }
 
@@ -216,17 +302,20 @@ class ApplicationViewModel extends BaseModel {
       confirmationTitle: "Yes",
     )
         .then(
-
       (val) {
-
         ans = val.confirmed;
-        if(val.confirmed == true){
+        if (val.confirmed == true) {
           _storageService.empty();
-          _dialogService.showDialog(title: "Logout", description: "Logout successful");
+          _dialogService.showDialog(
+              title: "Logout", description: "Logout successful");
           _navigationService.navigateAndClearRoute(LoginScreen.routeName);
         }
       },
     );
     return ans;
+  }
+
+  String formatNumber(int num) {
+    return new NumberFormat('###,###').format(num);
   }
 }

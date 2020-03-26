@@ -6,8 +6,6 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
-import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/timeline.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
@@ -22,8 +20,6 @@ class DashboardScreen extends StatelessWidget {
   get value => null;
 
   BuildContext get context => null;
-
-  String text = "";
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +86,12 @@ class DashboardScreen extends StatelessWidget {
                 child: new Column(
                   children: <Widget>[
                     Container(
-                  child: CardItem(
-                      titleText: "Total Borrowed Loans",
-                      btnText: "N ${model.activeLoan}.00",
-                      icon: Icons.cloud_download,
-                      //onPressed: () => model.toRoute(UpdateKYC.routeName),
-                    ),
+                      child: CardItem(
+                        titleText: "Total Borrowed Loans",
+                        btnText: "N ${model.activeLoan}.00",
+                        icon: Icons.cloud_download,
+                        //onPressed: () => model.toRoute(UpdateKYC.routeName),
+                      ),
                     ),
                     SizedBox(
                       height: 15.0,
@@ -119,10 +115,9 @@ class DashboardScreen extends StatelessWidget {
                           Text(
                             "Wallet Balance ",
                             style: TextStyle(
-                              color: primaryColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
-                            ),
+                                color: primaryColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -141,12 +136,10 @@ class DashboardScreen extends StatelessWidget {
                           SizedBox(
                             height: 380.0,
                           ),
-
                           Image(
                             image: AssetImage('assets/images/icon1.png'),
                             alignment: Alignment.topRight,
                           ),
-
                           SizedBox(
                             height: 380.0,
                           ),
@@ -161,35 +154,34 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                  verticalSpace15,
+                    verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(top: 10, left: 15, right: 14),
                       height: 50,
                       child: Center(
                         child: RaisedButton.icon(
-                          color: primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          icon: Icon(
-                            Icons.call_made,
-                            color: Colors.white,
-                          ),
-                          label: Text(
-                            'My Wallet',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
+                            color: primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            icon: Icon(
+                              Icons.call_made,
                               color: Colors.white,
                             ),
-                          ),
-                          splashColor: Colors.white,
-                          onPressed: () {
-                            model.toRoute(WalletScreen.routeName);
-                          }
-                        ),
+                            label: Text(
+                              'My Wallet',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            splashColor: Colors.white,
+                            onPressed: () {
+                              model.toRoute(WalletScreen.routeName);
+                            }),
                       ),
                     ),
-                   verticalSpace15,
+                    verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(
                         top: 5,
@@ -206,27 +198,35 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    verticalSpace15,
                     Container(
                       margin: EdgeInsets.only(
                         left: 10,
                       ),
                       padding: EdgeInsets.only(right: 8, top: 5),
-                      height: 150,
-                      width: 250,
+                      height: 200,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          new CircularPercentIndicator(
+                          CircularPercentIndicator(
                             radius: 130.0,
                             lineWidth: 15.0,
                             animation: true,
-                            percent: 0.0,
-                            center: new Text(
-                              "0%",
-                              style: new TextStyle(
+                            percent: (model.activeLoansTotalPaid /
+                                        model.activeLoansTotal)
+                                    .isNaN
+                                ? 0
+                                : (model.activeLoansTotalPaid /
+                                    model.activeLoansTotal),
+                            header: Text(
+                                "Paid = N ${model.formatNumber(model.activeLoansTotalPaid)}"),
+                            footer: Text(
+                                "Left To Pay = N ${model.formatNumber(model.activeLoansAmountLeft)}"),
+                            center: Text(
+                              "${(model.activeLoansTotalPaid /
+                                  model.activeLoansTotal)
+                                  .isNaN ? 0 : ((model.activeLoansTotalPaid / model.activeLoansTotal) * 100)}%",
+                              style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15.0,
                                   color: Colors.indigo),
@@ -235,22 +235,40 @@ class DashboardScreen extends StatelessWidget {
                             circularStrokeCap: CircularStrokeCap.round,
                             progressColor: Colors.lightBlue,
                           ),
-
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          Text(
-                            "N ${model.activeLoan}.00",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: primaryColor,
-                              fontSize: 30,
-                            ),
-                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "N ${model.formatNumber(model.activeLoansTotal)}.00",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpace15,
+                              Text(
+                                "Next Installment",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                "N 0.00",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
-                   verticalSpace15,
+                    verticalSpace15,
 //                    Container(
 //                      margin: EdgeInsets.only(right: 30.0, top: 5),
 //                      child: Row(

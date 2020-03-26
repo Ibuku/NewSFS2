@@ -171,40 +171,47 @@ class ApplicationService {
   }
 
   Future requestForALoan({@required loanReqData}) async {
-    try{
-      var reqResult = await _network.post(
-        "$API_BASE_URL/loan-request/new",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: loanReqData,
-        encodeBody: false,
-        isAuth: true
-      );
-      return reqResult;
-    } catch(e) {
-      return e;
-    }
-  }
-
-  Future approveOrDeclineLoanRequest({@required reqData, @required action}) async {
-    try{
-      if(action != 'approve' && action != 'declined') {
-        return;
-      }
-      var reqResult = await _network.post(
-          "$API_BASE_URL/guarantor-request/$action/loan",
+    try {
+      var reqResult = await _network.post("$API_BASE_URL/loan-request/new",
           headers: {
             "Accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
           },
-          body: reqData,
+          body: loanReqData,
           encodeBody: false,
-          isAuth: true
-      );
+          isAuth: true);
       return reqResult;
-    } catch(e) {
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future approveOrDeclineLoanRequest(
+      {@required reqData, @required action}) async {
+    try {
+      if (action != 'approve' && action != 'declined') {
+        return;
+      }
+      var reqResult =
+          await _network.post("$API_BASE_URL/guarantor-request/$action/loan",
+              headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: reqData,
+              encodeBody: false,
+              isAuth: true);
+      return reqResult;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future getPaybackSchedules() async {
+    try {
+      return await _network.get("$API_BASE_URL/loan-request/payback-schedules",
+          headers: {"Accept": "application/json"}, isAuth: true);
+    } catch (e) {
       return e;
     }
   }

@@ -61,33 +61,17 @@ class LoanApplicationViewModel extends ApplicationViewModel {
     notifyListeners();
   }
 
+  void setLoanPackages(List<LoanPackage> packages) {
+    _loanPackages = packages;
+    notifyListeners();
+  }
+
   void toRoute(String type) {
     switch (type) {
       case UpdateKYC.routeName:
         _navigationService.navigateTo(UpdateKYC.routeName);
         break;
       default:
-    }
-  }
-
-  Future<void> getAllLoanPackages() async {
-    var approvedLoanPackagesRes = await _application.getApprovedLoanPackages();
-    if (approvedLoanPackagesRes is Error) {
-      _dialogService.showDialog(
-        title: "Network error occured",
-        description: approvedLoanPackagesRes.toString(),
-      );
-      return;
-    }
-    if (approvedLoanPackagesRes.statusCode == 200) {
-      var body = jsonDecode(approvedLoanPackagesRes.body);
-      List approvedLoanPackages = body['data'];
-      _loanPackages = approvedLoanPackages.map((i) => LoanPackage.fromMap((i))).toList();
-    } else {
-      _dialogService.showDialog(
-        title: "Network error occured",
-        description: approvedLoanPackagesRes.toString(),
-      );
     }
   }
 
@@ -207,7 +191,7 @@ class LoanApplicationViewModel extends ApplicationViewModel {
 
   Future<void> initPackages() async {
     setLoading(true);
-    await getAllLoanPackages();
+    await super.getAllLoanPackages(setLoanPackages);
     setLoading(false);
   }
 

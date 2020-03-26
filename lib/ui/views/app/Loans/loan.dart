@@ -20,8 +20,12 @@ class MyLoanScreen extends StatelessWidget {
   get value => null;
 
   int getCurrentSalary(List<LoanRequest> requests) {
-    LoanRequest latestRequest = new List.from(requests.reversed)[0];
-    return latestRequest.currentSalary;
+    int salary = 0;
+    if(requests.isNotEmpty){
+      LoanRequest latestRequest = new List.from(requests.reversed)[0];
+      salary = latestRequest.currentSalary;
+    }
+    return salary;
   }
 
   @override
