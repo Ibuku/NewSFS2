@@ -85,111 +85,124 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
           ),
           backgroundColor: Colors.white,
           drawer: MenuDrawer(user: model.user, logout: model.logout),
-          body: BusyOverlay(
-            show: model.loading,
-            title: "Loading...",
-            child: Container(
-              child: SingleChildScrollView(
-                child: new ConstrainedBox(
-                  constraints: new BoxConstraints(),
-                  child: new Column(children: <Widget>[
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 30, horizontal: 15),
-                      decoration: BoxDecoration(color: primaryColor),
-                      child: CardItem(
-                        customTitleTextWidget: Text(
-                          "Current Salary",
-                          style: GoogleFonts.mavenPro(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                          ).copyWith(color: primaryColor),
+          body: new GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+              if(_isEditingSalary){
+                setState(() {
+                  _isEditingSalary = false;
+                });
+              }
+            },
+            child: BusyOverlay(
+              show: model.loading,
+              title: "Loading...",
+              child: Container(
+                child: SingleChildScrollView(
+                  child: new ConstrainedBox(
+                    constraints: new BoxConstraints(),
+                    child: new Column(children: <Widget>[
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+                        decoration: BoxDecoration(color: primaryColor),
+                        child: CardItem(
+                          customTitleTextWidget: Text(
+                            "Current Salary",
+                            style: GoogleFonts.mavenPro(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ).copyWith(color: primaryColor),
+                          ),
+                          customBtnTextWidget: _isEditingSalary
+                              ? TextField(
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _salaryValue = newValue;
+                                    });
+                                  },
+                                  onSubmitted: (newValue) {
+                                    setState(() {
+                                      _salaryValue = newValue;
+                                      _isEditingSalary = false;
+                                    });
+                                  },
+                                  autofocus: true,
+                                  controller: _salaryTextController,
+                                  keyboardType: TextInputType.number)
+                              : InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _isEditingSalary = true;
+                                    });
+                                  },
+                                  child: Text(
+                                    "N ${new NumberFormat('###,###').format(int.parse(_salaryValue))}",
+                                    style: GoogleFonts.mavenPro(
+                                      fontWeight: FontWeight.bold,
+                                    ).copyWith(
+                                        color: primaryColor, fontSize: 20),
+                                  ),
+                                ),
+                          icon: Icons.person,
+                          paddingVertical: 30,
                         ),
-                        customBtnTextWidget: _isEditingSalary
-                            ? TextField(
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    _salaryValue = newValue;
-                                  });
-                                },
-                                onSubmitted: (newValue) {
-                                  setState(() {
-                                    _salaryValue = newValue;
-                                    _isEditingSalary = false;
-                                  });
-                                },
-                                autofocus: true,
-                                controller: _salaryTextController,
-                                keyboardType: TextInputType.number)
-                            : InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _isEditingSalary = true;
-                                  });
-                                },
-                                child: Text(
-                                  "N ${new NumberFormat('###,###').format(int.parse(_salaryValue))}",
-                                  style: GoogleFonts.mavenPro(
-                                    fontWeight: FontWeight.bold,
-                                  ).copyWith(color: primaryColor, fontSize: 20),
+                      ),
+                      verticalSpace15,
+                      Container(
+                          margin: EdgeInsets.only(
+                            top: 15,
+                          ),
+                          padding: EdgeInsets.only(right: 20, left: 20),
+                          child: Column(children: <Widget>[
+                            Text(
+                              "Loan Options",
+                              style: GoogleFonts.mavenPro(
+                                textStyle: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: primaryColor,
                                 ),
                               ),
-                        icon: Icons.person,
-                        paddingVertical: 30,
-                      ),
-                    ),
-                    verticalSpace15,
-                    Container(
-                        margin: EdgeInsets.only(
-                          top: 15,
-                        ),
-                        padding: EdgeInsets.only(right: 20, left: 20),
-                        child: Column(children: <Widget>[
-                          Text(
-                            "Loan Options",
-                            style: GoogleFonts.mavenPro(
-                              textStyle: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                                color: primaryColor,
-                              ),
                             ),
-                          ),
-                          Column(
-                              children: model.loanPackages
-                                  .where((loanPackage) => isEligible(_salaryValue != "" ?
-                                      int.parse(_salaryValue) : 0,
-                                      loanPackage.amount))
-                                  .map((loanPackage) => LoanPackageWidget(
-                                      package: loanPackage,
-                                      selectedPackage: _selectedPackage,
-                                      onPressed: this.selectLoanPackage))
-                                  .toList()),
-                          verticalSpace30,
-                          BusyButton(
-                            title: "Continue",
-                            onPressed: () {
-                              if (_selectedPackage == null ||
-                                  _salaryValue == "0") {
-                                _dialogService.showDialog(
-                                    title: 'Warning!',
-                                    description:
-                                        "Add Your Salary and Select a Loan Package");
-                                return;
-                              }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ApplyScreen2(
-                                        loanPackage: _selectedPackage,
-                                        currentSalary: _salaryValue)),
-                              );
-                            },
-                            busy: model.busy,
-                          ),
-                          verticalSpace30
-                        ])),
-                  ]),
+                            Column(
+                                children: model.loanPackages
+                                    .where((loanPackage) => isEligible(
+                                        _salaryValue != ""
+                                            ? int.parse(_salaryValue)
+                                            : 0,
+                                        loanPackage.amount))
+                                    .map((loanPackage) => LoanPackageWidget(
+                                        package: loanPackage,
+                                        selectedPackage: _selectedPackage,
+                                        onPressed: this.selectLoanPackage))
+                                    .toList()),
+                            verticalSpace30,
+                            BusyButton(
+                              title: "Continue",
+                              onPressed: () {
+                                if (_selectedPackage == null ||
+                                    _salaryValue == "0") {
+                                  _dialogService.showDialog(
+                                      title: 'Warning!',
+                                      description:
+                                          "Add Your Salary and Select a Loan Package");
+                                  return;
+                                }
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ApplyScreen2(
+                                          loanPackage: _selectedPackage,
+                                          currentSalary: _salaryValue)),
+                                );
+                              },
+                              busy: model.busy,
+                            ),
+                            verticalSpace30
+                          ])),
+                    ]),
+                  ),
                 ),
               ),
             ),

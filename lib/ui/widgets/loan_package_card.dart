@@ -80,7 +80,7 @@ class LoanPackageWidget extends StatelessWidget {
                       Padding(
                           padding: EdgeInsets.symmetric(vertical: 5),
                           child:Text(
-                            'Interest Rate(%) = ${package.interestRate} | Tenure = ${package.tenure}',
+                            'Interest Rate(%) = ${package.interestRate} | Tenure = ${package.tenure} months',
                             textAlign: TextAlign.left,
                             textDirection: TextDirection.ltr,
                             style: GoogleFonts.mavenPro(

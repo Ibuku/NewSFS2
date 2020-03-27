@@ -194,8 +194,6 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                       },
                                       textController: _accountNoController,
                                       inputType: TextInputType.number,
-                                      readOnly:
-                                          model.bankDetails?.accountNo != null,
                                       onChanged: (value) async {
                                         if (model.selectedBank != null &&
                                             value.toString().length == 10) {
