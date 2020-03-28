@@ -22,7 +22,7 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
   List<GuarantorRequest> _guarantorRequests = [];
   List<GuarantorRequest> get guarantorRequests => _guarantorRequests;
 
-  void setGuarantorRequests(List<GuarantorRequest> requests){
+  void setGuarantorRequests(List<GuarantorRequest> requests) {
     _guarantorRequests = requests;
     notifyListeners();
   }
@@ -38,12 +38,14 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
 
   Future getGuarantorRequests() async {
     var guarantorRequestRes = await _application.getGuarantorRequests();
-    if(guarantorRequestRes.runtimeType == Response) {
+    if (guarantorRequestRes.runtimeType == Response) {
       if (guarantorRequestRes.statusCode == 200) {
         var body = jsonDecode(guarantorRequestRes.body);
-        if(!body['data'].isEmpty) {
+        if (!body['data'].isEmpty) {
           List rawRequests = body['data'];
-          List<GuarantorRequest> requests = rawRequests.map((i) => GuarantorRequest.fromMap((i))).toList();
+          List<GuarantorRequest> requests =
+              rawRequests.map((i) => GuarantorRequest.fromMap((i))).toList();
+          print("Guarantor Requests: $requests");
           setGuarantorRequests(requests);
         }
       } else {
@@ -60,17 +62,17 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
     }
   }
 
-  Future modifyGuarantorRequest({@required reqData, @required action}) async {
+  Future modifyGuarantorRequest(
+      {@required Map reqData, @required action}) async {
     setBusy(true);
 
-    var modifyGuarantorRequestRes = await _application.approveOrDeclineLoanRequest(reqData: reqData, action: action);
-    if(modifyGuarantorRequestRes.runtimeType == Response) {
+    var modifyGuarantorRequestRes = await _application
+        .approveOrDeclineLoanRequest(reqData: reqData, action: action);
+    if (modifyGuarantorRequestRes.runtimeType == Response) {
       var body = jsonDecode(modifyGuarantorRequestRes.body);
       if (modifyGuarantorRequestRes.statusCode == 200) {
         _dialogService.showDialog(
-          title: "Guarantor Request",
-          description: body['message']
-        );
+            title: "Guarantor Request", description: body['message']);
         _navigationService.navigateAndClearRoute(AllRequestScreen.routeName);
       } else {
         _dialogService.showDialog(
@@ -84,6 +86,32 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
         description: modifyGuarantorRequestRes.toString(),
       );
     }
+    setBusy(false);
+  }
+
+  Future<void> addGuarantorBankDetails({@required Map reqData}) async {
+    setBusy(true);
+    var addGuarantorDetailsRes =
+        await _application.addGuarantorBankDetails(reqData: reqData);
+    if (addGuarantorDetailsRes.runtimeType == Response) {
+      var body = jsonDecode(addGuarantorDetailsRes.body);
+      if (addGuarantorDetailsRes.statusCode == 200) {
+        await modifyGuarantorRequest(
+            reqData: {'loan_request_id': reqData['loan_request_id']},
+            action: 'approve');
+      } else {
+        _dialogService.showDialog(
+          title: "Network error occured",
+          description: body['message'],
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: addGuarantorDetailsRes.toString(),
+      );
+    }
+
     setBusy(false);
   }
 

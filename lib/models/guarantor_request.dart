@@ -9,7 +9,6 @@ class GuarantorRequest {
   final String guarantorBankStatement;
   final String guarantorApproved;
   final LoanRequest loanRequest;
-  final String createdAt;
 
   GuarantorRequest({
     @required this.id,
@@ -17,8 +16,7 @@ class GuarantorRequest {
     this.guarantorSalary,
     this.guarantorBankStatement,
     @required this.guarantorApproved,
-    @required this.loanRequest,
-    @required this.createdAt
+    @required this.loanRequest
   });
 
   Map<String, dynamic> toMap() {
@@ -28,7 +26,6 @@ class GuarantorRequest {
       'guarantor_salary': guarantorSalary,
       'guarantor_bank_statement': guarantorBankStatement,
       'guarantor_approved': guarantorApproved,
-      'created_at': createdAt,
       'loan_request': loanRequest.toMap(),
     };
   }

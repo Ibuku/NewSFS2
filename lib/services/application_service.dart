@@ -215,4 +215,20 @@ class ApplicationService {
       return e;
     }
   }
+
+  Future addGuarantorBankDetails({@required reqData}) async {
+    try {
+      return await _network.post(
+          "$API_BASE_URL/guarantor-request/loan-request/bankDetails",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: reqData,
+          encodeBody: false,
+          isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
 }

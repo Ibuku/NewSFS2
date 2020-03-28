@@ -175,8 +175,8 @@ class ApplicationViewModel extends BaseModel {
       List allGuarantorRequests = body['data'];
       List userGuarantorRequests = allGuarantorRequests
           .where((guarantorRequest) =>
-              guarantorRequest.guarantor_approved == "true" &&
-              guarantorRequest.loan_request.status == 'approved')
+              guarantorRequest['guarantor_approved'] == "true" &&
+              guarantorRequest['loan_request']['status'] == 'approved')
           .toList();
       List<GuarantorRequest> requests = userGuarantorRequests
           .map((i) => GuarantorRequest.fromMap((i)))
@@ -260,6 +260,7 @@ class ApplicationViewModel extends BaseModel {
       var body = jsonDecode(approvedLoanPackagesRes.body);
       List approvedLoanPackages = body['data'];
       List<LoanPackage> loanPackages = approvedLoanPackages.map((i) => LoanPackage.fromMap((i))).toList();
+      print("Loan packages : ${body['data']}");
       setLoanPackages(loanPackages);
     } else {
       _dialogService.showDialog(

@@ -81,6 +81,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
       viewModel: LoanApplicationViewModel(),
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => WillPopScope(
+        onWillPop: () async => await model.onWillPop(),
         child: Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
