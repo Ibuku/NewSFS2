@@ -47,8 +47,6 @@ class LoginViewModel extends BaseModel {
         setBusy(true);
         _authenticationService.loadToken(body);
         ApplicationViewModel().user = body['data'];
-        // _authenticationService.loadUser(body['data']);
-        // ApplicationService.user = User.fromJson(body['data']);
         await ApplicationViewModel().getUserProfile();
         setBusy(false);
 

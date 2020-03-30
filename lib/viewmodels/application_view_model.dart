@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:intl/intl.dart' show NumberFormat;
+import 'package:sfscredit/models/bank_details.dart';
 import 'package:sfscredit/models/guarantor_request.dart';
 import 'package:sfscredit/models/loan.dart';
 import 'package:sfscredit/models/loan_package.dart';
@@ -84,6 +85,18 @@ class ApplicationViewModel extends BaseModel {
     notifyListeners();
   }
 
+  BankDetails _userBankDetails;
+  BankDetails get bankDetails => _userBankDetails;
+
+  String _bankAccountName = "";
+  String get bankAccountName => _bankAccountName;
+
+  void setBankDetails(BankDetails details) {
+    _userBankDetails = details;
+    _bankAccountName = details.accountName;
+    notifyListeners();
+  }
+
   Future<void> getUserProfile() async {
     var userProfile = await _application.userProfile();
     if (userProfile is Error) {
@@ -96,8 +109,6 @@ class ApplicationViewModel extends BaseModel {
     if (userProfile.statusCode == 200) {
       var body = jsonDecode(userProfile.body);
       user = body['data'];
-      // _authenticationService.loadUser(body['data']);
-      // ApplicationService.user = User.fromJson(body['data']);
     }
   }
 
@@ -270,9 +281,36 @@ class ApplicationViewModel extends BaseModel {
     }
   }
 
+  Future<void> getUsersBankDetails() async {
+    setBusy(true);
+
+    var bankDetailsRes = await _application.getUsersBankDetails();
+
+    setBusy(false);
+
+    if(bankDetailsRes.runtimeType == Response) {
+      if (bankDetailsRes.statusCode == 200) {
+        var body = jsonDecode(bankDetailsRes.body);
+        if(!body['data'].isEmpty) {
+          setBankDetails(BankDetails.fromMap(body['data'][0]));
+        }
+      } else {
+        _dialogService.showDialog(
+          title: "Network error occured",
+          description: bankDetailsRes.toString(),
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: bankDetailsRes.toString(),
+      );
+    }
+  }
+
   Future<void> init() async {
     setLoading(true);
-    await getUserLoanRequests();
+    await Future.wait([getUserLoanRequests(), getUsersBankDetails()]);
     await Future.wait(
         [getActiveLoan(), getWalletBalance(), getCurrentGuarantorLoan(), getLoanPaybackSchedules(_userLoanRequests)]);
     setLoading(false);

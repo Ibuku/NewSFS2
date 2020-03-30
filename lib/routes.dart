@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sfscredit/ui/views/app/profile/add_bank_details.dart';
 
 import 'ui/views/app/Loans/loan.dart';
 
@@ -54,4 +55,5 @@ var appRoutes = <String, WidgetBuilder>{
   DeclinedRequestScreen.routeName: (ctx) => DeclinedRequestScreen(),
   PendingRequestScreen.routeName: (ctx) => PendingRequestScreen(),
   SettingScreen.routeName: (ctx) => SettingScreen(),
+  AddBankDetails.routeName: (ctx) => AddBankDetails(),
 };

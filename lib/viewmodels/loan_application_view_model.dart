@@ -7,7 +7,6 @@ import 'package:sfscredit/models/bank.dart';
 import 'package:sfscredit/models/bank_details.dart';
 import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/models/user_card.dart';
-import 'package:sfscredit/services/payment_service.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 
@@ -22,7 +21,6 @@ class LoanApplicationViewModel extends ApplicationViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
   final ApplicationService _application = locator<ApplicationService>();
-  final PaymentService _payment = locator<PaymentService>();
 
   List<LoanPackage> _loanPackages = [];
   List get loanPackages => _loanPackages;
@@ -92,29 +90,6 @@ class LoanApplicationViewModel extends ApplicationViewModel {
       _dialogService.showDialog(
         title: "Application error",
         description: allBanksRes.toString(),
-      );
-    }
-  }
-
-  Future<void> getUsersBankDetails() async {
-    var bankDetailsRes = await _application.getUsersBankDetails();
-    if(bankDetailsRes.runtimeType == Response) {
-      if (bankDetailsRes.statusCode == 200) {
-        var body = jsonDecode(bankDetailsRes.body);
-        if(!body['data'].isEmpty) {
-          print("Body: ${body['data']}");
-          setBankDetails(BankDetails.fromMap(body['data'][0]));
-        }
-      } else {
-        _dialogService.showDialog(
-          title: "Network error occured",
-          description: bankDetailsRes.toString(),
-        );
-      }
-    } else {
-      _dialogService.showDialog(
-        title: "Application error",
-        description: bankDetailsRes.toString(),
       );
     }
   }
@@ -197,7 +172,7 @@ class LoanApplicationViewModel extends ApplicationViewModel {
 
   Future<void> init() async {
     setLoading(true);
-    await Future.wait([getAllBanks(), getUsersBankDetails(), getUsersCards()]);
+    await Future.wait([getAllBanks(), getUsersCards()]);
     setLoading(false);
   }
 }

@@ -156,6 +156,21 @@ class ApplicationService {
     }
   }
 
+  Future addBankDetails(Map reqData) async {
+    try {
+      return await _network.post("$API_BASE_URL/bank",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: reqData,
+          encodeBody: false,
+          isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
+
   Future resolveBankDetails(String accountNo, String bankCode) async {
     try {
       return await _network.get(

@@ -75,9 +75,6 @@ class _GuarantorDetailsModalState extends State<GuarantorDetailsModalWidget> {
                               return null;
                             },
                             inputType: TextInputType.number,
-                            onChanged: (value) {
-                              _reqData['guarantor_salary'] = value;
-                            },
                             onSaved: (value) {
                               _reqData['guarantor_salary'] = value;
                             },

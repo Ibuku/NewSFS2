@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart' show NumberFormat;
 import 'package:provider_architecture/viewmodel_provider.dart';
 
@@ -489,7 +490,10 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
 
     // This is called only after transaction is successful
     handleOnSuccess(Transaction transaction) async {
-      await _payment.verifyOnServer(transaction.reference);
+      var verifyRes = await _payment.verifyOnServer(transaction.reference);
+      if(verifyRes.runtimeType == Response && verifyRes.statusCode == 200){
+        setState(() => _inProgress = false);
+      }
     }
 
     PaystackPlugin.chargeCard(context,

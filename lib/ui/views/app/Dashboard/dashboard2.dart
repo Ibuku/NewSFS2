@@ -6,7 +6,9 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
+import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
+import 'package:sfscredit/ui/views/app/profile/add_bank_details.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
@@ -46,36 +48,47 @@ class DashboardScreen extends StatelessWidget {
           // backgroundColor: Colors.white,
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: model.user.profile == null
-                ? profileNotSet(model)
-                : profileSetup(model),
+            child: model.user.profile == null || model.bankDetails == null
+                ? profileNotComplete(model)
+                : profileComplete(model),
           ),
         ),
       ),
     );
   }
 
-  Widget profileNotSet(ApplicationViewModel model) {
+  Widget profileNotComplete(ApplicationViewModel model) {
     return Column(
       children: <Widget>[
-        CardItem(
-          titleText: "Update KYC",
-          btnText: "Update",
-          icon: Icons.person,
-          onPressed: () => model.toRoute(UpdateKYC.routeName),
-        ),
+        model.user.profile == null
+            ? CardItem(
+                titleText: "Update KYC",
+                btnText: "Update",
+                icon: Icons.person,
+                onPressed: () => model.toRoute(UpdateKYC.routeName),
+              )
+            : Container(),
+        verticalSpace15,
+        model.bankDetails == null
+            ? CardItem(
+                titleText: "Update Bank Details",
+                btnText: "Update",
+                icon: Icons.credit_card,
+                onPressed: () => model.toRoute(AddBankDetails.routeName),
+              )
+            : Container(),
         verticalSpace15,
         CardItem(
           titleText: "Your first loan",
           btnText: "Apply",
           icon: Icons.keyboard_tab,
-          onPressed: () {},
+          onPressed: () => model.toRoute(ApplyScreen1.routeName),
         ),
       ],
     );
   }
 
-  Widget profileSetup(ApplicationViewModel model) {
+  Widget profileComplete(ApplicationViewModel model) {
     return Column(
       children: <Widget>[
         Container(
@@ -223,9 +236,7 @@ class DashboardScreen extends StatelessWidget {
                             footer: Text(
                                 "Left To Pay = N ${model.formatNumber(model.activeLoansAmountLeft)}"),
                             center: Text(
-                              "${(model.activeLoansTotalPaid /
-                                  model.activeLoansTotal)
-                                  .isNaN ? 0 : ((model.activeLoansTotalPaid / model.activeLoansTotal) * 100)}%",
+                              "${(model.activeLoansTotalPaid / model.activeLoansTotal).isNaN ? 0 : ((model.activeLoansTotalPaid / model.activeLoansTotal) * 100)}%",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15.0,
