@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:sfscredit/const.dart';
 import 'package:sfscredit/locator.dart';
+import 'package:sfscredit/models/bank.dart';
 
 import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/services/payment_service.dart';
@@ -26,6 +27,7 @@ import 'package:sfscredit/ui/widgets/custom_card.dart';
 import 'package:sfscredit/ui/widgets/custom_text_field.dart';
 import 'package:sfscredit/ui/widgets/full_screen_picker.dart';
 import 'package:sfscredit/viewmodels/loan_application_view_model.dart';
+import 'package:sfscredit/viewmodels/payment_view_model.dart';
 
 class ApplyScreen2 extends StatefulWidget {
   static const routeName = '/app/Apply/apply2';
@@ -51,12 +53,6 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
   final _bankController = TextEditingController();
   final _cardController = TextEditingController();
 
-  // Paystack
-  final PaymentService _payment = locator<PaymentService>();
-  final _scaffoldKey = new GlobalKey<ScaffoldState>();
-  bool _inProgress = false;
-  String _reference;
-
   @override
   void initState() {
     PaystackPlugin.initialize(publicKey: PAYSTACK_PUBLIC_KEY);
@@ -76,15 +72,60 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
     super.dispose();
   }
 
+  Widget buildPlatformButton(String string, Function() function) {
+    Widget widget;
+    if (Platform.isIOS) {
+      widget = new CupertinoButton(
+        onPressed: function,
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        color: CupertinoColors.activeBlue,
+        child: new Text(
+          string,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    } else {
+      widget = new RaisedButton(
+        onPressed: function,
+        color: primaryColor,
+        padding: EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
+        child: new Text(
+          string,
+          style:
+          GoogleFonts.mavenPro(fontSize: 15, fontWeight: FontWeight.normal)
+              .copyWith(color: Colors.white),
+        ),
+      );
+    }
+    return widget;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<LoanApplicationViewModel>.withConsumer(
-      viewModel: LoanApplicationViewModel(),
-      onModelReady: (model) => model.init(),
+    return ViewModelProvider<PaymentViewModel>.withConsumer(
+      viewModel: PaymentViewModel(),
+      onModelReady: (model) {
+        Future.wait([model.init(), model.initBankDetails()]).then((val) {
+          if(model.bankDetails != null) {
+            _accountNoController.text = model.bankDetails.accountNo;
+            _accountNameController.text = model.bankDetails.accountName;
+            List<Bank> usersBankList = model.banks
+                .where((bank) => bank.code == model.bankDetails.bankCode)
+                .toList();
+            if(usersBankList.isNotEmpty) {
+              _bankController.text = usersBankList[0].name;
+            }
+          }
+          model.setBuildContext(context);
+        });
+      },
       builder: (context, model, child) => WillPopScope(
-        onWillPop: () async => await model.onWillPop(),
+        //onWillPop: () async => await model.onWillPop(),
         child: Scaffold(
-            key: _scaffoldKey,
             appBar: AppBar(
               title: Text("Apply"),
               centerTitle: false,
@@ -394,9 +435,9 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: <Widget>[
-                                              _getPlatformButton(
+                                              buildPlatformButton(
                                                   'Add a New Card',
-                                                  () => _startAfreshCharge(
+                                                  () => model.startAfreshCharge(
                                                       model.user.email))
                                             ],
                                           ),
@@ -444,121 +485,5 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
             )),
       ),
     );
-  }
-
-  _startAfreshCharge(String userEmail) async {
-    //_formKey.currentState.save();
-
-    Charge charge = Charge();
-    charge.card = _getCardDefaults();
-
-    setState(() => _inProgress = true);
-    // Set transaction params directly in app (note that these params
-    // are only used if an access_code is not set. In debug mode,
-    // setting them after setting an access code would throw an exception
-    _reference = await _payment.fetchReferenceFromServer();
-    charge
-      ..amount = (50 * 100) // In base currency
-      ..email = userEmail
-      ..reference = _reference
-      ..putCustomField('Charged From', 'Flutter SDK');
-    _chargeCard(charge);
-  }
-
-  _chargeCard(Charge charge) {
-    // This is called only before requesting OTP
-    // Save reference so you may send to server if error occurs with OTP
-    handleBeforeValidate(Transaction transaction) {
-      _updateStatus(transaction.reference, 'validating...');
-    }
-
-    handleOnError(Object e, Transaction transaction) async {
-      // If an access code has expired, simply ask your server for a new one
-      // and restart the charge instead of displaying error
-      if (e is ExpiredAccessCodeException) {
-        _chargeCard(charge);
-        return;
-      }
-
-      if (transaction.reference != null) {
-        await _payment.verifyOnServer(transaction.reference);
-      } else {
-        setState(() => _inProgress = false);
-        _updateStatus(transaction.reference, e.toString());
-      }
-    }
-
-    // This is called only after transaction is successful
-    handleOnSuccess(Transaction transaction) async {
-      var verifyRes = await _payment.verifyOnServer(transaction.reference);
-      if(verifyRes.runtimeType == Response && verifyRes.statusCode == 200){
-        setState(() => _inProgress = false);
-      }
-    }
-
-    PaystackPlugin.chargeCard(context,
-        charge: charge,
-        beforeValidate: (transaction) => handleBeforeValidate(transaction),
-        onSuccess: (transaction) => handleOnSuccess(transaction),
-        onError: (error, transaction) => handleOnError(error, transaction));
-  }
-
-  PaymentCard _getCardDefaults() {
-    // Using just the must-required parameters.
-    return PaymentCard(
-      number: null,
-      cvc: null,
-      expiryMonth: 0,
-      expiryYear: 0,
-    );
-  }
-
-  Widget _getPlatformButton(String string, Function() function) {
-    // is still in progress
-    Widget widget;
-    if (Platform.isIOS) {
-      widget = new CupertinoButton(
-        onPressed: function,
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        color: CupertinoColors.activeBlue,
-        child: new Text(
-          string,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      );
-    } else {
-      widget = new RaisedButton(
-        onPressed: function,
-        color: primaryColor,
-        padding: EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 16,
-        ),
-        child: new Text(
-          string,
-          style:
-              GoogleFonts.mavenPro(fontSize: 15, fontWeight: FontWeight.normal)
-                  .copyWith(color: Colors.white),
-        ),
-      );
-    }
-    return widget;
-  }
-
-  _updateStatus(String reference, String message) {
-    _showMessage('Reference: $reference \n\ Response: $message',
-        const Duration(seconds: 7));
-  }
-
-  _showMessage(String message,
-      [Duration duration = const Duration(seconds: 4)]) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(message),
-      duration: duration,
-      action: new SnackBarAction(
-          label: 'CLOSE',
-          onPressed: () => _scaffoldKey.currentState.removeCurrentSnackBar()),
-    ));
   }
 }

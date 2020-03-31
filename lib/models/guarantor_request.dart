@@ -26,7 +26,7 @@ class GuarantorRequest {
       'guarantor_salary': guarantorSalary,
       'guarantor_bank_statement': guarantorBankStatement,
       'guarantor_approved': guarantorApproved,
-      'loan_request': loanRequest.toMap(),
+      'loan_request': loanRequest.toMap()
     };
   }
 

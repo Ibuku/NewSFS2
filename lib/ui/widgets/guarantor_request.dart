@@ -16,8 +16,7 @@ class GuarantorRequestWidget extends StatefulWidget {
   final GuarantorRequest request;
   final BuildContext pageContext;
 
-  GuarantorRequestWidget({Key key, @required this.request, this.pageContext})
-      : super(key: key);
+  GuarantorRequestWidget({@required this.request, this.pageContext});
 
   @override
   _GuarantorRequestState createState() => _GuarantorRequestState();
@@ -25,6 +24,10 @@ class GuarantorRequestWidget extends StatefulWidget {
 
 class _GuarantorRequestState extends State<GuarantorRequestWidget> {
   bool _clicked = false;
+
+  bool _isPending() {
+    return widget.request.guarantorApproved == 'pending';
+  }
 
   Future<void> showSalaryModal(
       GuarantorRequest request, BuildContext pageContext) async {
@@ -36,7 +39,8 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
         backgroundColor: Colors.white,
         context: pageContext,
         builder: (builder) {
-          return GuarantorDetailsModalWidget(request: request);
+          return GuarantorDetailsModalWidget(
+              request: request, parentContext: pageContext);
         });
   }
 
@@ -93,12 +97,6 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
   }
 
   @override
-  void initState() {
-    print("Hmm Args: ${widget.request.toMap()}");
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ViewModelProvider<GuarantorRequestViewModel>.withConsumer(
       viewModel: GuarantorRequestViewModel(),
@@ -115,7 +113,8 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
                       flex: 1,
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
-                          "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",
+                          widget.request.loanRequest.user?.profile?.avatar ??
+                              "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",
                         ),
                       ),
                     ),
@@ -127,7 +126,7 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
                           Column(
                             children: <Widget>[
                               Text(
-                                "Donald Trump",
+                                "${widget.request.loanRequest.user?.firstname} ${widget.request.loanRequest.user?.lastname}",
                                 style: GoogleFonts.mavenPro(
                                   textStyle: TextStyle(
                                     fontSize: 15,
@@ -160,42 +159,47 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
                                   ),
                                 ),
                               ),
-                              Text(
-                                "Active",
-                                style: GoogleFonts.mavenPro(
-                                  textStyle: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal,
-                                    color: lightGrey,
-                                  ),
-                                ),
-                              )
+                              !_isPending() &&
+                                      widget.request.loanRequest
+                                              .paymentStatus ==
+                                          'unpaid'
+                                  ? Text(
+                                      "Active",
+                                      style: GoogleFonts.mavenPro(
+                                        textStyle: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.normal,
+                                          color: lightGrey,
+                                        ),
+                                      ),
+                                    )
+                                  : Container()
                             ],
                           )
                         ],
                       ),
                     ),
-                    Flexible(
-                      flex: 1,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _clicked = !_clicked;
-                          });
-                        },
-                        icon: Icon(
-                            Platform.isAndroid
-                                ? Icons.arrow_forward
-                                : Icons.arrow_forward_ios,
-                            color: lightGrey),
-                        iconSize: 20,
-                      ),
-                    )
+                    _isPending()
+                        ? Flexible(
+                            flex: 1,
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _clicked = !_clicked;
+                                });
+                              },
+                              icon: Icon(
+                                  Platform.isAndroid
+                                      ? Icons.arrow_forward
+                                      : Icons.arrow_forward_ios,
+                                  color: lightGrey),
+                              iconSize: 20,
+                            ),
+                          )
+                        : Container()
                   ],
                 )),
-            _clicked && widget.request.loanRequest.status == 'pending'
-                ? buildActionWidget(model)
-                : Container()
+            _clicked && _isPending() ? buildActionWidget(model) : Container()
           ],
         ),
       ),

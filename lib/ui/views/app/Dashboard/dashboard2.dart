@@ -44,7 +44,6 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
           drawer: MenuDrawer(user: model.user, logout: model.logout),
-
           // backgroundColor: Colors.white,
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),

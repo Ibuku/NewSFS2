@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:intl/intl.dart' show NumberFormat;
+import 'package:sfscredit/models/bank.dart';
 import 'package:sfscredit/models/bank_details.dart';
 import 'package:sfscredit/models/guarantor_request.dart';
 import 'package:sfscredit/models/loan.dart';
@@ -90,6 +91,16 @@ class ApplicationViewModel extends BaseModel {
 
   String _bankAccountName = "";
   String get bankAccountName => _bankAccountName;
+
+  List<Bank> _banksList = [];
+  List get banks => _banksList;
+
+  Bank _selectedBank;
+  Bank get selectedBank => _selectedBank;
+
+  void setSelectedBank(Bank bank) {
+    _selectedBank = bank;
+  }
 
   void setBankDetails(BankDetails details) {
     _userBankDetails = details;
@@ -306,6 +317,62 @@ class ApplicationViewModel extends BaseModel {
         description: bankDetailsRes.toString(),
       );
     }
+  }
+
+  Future<void> getAllBanks() async {
+    setBusy(true);
+    var allBanksRes = await _application.getBanks();
+    setBusy(false);
+
+    if(allBanksRes.runtimeType == Response) {
+      if (allBanksRes.statusCode == 200) {
+        var body = jsonDecode(allBanksRes.body);
+        List allBanks = body['data'];
+        _banksList = allBanks.map((i) => Bank.fromMap((i))).toList();
+      } else {
+        _dialogService.showDialog(
+          title: "Network error occured",
+          description: allBanksRes.toString(),
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: allBanksRes.toString(),
+      );
+    }
+  }
+
+  Future<void> resolveBankDetails(String accountNo, Bank bank) async {
+    setBusy(true);
+    var resolveDetailsRes = await _application.resolveBankDetails(accountNo, bank.code);
+    if(resolveDetailsRes.runtimeType == Response) {
+      var body = jsonDecode(resolveDetailsRes.body);
+      if (resolveDetailsRes.statusCode == 200) {
+        if(!body['data'].isEmpty) {
+          setBankDetails(BankDetails.fromMap(body['data']));
+        }
+      } else {
+        _dialogService.showDialog(
+            title: "Bank Account Verification Failed",
+            description: body['message']
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: resolveDetailsRes.toString(),
+      );
+    }
+    setBusy(false);
+  }
+
+  Future<void> initBankDetails() async {
+    setLoading(true);
+
+    await Future.wait([getAllBanks(), getUsersBankDetails()]);
+
+    setLoading(false);
   }
 
   Future<void> init() async {

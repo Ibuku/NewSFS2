@@ -32,7 +32,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
             _currentRequestsList = _allRequests
                 .where((guarantorRequest) =>
                     _currentStatus == 'all' ||
-                    guarantorRequest.loanRequest.status == _currentStatus)
+                    guarantorRequest.guarantorApproved == _currentStatus)
                 .toList();
           });
         },
@@ -71,7 +71,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
             _currentRequestsList = _allRequests
                 .where((guarantorRequest) =>
                     _currentStatus == 'all' ||
-                    guarantorRequest.loanRequest.status == _currentStatus)
+                    guarantorRequest.guarantorApproved == _currentStatus)
                 .toList();
           });
         });
@@ -159,7 +159,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
                           itemCount: _currentRequestsList.length,
                           itemBuilder: (BuildContext context, int index) {
                             return GuarantorRequestWidget(
-                                request: _currentRequestsList[index], pageContext: context,);
+                                request: _currentRequestsList[index], pageContext: context);
                           },
                           separatorBuilder: (context, index) {
                             return verticalSpace15;

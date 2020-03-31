@@ -12,8 +12,10 @@ import 'busy_button.dart';
 
 class GuarantorDetailsModalWidget extends StatefulWidget {
   final GuarantorRequest request;
+  final BuildContext parentContext;
 
-  GuarantorDetailsModalWidget({@required this.request});
+  GuarantorDetailsModalWidget(
+      {@required this.request, @required this.parentContext});
 
   @override
   _GuarantorDetailsModalState createState() => _GuarantorDetailsModalState();
@@ -31,81 +33,82 @@ class _GuarantorDetailsModalState extends State<GuarantorDetailsModalWidget> {
     return ViewModelProvider<GuarantorRequestViewModel>.withConsumer(
       viewModel: GuarantorRequestViewModel(),
       builder: (context, model, child) => WillPopScope(
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 25, horizontal: 35),
-          child: Column(
-            children: <Widget>[
-              Flexible(
-                child:  Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    FlatButton(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      onPressed: () {
-                        print('Cancel Clicked');
-                      },
-                      child: Text("Cancel",
-                          style: GoogleFonts.mavenPro(
-                            textStyle: TextStyle(fontSize: 15, color: primaryColor),
-                          )),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text("Add Your Current Salary",
+          child: Container(
+        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 35),
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  FlatButton(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    onPressed: () {
+                      Navigator.of(widget.parentContext).pop();
+                    },
+                    child: Text("Cancel",
                         style: GoogleFonts.mavenPro(
-                          textStyle: TextStyle(fontSize: 17, color: primaryColor),
+                          textStyle:
+                              TextStyle(fontSize: 15, color: primaryColor),
                         )),
-                    Form(
-                      key: _salaryFormKey,
-                      child: Column(
-                        children: <Widget>[
-                          CustomTextField(
-                            hintText: 'Current Salary',
-                            textController: _salaryController,
-                            hintTextStyle: TextStyle(fontSize: 12),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Current Salary is required";
-                              }
-                              return null;
-                            },
-                            inputType: TextInputType.number,
-                            onSaved: (value) {
-                              _reqData['guarantor_salary'] = value;
-                            },
-                          ),
-                          verticalSpace15,
-                          BusyButton(
-                            title: "Approve Request",
-                            onPressed: () async {
-                              if (_reqData.isEmpty) {
-                                return;
-                              }
-                              if (!_salaryFormKey.currentState.validate()) {
-                                return;
-                              }
-                              _salaryFormKey.currentState.save();
-                              _reqData['loan_request_id'] =
-                                  widget.request.loanRequestId;
-                              await model.addGuarantorBankDetails(reqData: _reqData);
-                            },
-                            busy: model.busy,
-                          ),
-                        ],
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text("Add Your Current Salary",
+                    style: GoogleFonts.mavenPro(
+                      textStyle: TextStyle(fontSize: 17, color: primaryColor),
+                    )),
+                Form(
+                  key: _salaryFormKey,
+                  child: Column(
+                    children: <Widget>[
+                      CustomTextField(
+                        hintText: 'Current Salary',
+                        textController: _salaryController,
+                        hintTextStyle: TextStyle(fontSize: 12),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Current Salary is required";
+                          }
+                          if (widget.request.loanRequest.loanPackage.amount >
+                              (0.35 * (3 * int.parse(value)))) {
+                            return "Your Current Salary is not enough";
+                          }
+                          return null;
+                        },
+                        inputType: TextInputType.number,
+                        onSaved: (value) {
+                          _reqData['guarantor_salary'] = value;
+                        },
                       ),
-                    )
-                  ],
+                      verticalSpace15,
+                      BusyButton(
+                        title: "Approve Request",
+                        onPressed: () async {
+                          if (!_salaryFormKey.currentState.validate()) {
+                            return;
+                          }
+                          _salaryFormKey.currentState.save();
+                          _reqData['loan_request_id'] =
+                              widget.request.loanRequestId;
+                          await model.addGuarantorBankDetails(
+                              reqData: _reqData);
+                        },
+                        busy: model.busy,
+                      ),
+                    ],
+                  ),
                 )
-              )
-            ],
-          ),
-        )
-      ),
+              ],
+            ))
+          ],
+        ),
+      )),
     );
   }
 }

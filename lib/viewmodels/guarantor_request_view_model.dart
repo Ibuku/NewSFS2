@@ -45,7 +45,6 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
           List rawRequests = body['data'];
           List<GuarantorRequest> requests =
               rawRequests.map((i) => GuarantorRequest.fromMap((i))).toList();
-          print("Guarantor Requests: $requests");
           setGuarantorRequests(requests);
         }
       } else {

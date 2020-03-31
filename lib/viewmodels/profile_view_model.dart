@@ -13,16 +13,6 @@ class ProfileViewModel extends ApplicationViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final ApplicationService _applicationService = locator<ApplicationService>();
 
-  List<Bank> _banksList = [];
-  List get banks => _banksList;
-
-  Bank _selectedBank;
-  Bank get selectedBank => _selectedBank;
-
-  void setSelectedBank(Bank bank) {
-    _selectedBank = bank;
-  }
-
   bool _passwordVisible = true;
   bool get passwordVisible => _passwordVisible;
 
@@ -67,62 +57,6 @@ class ProfileViewModel extends ApplicationViewModel {
     }
   }
 
-  Future<void> getAllBanks() async {
-    setBusy(true);
-    var allBanksRes = await _applicationService.getBanks();
-    setBusy(false);
-
-    if(allBanksRes.runtimeType == Response) {
-      if (allBanksRes.statusCode == 200) {
-        var body = jsonDecode(allBanksRes.body);
-        List allBanks = body['data'];
-        _banksList = allBanks.map((i) => Bank.fromMap((i))).toList();
-      } else {
-        _dialogService.showDialog(
-          title: "Network error occured",
-          description: allBanksRes.toString(),
-        );
-      }
-    } else {
-      _dialogService.showDialog(
-        title: "Application error",
-        description: allBanksRes.toString(),
-      );
-    }
-  }
-
-  Future<void> resolveBankDetails(String accountNo, Bank bank) async {
-    setBusy(true);
-    var resolveDetailsRes = await _applicationService.resolveBankDetails(accountNo, bank.code);
-    if(resolveDetailsRes.runtimeType == Response) {
-      var body = jsonDecode(resolveDetailsRes.body);
-      if (resolveDetailsRes.statusCode == 200) {
-        if(!body['data'].isEmpty) {
-          setBankDetails(BankDetails.fromMap(body['data']));
-        }
-      } else {
-        _dialogService.showDialog(
-            title: "Bank Account Verification Failed",
-            description: body['message']
-        );
-      }
-    } else {
-      _dialogService.showDialog(
-        title: "Application error",
-        description: resolveDetailsRes.toString(),
-      );
-    }
-    setBusy(false);
-  }
-
-  Future<void> initBankDetails() async {
-    setLoading(true);
-
-    await Future.wait([getAllBanks(), getUsersBankDetails()]);
-
-    setLoading(false);
-  }
-
   Future updateUserBankDetails(Map reqData) async {
     setBusy(true);
     var addDetailsRes = await _applicationService.addBankDetails(reqData);
@@ -131,7 +65,6 @@ class ProfileViewModel extends ApplicationViewModel {
       if (addDetailsRes.statusCode == 200) {
         setBusy(true);
         await getUsersBankDetails();
-        print("Detils: $bankDetails");
         setBusy(false);
       } else {
         _dialogService.showDialog(
