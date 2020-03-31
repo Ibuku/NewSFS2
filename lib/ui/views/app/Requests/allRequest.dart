@@ -1,5 +1,6 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider_architecture/provider_architecture.dart';
@@ -10,6 +11,7 @@ import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/guarantor_request.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
 import 'package:sfscredit/viewmodels/guarantor_request_view_model.dart';
+import '../../../../const.dart';
 
 class AllRequestScreen extends StatefulWidget {
   static const routeName = '/app/Requests/allRequest';
@@ -58,6 +60,12 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
         ),
       );
     }).toList();
+  }
+
+  @override
+  void initState() {
+    PaystackPlugin.initialize(publicKey: PAYSTACK_PUBLIC_KEY);
+    super.initState();
   }
 
   @override

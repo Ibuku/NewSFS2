@@ -10,6 +10,7 @@ import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
 import 'package:sfscredit/ui/views/app/profile/add_bank_details.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
+import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
@@ -47,9 +48,13 @@ class DashboardScreen extends StatelessWidget {
           // backgroundColor: Colors.white,
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: model.user.profile == null || model.bankDetails == null
-                ? profileNotComplete(model)
-                : profileComplete(model),
+            child: BusyOverlay(
+              show: model.loading,
+              overlayBackground: backgroundColor,
+              child: model.user.profile == null || model.bankDetails == null
+                  ? profileNotComplete(model)
+                  : profileComplete(model),
+            )
           ),
         ),
       ),
