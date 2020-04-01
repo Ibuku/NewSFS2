@@ -62,7 +62,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget profileNotComplete(ApplicationViewModel model) {
-    return Column(
+    return !model.loading ? Column(
       children: <Widget>[
         model.user.profile == null
             ? CardItem(
@@ -89,7 +89,7 @@ class DashboardScreen extends StatelessWidget {
           onPressed: () => model.toRoute(ApplyScreen1.routeName),
         ),
       ],
-    );
+    ) : Container();
   }
 
   Widget profileComplete(ApplicationViewModel model) {
