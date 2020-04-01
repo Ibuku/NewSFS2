@@ -50,7 +50,7 @@ class DashboardScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             child: BusyOverlay(
               show: model.loading,
-              overlayBackground: backgroundColor,
+              overlayBackground: Colors.white,
               child: model.user.profile == null || model.bankDetails == null
                   ? profileNotComplete(model)
                   : profileComplete(model),

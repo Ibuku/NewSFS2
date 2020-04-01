@@ -32,7 +32,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
       ..amount = (50 * 100) // In base currency
       ..email = userEmail
       ..reference = _reference
-      ..putCustomField('Charged From', 'Flutter SDK');
+      ..putCustomField('Charged From', 'SFS Credits Mobile App');
     _chargeCard(charge);
   }
 
@@ -48,6 +48,10 @@ class PaymentViewModel extends LoanApplicationViewModel {
       // and restart the charge instead of displaying error
       if (e is ExpiredAccessCodeException) {
         _chargeCard(charge);
+        return;
+      }
+
+      if(e is CardException) {
         return;
       }
 

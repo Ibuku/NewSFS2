@@ -96,7 +96,7 @@ class _FullScreenPickerState extends State<FullScreenPicker> {
                           );
                         },
                       ),
-              )
+              ),
             ],
           ),
         ),

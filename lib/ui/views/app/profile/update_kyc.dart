@@ -153,20 +153,20 @@ class _UpdateKYCState extends State<UpdateKYC> {
                         _userProfile['next_of_kin'] = val;
                       },
                     ),
-                    verticalSpace15,
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        width: 100,
-                        child: CardBusyButton(
-                          title: "Add Profile Image",
-                          onPressed: () {
-
-                          },
-                          busy: false,
-                        ),
-                      ),
-                    ),
+//                    verticalSpace15,
+//                    Align(
+//                      alignment: Alignment.centerLeft,
+//                      child: Container(
+//                        width: 100,
+//                        child: CardBusyButton(
+//                          title: "Add Profile Image",
+//                          onPressed: () {
+//
+//                          },
+//                          busy: false,
+//                        ),
+//                      ),
+//                    ),
                     verticalSpace(50),
                     Align(
                       alignment: Alignment.centerRight,

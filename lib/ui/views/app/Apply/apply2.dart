@@ -96,8 +96,8 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
         child: new Text(
           string,
           style:
-          GoogleFonts.mavenPro(fontSize: 15, fontWeight: FontWeight.normal)
-              .copyWith(color: Colors.white),
+              GoogleFonts.mavenPro(fontSize: 15, fontWeight: FontWeight.normal)
+                  .copyWith(color: Colors.white),
         ),
       );
     }
@@ -110,13 +110,13 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
       viewModel: PaymentViewModel(),
       onModelReady: (model) {
         Future.wait([model.init(), model.initBankDetails()]).then((val) {
-          if(model.bankDetails != null) {
+          if (model.bankDetails != null) {
             _accountNoController.text = model.bankDetails.accountNo;
             _accountNameController.text = model.bankDetails.accountName;
             List<Bank> usersBankList = model.banks
                 .where((bank) => bank.code == model.bankDetails.bankCode)
                 .toList();
-            if(usersBankList.isNotEmpty) {
+            if (usersBankList.isNotEmpty) {
               _bankController.text = usersBankList[0].name;
             }
           }
@@ -267,11 +267,9 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                       enabled: !model.loading,
                                       onSaved: (value) {
                                         _bankController.value =
-                                            new TextEditingController
-                                                .fromValue(
-                                                new TextEditingValue(
-                                                    text:
-                                                    value))
+                                            new TextEditingController.fromValue(
+                                                    new TextEditingValue(
+                                                        text: value))
                                                 .value;
                                       },
                                       readOnly: true,
@@ -354,17 +352,30 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                               verticalSpace15,
                               Column(children: <Widget>[
                                 Container(
-                                  margin: EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    model.cards.length > 0
-                                        ? "Select A Card"
-                                        : "Add Card",
-                                    style: GoogleFonts.mavenPro(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold)
-                                        .copyWith(color: Colors.indigo[900]),
-                                  ),
-                                ),
+                                    margin: EdgeInsets.only(left: 20),
+                                    child: Row(children: <Widget>[
+                                      Expanded(
+                                          child: Center(
+                                        child: Text(
+                                          model.cards.length > 0
+                                              ? "Select A Card"
+                                              : "Add Card",
+                                          style: GoogleFonts.mavenPro(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold)
+                                              .copyWith(
+                                                  color: Colors.indigo[900]),
+                                        ),
+                                      )),
+                                      IconButton(
+                                        onPressed: () => model.startAfreshCharge(
+                                            model.user.email),
+                                          icon: Icon(Icons.add,
+                                              color: primaryColor),
+                                          color: Colors.transparent,
+                                          tooltip: "Add a new Card",
+                                          iconSize: 20),
+                                    ])),
                                 verticalSpace15,
                                 // When User has at least 1 verified card on the platform
                                 model.cards.length > 0
@@ -386,9 +397,9 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                         onSaved: (value) {
                                           _cardController.value =
                                               new TextEditingController
-                                                  .fromValue(
-                                                  new TextEditingValue(
-                                                      text: value))
+                                                          .fromValue(
+                                                      new TextEditingValue(
+                                                          text: value))
                                                   .value;
                                         },
                                         readOnly: true,
