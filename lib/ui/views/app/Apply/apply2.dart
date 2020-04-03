@@ -109,7 +109,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
     return ViewModelProvider<PaymentViewModel>.withConsumer(
       viewModel: PaymentViewModel(),
       onModelReady: (model) {
-        Future.wait([model.init(), model.initBankDetails()]).then((val) {
+        model.initLoanApplication().then((val) {
           if (model.bankDetails != null) {
             _accountNoController.text = model.bankDetails.accountNo;
             _accountNameController.text = model.bankDetails.accountName;
@@ -140,7 +140,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
             ),
             backgroundColor: Colors.white,
             body: BusyOverlay(
-              show: model.loading,
+              show: model.loading || model.busy,
               title: "Loading...",
               child: Container(
                 padding: EdgeInsets.only(left: 10, right: 10),

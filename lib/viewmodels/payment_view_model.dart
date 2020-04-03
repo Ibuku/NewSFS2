@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:sfscredit/services/dialog_service.dart';
 import 'package:sfscredit/services/payment_service.dart';
-import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/viewmodels/loan_application_view_model.dart';
 
 import '../locator.dart';
@@ -52,6 +48,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
       }
 
       if(e is CardException) {
+        setBusy(false);
         return;
       }
 
@@ -67,6 +64,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
     handleOnSuccess(Transaction transaction) async {
       var verifyRes = await _payment.verifyOnServer(transaction.reference);
       if(verifyRes.runtimeType == Response && verifyRes.statusCode == 200){
+        await getUsersCards();
         setBusy(false);
       }
     }
