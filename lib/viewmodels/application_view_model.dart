@@ -31,11 +31,8 @@ class ApplicationViewModel extends BaseModel {
   final AuthenticationService _authenticationService =
       locator<AuthenticationService>();
 
-  int _activeLoanPayback = 0;
-  int get activeLoan => _activeLoanPayback;
-
-  int _activeGuarantorLoanPayback = 0;
-  int get currentGuarantorLoan => _activeGuarantorLoanPayback;
+  int _totalGuarantorLoanPayback = 0;
+  int get totalGuarantorLoan => _totalGuarantorLoanPayback;
 
   int _userWallerBalance = 0;
   int get walletBalance => _userWallerBalance;
@@ -76,9 +73,12 @@ class ApplicationViewModel extends BaseModel {
   int _activeLoansTotalPaid = 0;
   int get activeLoansTotalPaid => _activeLoansTotalPaid;
 
-  void setActiveLoanParams(List<PaybackSchedule> pendingSchedules, List<LoanRequest> requests) {
+  void setActiveLoanParams(
+      List<PaybackSchedule> pendingSchedules, List<LoanRequest> requests) {
     pendingSchedules.forEach((schedule) {
-      LoanRequest request = requests.where((request) => request.id == schedule.loanRequestId).toList()[0];
+      LoanRequest request = requests
+          .where((request) => request.id == schedule.loanRequestId)
+          .toList()[0];
       _activeLoansTotal += request.loanPackage.totalPayback;
       _activeLoansAmountLeft += schedule.amountDue;
     });
@@ -134,34 +134,33 @@ class ApplicationViewModel extends BaseModel {
     }
   }
 
-  Future<void> getActiveLoan() async {
-    var allLoanRequestsRes = await _application.getLoanRequests();
-    if (allLoanRequestsRes is Error) {
-      _dialogService.showDialog(
-        title: "Network error occured",
-        description: allLoanRequestsRes.toString(),
-      );
-      return;
-    }
-    if (allLoanRequestsRes.statusCode == 200) {
-      var body = jsonDecode(allLoanRequestsRes.body);
-      List allLoanRequests = body['data'];
-      List userLoanRequests = allLoanRequests
-          .where((loanRequest) => loanRequest['status'] == 'approved')
-          .toList();
-      List<LoanRequest> userLoanList =
-          userLoanRequests.map((i) => LoanRequest.fromMap(i)).toList();
-      if (userLoanList.length != 0) {
-        Loan currentActiveLoan = new List.from(userLoanList.reversed)[0];
-        _activeLoanPayback = currentActiveLoan.totalPayback;
-      }
-    } else {
-      _dialogService.showDialog(
-        title: "Network error occured",
-        description: allLoanRequestsRes.toString(),
-      );
-    }
-  }
+//  Future<void> getActiveLoan() async {
+//    var allLoanRequestsRes = await _application.getLoanRequests();
+//    if (allLoanRequestsRes.runtimeType == Response) {
+//      var body = jsonDecode(allLoanRequestsRes.body);
+//      if (allLoanRequestsRes.statusCode == 200) {
+//        List rawRequests = body['data'];
+//        List<LoanRequest> userLoanRequests =
+//            rawRequests.map((req) => LoanRequest.fromMap(req));
+//        List<LoanRequest> approvedLoanRequests = userLoanRequests.where(
+//            (req) => req.paymentStatus == 'unpaid' && req.approvalDate != null).toList();
+//        if (approvedLoanRequests.length != 0) {
+//          Loan currentActiveLoan = new List.from(userLoanList.reversed)[0];
+//          _activeLoanPayback = currentActiveLoan.totalPayback;
+//        }
+//      } else {
+//        _dialogService.showDialog(
+//          title: "Request error",
+//          description: body['message'],
+//        );
+//      }
+//    } else {
+//      _dialogService.showDialog(
+//        title: "Network error occured",
+//        description: allLoanRequestsRes.toString(),
+//      );
+//    }
+//  }
 
   Future<void> getWalletBalance() async {
     var walletRequestRes = await _application.getWallet();
@@ -183,31 +182,29 @@ class ApplicationViewModel extends BaseModel {
     }
   }
 
-  Future<void> getCurrentGuarantorLoan() async {
+  Future<void> getTotalGuarantorLoan() async {
     var guarantorRequestsRes = await _application.getGuarantorRequests();
-    if (guarantorRequestsRes is Error) {
-      _dialogService.showDialog(
-        title: "Network error occured",
-        description: guarantorRequestsRes.toString(),
-      );
-      return;
-    }
-    if (guarantorRequestsRes.statusCode == 200) {
+
+    if (guarantorRequestsRes.runtimeType == Response) {
       var body = jsonDecode(guarantorRequestsRes.body);
-      List allGuarantorRequests = body['data'];
-      List userGuarantorRequests = allGuarantorRequests
-          .where((guarantorRequest) =>
-              guarantorRequest['guarantor_approved'] == "true" &&
-              guarantorRequest['loan_request']['status'] == 'approved')
-          .toList();
-      List<GuarantorRequest> requests = userGuarantorRequests
-          .map((i) => GuarantorRequest.fromMap((i)))
-          .toList();
-      if (requests.length != 0) {
-        GuarantorRequest currentGuarantorLoan =
-            new List.from(requests.reversed)[0];
-        _activeGuarantorLoanPayback =
-            currentGuarantorLoan.loanRequest.loanPackage.totalPayback;
+      if (guarantorRequestsRes.statusCode == 200) {
+        List rawRequests = body['data'];
+        List<GuarantorRequest> allGuarantorRequests =
+            rawRequests.map((req) => GuarantorRequest.fromMap(req)).toList();
+        List<GuarantorRequest> approvedRequests = allGuarantorRequests
+            .where((req) => req.guarantorApproved == 'approved')
+            .toList();
+        if (approvedRequests.length > 0) {
+          int guaranteedLoansTotal = approvedRequests
+              .map((req) => req.loanRequest.loanPackage.totalPayback)
+              .reduce((int i, int j) => i + j);
+          _totalGuarantorLoanPayback = guaranteedLoansTotal;
+        }
+      } else {
+        _dialogService.showDialog(
+          title: "Request Error",
+          description: body['message'],
+        );
       }
     } else {
       _dialogService.showDialog(
@@ -226,7 +223,7 @@ class ApplicationViewModel extends BaseModel {
         List allLoanRequests = body['data'];
         List<LoanRequest> userLoanRequestList =
             allLoanRequests.map((i) => LoanRequest.fromMap(i)).toList();
-          setUserLoanRequests(userLoanRequestList);
+        setUserLoanRequests(userLoanRequestList);
       } else {
         _dialogService.showDialog(
           title: "Network error occured",
@@ -281,7 +278,8 @@ class ApplicationViewModel extends BaseModel {
     if (approvedLoanPackagesRes.statusCode == 200) {
       var body = jsonDecode(approvedLoanPackagesRes.body);
       List approvedLoanPackages = body['data'];
-      List<LoanPackage> loanPackages = approvedLoanPackages.map((i) => LoanPackage.fromMap((i))).toList();
+      List<LoanPackage> loanPackages =
+          approvedLoanPackages.map((i) => LoanPackage.fromMap((i))).toList();
       print("Loan packages : ${body['data']}");
       setLoanPackages(loanPackages);
     } else {
@@ -299,10 +297,10 @@ class ApplicationViewModel extends BaseModel {
 
     setBusy(false);
 
-    if(bankDetailsRes.runtimeType == Response) {
+    if (bankDetailsRes.runtimeType == Response) {
       if (bankDetailsRes.statusCode == 200) {
         var body = jsonDecode(bankDetailsRes.body);
-        if(!body['data'].isEmpty) {
+        if (!body['data'].isEmpty) {
           setBankDetails(BankDetails.fromMap(body['data'][0]));
         }
       } else {
@@ -324,7 +322,7 @@ class ApplicationViewModel extends BaseModel {
     var allBanksRes = await _application.getBanks();
     setBusy(false);
 
-    if(allBanksRes.runtimeType == Response) {
+    if (allBanksRes.runtimeType == Response) {
       if (allBanksRes.statusCode == 200) {
         var body = jsonDecode(allBanksRes.body);
         List allBanks = body['data'];
@@ -345,18 +343,18 @@ class ApplicationViewModel extends BaseModel {
 
   Future<void> resolveBankDetails(String accountNo, Bank bank) async {
     setBusy(true);
-    var resolveDetailsRes = await _application.resolveBankDetails(accountNo, bank.code);
-    if(resolveDetailsRes.runtimeType == Response) {
+    var resolveDetailsRes =
+        await _application.resolveBankDetails(accountNo, bank.code);
+    if (resolveDetailsRes.runtimeType == Response) {
       var body = jsonDecode(resolveDetailsRes.body);
       if (resolveDetailsRes.statusCode == 200) {
-        if(!body['data'].isEmpty) {
+        if (!body['data'].isEmpty) {
           setBankDetails(BankDetails.fromMap(body['data']));
         }
       } else {
         _dialogService.showDialog(
             title: "Bank Account Verification Failed",
-            description: body['message']
-        );
+            description: body['message']);
       }
     } else {
       _dialogService.showDialog(
@@ -378,8 +376,11 @@ class ApplicationViewModel extends BaseModel {
   Future<void> init() async {
     setLoading(true);
     await Future.wait([getUserLoanRequests(), getUsersBankDetails()]);
-    await Future.wait(
-        [getActiveLoan(), getWalletBalance(), getCurrentGuarantorLoan(), getLoanPaybackSchedules(_userLoanRequests)]);
+    await Future.wait([
+      getWalletBalance(),
+      getTotalGuarantorLoan(),
+      getLoanPaybackSchedules(_userLoanRequests)
+    ]);
     setLoading(false);
   }
 

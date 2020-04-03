@@ -49,7 +49,7 @@ class DashboardScreen extends StatelessWidget {
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             child: BusyOverlay(
-              show: model.loading,
+              show: model.loading || model.busy,
               overlayBackground: Colors.white,
               child: model.user.profile == null || model.bankDetails == null
                   ? profileNotComplete(model)
@@ -105,7 +105,7 @@ class DashboardScreen extends StatelessWidget {
                     Container(
                       child: CardItem(
                         titleText: "Total Borrowed Loans",
-                        btnText: "N ${model.activeLoan}.00",
+                        btnText: "N ${model.formatNumber(model.activeLoansTotal)}.00",
                         icon: Icons.cloud_download,
                         //onPressed: () => model.toRoute(UpdateKYC.routeName),
                       ),
@@ -115,7 +115,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     CardItem(
                       titleText: "Total Guaranteed Loans",
-                      btnText: "N ${model.currentGuarantorLoan}.00",
+                      btnText: "N ${model.formatNumber(model.totalGuarantorLoan)}.00",
                       icon: Icons.person,
                       // onPressed: () => model.toRoute(UpdateKYC.routeName),
                     ),

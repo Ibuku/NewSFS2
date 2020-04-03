@@ -66,7 +66,7 @@ class LoanPackageWidget extends StatelessWidget {
                       Padding(
                           padding: EdgeInsets.symmetric(vertical: 5),
                           child: Text(
-                            'N ${package.amount}',
+                            'N ${package.amount}.00',
                             textAlign: TextAlign.left,
                             textDirection: TextDirection.ltr,
                             style: GoogleFonts.mavenPro(

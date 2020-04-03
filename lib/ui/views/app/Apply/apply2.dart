@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:http/http.dart';
-import 'package:intl/intl.dart' show NumberFormat;
 import 'package:provider_architecture/viewmodel_provider.dart';
 
 import 'package:email_validator/email_validator.dart';
@@ -12,11 +10,9 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:sfscredit/const.dart';
-import 'package:sfscredit/locator.dart';
 import 'package:sfscredit/models/bank.dart';
 
 import 'package:sfscredit/models/loan_package.dart';
-import 'package:sfscredit/services/payment_service.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
@@ -26,7 +22,6 @@ import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/custom_card.dart';
 import 'package:sfscredit/ui/widgets/custom_text_field.dart';
 import 'package:sfscredit/ui/widgets/full_screen_picker.dart';
-import 'package:sfscredit/viewmodels/loan_application_view_model.dart';
 import 'package:sfscredit/viewmodels/payment_view_model.dart';
 
 class ApplyScreen2 extends StatefulWidget {
@@ -160,7 +155,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                             ).copyWith(color: primaryColor),
                           ),
                           customBtnTextWidget: Text(
-                            "N ${new NumberFormat('###,###').format(int.parse(widget.currentSalary))}",
+                            "N ${model.formatNumber(int.parse(widget.currentSalary))}.00",
                             style: GoogleFonts.mavenPro(
                               fontWeight: FontWeight.bold,
                             ).copyWith(color: primaryColor, fontSize: 20),

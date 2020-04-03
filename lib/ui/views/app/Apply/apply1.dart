@@ -2,7 +2,6 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart' show NumberFormat;
 import 'package:provider_architecture/viewmodel_provider.dart';
 import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
@@ -138,7 +137,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                                     });
                                   },
                                   child: Text(
-                                    "N ${new NumberFormat('###,###').format(int.parse(_salaryValue))}",
+                                    "N ${model.formatNumber(int.parse(_salaryValue))}.00",
                                     style: GoogleFonts.mavenPro(
                                       fontWeight: FontWeight.bold,
                                     ).copyWith(
