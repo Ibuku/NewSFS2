@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -263,7 +265,19 @@ class MyLoanScreen extends StatelessWidget {
                                 amount: model
                                     .loanRequests[index].loanPackage.amount,
                                 date: model.loanRequests[index].createdAt,
-                                arrowIconColor: primaryColor);
+                                color: primaryColor,
+                              actionIcon: IconButton(
+                                  onPressed: () {
+                                    print("Clicked");
+                                  },
+                                  icon: Icon(
+                                    Platform.isAndroid
+                                        ? Icons.arrow_forward
+                                        : Icons.arrow_forward_ios,
+                                    color: primaryColor,
+                                    size: 20,
+                                  )),
+                            );
                           },
                           separatorBuilder: (context, index) {
                             return verticalSpace15;

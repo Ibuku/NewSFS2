@@ -31,7 +31,7 @@ class PaymentService {
     }
   }
 
-  Future fetchReferenceFromServer() async {
+  Future initializeAddCard() async {
     try {
       Response res = await _network.post('$API_BASE_URL/cards/initialize',
           headers: {
@@ -41,6 +41,72 @@ class PaymentService {
           isAuth: true);
       var body = jsonDecode(res.body);
       return body['data']['reference'];
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future withdrawFromWallet(Map reqData) async {
+    try {
+      Response res = await _network.post('$API_BASE_URL/wallet/transfer/bank',
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: reqData,
+          encodeBody: false,
+          isAuth: true);
+      var body = jsonDecode(res.body);
+      print("$body");
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future initializeWalletTransaction(int amount) async {
+    try {
+      Response res = await _network.post('$API_BASE_URL/wallet/fund/initialize',
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: {'amount': amount},
+          encodeBody: false,
+          isAuth: true);
+      var body = jsonDecode(res.body);
+      return body['data']['reference'];
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future fundWallet(Map reqData) async {
+    try {
+      Response res = await _network.post("$API_BASE_URL/wallet/fund/pay",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: reqData,
+          encodeBody: false,
+          isAuth: true);
+      return res;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future confirmWalletTransaction(String reference) async {
+    try {
+      Response res = await _network.post('$API_BASE_URL/wallet/fund/confirm',
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: {'reference': reference},
+          encodeBody: false,
+          isAuth: true);
+      return res;
     } catch (e) {
       return e;
     }

@@ -55,6 +55,7 @@ dependencies:
   rflutter_alert: ^1.0.3
   # Paystack Flutter Package
   flutter_paystack: ^1.0.3+1
+  flutter_svg: ^0.17.1
 
 
 dev_dependencies:
@@ -81,3 +82,4 @@ flutter:
 
   assets:
    - assets/images/
+   - assets/svgs/

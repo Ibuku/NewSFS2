@@ -1,12 +1,16 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:sfscredit/models/wallet_transaction.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
+import 'package:sfscredit/ui/widgets/custom_list_item.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
+import 'package:sfscredit/ui/widgets/wallet_transaction_modal.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sfscredit/viewmodels/payment_view_model.dart';
 
 class WalletScreen extends StatefulWidget {
   static const routeName = '/app/Dashboard/wallet';
@@ -16,12 +20,33 @@ class WalletScreen extends StatefulWidget {
 
 class _WalletScreenState extends State<WalletScreen> {
   get value => null;
+  List<WalletTransaction> _transactions = [];
+
+  Future<void> showTransactionModal(BuildContext pageContext) async {
+    await showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40))),
+        backgroundColor: Colors.white,
+        context: pageContext,
+        builder: (builder) {
+          return WalletTransactionModalWidget(parentContext: pageContext);
+        });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<ApplicationViewModel>.withConsumer(
-      viewModel: ApplicationViewModel(),
-      onModelReady: (model) => model.init(),
+    return ViewModelProvider<PaymentViewModel>.withConsumer(
+      viewModel: PaymentViewModel(),
+      onModelReady: (model) {
+        model.initWallet().then((val) {
+          setState(() {
+            _transactions = List.from(model.walletTransactions);
+          });
+        });
+      },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async => await model.onWillPop(),
         child: Scaffold(
@@ -39,6 +64,7 @@ class _WalletScreenState extends State<WalletScreen> {
           ),
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           body: Container(
+            constraints: BoxConstraints.expand(),
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -49,9 +75,9 @@ class _WalletScreenState extends State<WalletScreen> {
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               physics: ClampingScrollPhysics(),
-              child: new ConstrainedBox(
-                constraints: new BoxConstraints(),
-                child: new Column(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
@@ -66,7 +92,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           ),
                           horizontalSpaceSmall,
                           Text(
-                            "N 0.00",
+                            "N ${model.walletBalance}.00",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -77,85 +103,92 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(right: 20, left: 15),
-                          padding: EdgeInsets.only(bottom: 20, top: 10),
-                          height: 120,
-                          width: 120,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white70,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromRGBO(
-                                    75,
-                                    97,
-                                    119,
-                                    .1,
+                        GestureDetector(
+                          onTap: () {
+                            print("Withdraw");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(right: 20, left: 15),
+                            padding: EdgeInsets.only(bottom: 20, top: 10),
+                            height: 120,
+                            width: 120,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white70,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromRGBO(
+                                      75,
+                                      97,
+                                      119,
+                                      .1,
+                                    ),
+                                    blurRadius: 20,
+                                    offset: Offset(0, 10),
+                                  )
+                                ]),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SvgPicture.asset("assets/svgs/withdraw.svg",
+                                    alignment: Alignment.topCenter, width: 40),
+                                verticalSpace15,
+                                Text(
+                                  "Withdraw",
+                                  style: TextStyle(
+                                    color: primaryColor,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  blurRadius: 20,
-                                  offset: Offset(0, 10),
-                                )
-                              ]),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Image.asset(
-                                'assets/images/withdraw.png',
-                                alignment: Alignment.topCenter,
-                                width: 70
-                              ),
-                              Text(
-                                "Withdraw",
-                                style: TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 15),
-                          padding: EdgeInsets.only(bottom: 20, top: 10),
-                          height: 120,
-                          width: 120,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white70,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromRGBO(
-                                    75,
-                                    97,
-                                    119,
-                                    .1,
+                        GestureDetector(
+                          onTap: () {
+                            print("Fund");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 15),
+                            padding: EdgeInsets.only(bottom: 20, top: 10),
+                            height: 120,
+                            width: 120,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white70,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromRGBO(
+                                      75,
+                                      97,
+                                      119,
+                                      .1,
+                                    ),
+                                    blurRadius: 20,
+                                    offset: Offset(0, 10),
+                                  )
+                                ]),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SvgPicture.asset("assets/svgs/fund.svg",
+                                    alignment: Alignment.topCenter, width: 40),
+                                verticalSpace15,
+                                Text(
+                                  "Fund",
+                                  style: TextStyle(
+                                    color: primaryColor,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  blurRadius: 20,
-                                  offset: Offset(0, 10),
-                                )
-                              ]),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Image.asset(
-                                  'assets/images/fund.png',
-                                  alignment: Alignment.topCenter,
-                                  width: 70
-                              ),
-                              Text(
-                                "Fund",
-                                style: TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
+                        )
                       ],
                     ),
                     verticalSpace15,
@@ -171,37 +204,32 @@ class _WalletScreenState extends State<WalletScreen> {
                         ),
                       ),
                     ),
-                    ListView.separated(
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              "Credit",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              "Date",
-                              style: TextStyle(
+                    _transactions.length > 0
+                        ? ListView.separated(
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              String type = _transactions[index].type;
+                              String svgName =
+                                  type == "credit" ? 'fund' : 'withdraw';
+                              return CustomListItem(
+                                leadingIcon: SvgPicture.asset(
+                                    "assets/svgs/$svgName.svg",
+                                    alignment: Alignment.topCenter,
+                                    width: 40),
+                                title:
+                                    "${type[0].toUpperCase()}${type.substring(1)}",
+                                amount: _transactions[index].amount,
                                 color: Colors.white,
-                              ),
-                            ),
-                            trailing: Text(
-                              "N0.00",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return Divider(
-                            height: 16,
-                          );
-                        },
-                        itemCount: 10),
+                                date: _transactions[index].createdAt,
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return Divider(
+                                height: 16,
+                              );
+                            },
+                            itemCount: _transactions.length)
+                        : Container()
                   ],
                 ),
               ),

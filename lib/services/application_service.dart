@@ -246,4 +246,14 @@ class ApplicationService {
       return e;
     }
   }
+
+  Future getWalletTransactions() async {
+    try {
+      return await _network.get("$API_BASE_URL/wallet/transactions",
+          headers: {"Accept": "application/json"}, isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
+
 }

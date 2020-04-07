@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:http/http.dart';
+import 'package:sfscredit/models/user_card.dart';
+import 'package:sfscredit/models/wallet_transaction.dart';
+import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/services/dialog_service.dart';
 import 'package:sfscredit/services/payment_service.dart';
 import 'package:sfscredit/viewmodels/loan_application_view_model.dart';
@@ -11,9 +16,18 @@ import '../locator.dart';
 class PaymentViewModel extends LoanApplicationViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final PaymentService _payment = locator<PaymentService>();
+  final ApplicationService _application = locator<ApplicationService>();
 
   String _reference;
   BuildContext _context;
+
+  List<WalletTransaction> _walletTransactions = [];
+  List<WalletTransaction> get walletTransactions => _walletTransactions;
+
+  setWalletTransactions(List<WalletTransaction> transactions) {
+    _walletTransactions = transactions;
+    notifyListeners();
+  }
 
   Future startAfreshCharge(String userEmail) async {
     Charge charge = Charge();
@@ -23,13 +37,66 @@ class PaymentViewModel extends LoanApplicationViewModel {
     // Set transaction params directly in app (note that these params
     // are only used if an access_code is not set. In debug mode,
     // setting them after setting an access code would throw an exception
-    _reference = await _payment.fetchReferenceFromServer();
+    _reference = await _payment.initializeAddCard();
     charge
       ..amount = (50 * 100) // In base currency
       ..email = userEmail
       ..reference = _reference
       ..putCustomField('Charged From', 'SFS Credits Mobile App');
     _chargeCard(charge);
+  }
+
+  Future startWalletCharge(int amount) async {
+    setBusy(true);
+    String reference = await _payment.initializeWalletTransaction(amount);
+    var paymentRes = await _payment.fundWallet({
+      'reference': reference,
+      'card_id': selectedCard.id,
+      'card_last4': selectedCard.last4,
+      'card_type': selectedCard.cardType,
+      'amount': amount
+    });
+    setBusy(false);
+
+    if(paymentRes.runtimeType == Response){
+      var body = jsonDecode(paymentRes.body);
+      if(paymentRes.statusCode == 200){
+        await confirmWalletCharge(reference);
+      } else {
+        _dialogService.showDialog(
+          title: "Request Error",
+          description: body['message']
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application Error",
+        description: "An Error occured while making the transaction"
+      );
+    }
+  }
+
+  Future confirmWalletCharge(String reference) async {
+    setBusy(true);
+    var confirmTransactionRes = await _payment.confirmWalletTransaction(reference);
+    setBusy(false);
+
+    if(confirmTransactionRes.runtimeType == Response){
+      var body = jsonDecode(confirmTransactionRes.body);
+      if(confirmTransactionRes.statusCode == 200){
+        notifyListeners();
+      } else {
+        _dialogService.showDialog(
+            title: "Request Error",
+            description: body['message']
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+          title: "Application Error",
+          description: "An Error occured while confirming the transaction"
+      );
+    }
   }
 
   _chargeCard(Charge charge) {
@@ -47,7 +114,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
         return;
       }
 
-      if(e is CardException) {
+      if (e is CardException) {
         setBusy(false);
         return;
       }
@@ -63,7 +130,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
     // This is called only after transaction is successful
     handleOnSuccess(Transaction transaction) async {
       var verifyRes = await _payment.verifyOnServer(transaction.reference);
-      if(verifyRes.runtimeType == Response && verifyRes.statusCode == 200){
+      if (verifyRes.runtimeType == Response && verifyRes.statusCode == 200) {
         await getUsersCards();
         setBusy(false);
       }
@@ -85,12 +152,50 @@ class PaymentViewModel extends LoanApplicationViewModel {
 
   void updateStatus(String reference, String message) {
     _dialogService.showDialog(
-      title: 'Update Status',
-      description: 'Reference: $reference \n\ Response: $message'
-    );
+        title: 'Update Status',
+        description: 'Reference: $reference \n\ Response: $message');
   }
 
-  void setBuildContext(BuildContext context){
+  void setBuildContext(BuildContext context) {
     _context = context;
   }
+
+  Future<void> getWalletTransactions() async {
+    setBusy(true);
+
+    var walletTransactionsRes = await _application.getWalletTransactions();
+
+    setBusy(false);
+
+    if (walletTransactionsRes.runtimeType == Response) {
+      var body = jsonDecode(walletTransactionsRes.body);
+      if (walletTransactionsRes.statusCode == 200) {
+        List rawTransactions = body['data'];
+        List<WalletTransaction> transactions = rawTransactions
+            .map((transaction) => WalletTransaction.fromMap(transaction))
+            .toList();
+        setWalletTransactions(transactions);
+      } else {
+        _dialogService.showDialog(
+          title: "Request error occured",
+          description: body['message'],
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: walletTransactionsRes.toString(),
+      );
+    }
+  }
+
+  Future initWallet() async {
+    setLoading(true);
+
+    await Future.wait([getWalletBalance(), getWalletTransactions()]);
+
+    setLoading(false);
+  }
+
+
 }
