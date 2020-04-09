@@ -36,6 +36,11 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
           children: <Widget>[
             RaisedButton(
               onPressed: () async {
+                if (widget.addSalaryReqData['guarantor_salary'] == null) {
+                  model.showMessage("Approve Request",
+                      "Add Your Salary before you can approve loan request");
+                  return;
+                }
                 if (widget.request.loanRequest.loanPackage.amount >
                     (0.35 *
                         (3 *
@@ -45,8 +50,11 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
                       "Your Current Salary is not enough to approve this Loan Request");
                   return;
                 }
-                await model.addGuarantorBankDetails(
-                    reqData: widget.addSalaryReqData);
+                await model.addGuarantorBankDetails(reqData: {
+                  'guarantor_salary':
+                      widget.addSalaryReqData['guarantor_salary'],
+                  'loan_request_id': widget.request.loanRequestId
+                });
               },
               color: primaryColor,
               padding: EdgeInsets.symmetric(
@@ -67,7 +75,7 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
             RaisedButton(
               onPressed: () {
                 model.modifyGuarantorRequest(
-                    reqData: {'loan_package_id': widget.request.loanRequestId},
+                    reqData: {'loan_request_id': widget.request.loanRequestId},
                     action: 'declined');
               },
               color: primaryColor,

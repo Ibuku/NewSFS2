@@ -270,8 +270,7 @@ class ApplicationService {
     try {
       var dio = Dio();
       FormData formData = FormData.fromMap(reqData);
-      return await dio.post("$API_BASE_URL/file/upload",
-          data:formData);
+      return await dio.post("$API_BASE_URL/file/upload", data: formData);
     } catch (e) {
       return e;
     }
@@ -284,6 +283,18 @@ class ApplicationService {
             "Accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
           },
+          body: reqData,
+          encodeBody: false,
+          isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future cashDownPayment(Map reqData) async {
+    try {
+      return await _network.post(
+          "$API_BASE_URL/guarantor-request/loan-request/cash-down",
           body: reqData,
           encodeBody: false,
           isAuth: true);

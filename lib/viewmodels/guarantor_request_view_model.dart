@@ -69,13 +69,18 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
         .approveOrDeclineLoanRequest(reqData: reqData, action: action);
     if (modifyGuarantorRequestRes.runtimeType == Response) {
       var body = jsonDecode(modifyGuarantorRequestRes.body);
+      print("Req Data: $reqData");
       if (modifyGuarantorRequestRes.statusCode == 200) {
-        _dialogService.showDialog(
-            title: "Guarantor Request", description: body['message']);
-        _navigationService.navigateAndClearRoute(AllRequestScreen.routeName);
+        if (action == 'approve') {
+          await cashDownPaymentDialog(reqData['loan_request_id']);
+        } else {
+          _dialogService.showDialog(
+              title: "Guarantor Request", description: body['message']);
+          _navigationService.navigateAndClearRoute(AllRequestScreen.routeName);
+        }
       } else {
         _dialogService.showDialog(
-          title: "Network error occured",
+          title: "Request error occured",
           description: body['message'],
         );
       }
@@ -100,7 +105,7 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
             action: 'approve');
       } else {
         _dialogService.showDialog(
-          title: "Network error occured",
+          title: "Request error occured",
           description: body['message'],
         );
       }
@@ -121,5 +126,48 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
     await getGuarantorRequests();
 
     setLoading(false);
+  }
+
+  Future cashDownPayment({@required Map reqData}) async {
+    setBusy(true);
+    var cashDownRes = await _application.cashDownPayment(reqData);
+    setBusy(false);
+
+    if (cashDownRes.runtimeType == Response) {
+      var body = jsonDecode(cashDownRes.body);
+      if (cashDownRes.statusCode == 200) {
+        return body['message'];
+      } else {
+        _dialogService.showDialog(
+          title: "Request error",
+          description: body['message'],
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: cashDownRes.toString(),
+      );
+    }
+  }
+
+  Future cashDownPaymentDialog(String loanRequestId) async {
+    String ans = "";
+    await _dialogService
+        .showConfirmationDialog(
+      title: "Cashdown Payment",
+      description:
+          "Would you like to signify Cahdown Payment for this Loan Request?",
+      cancelTitle: "No",
+      confirmationTitle: "Yes",
+    )
+        .then((val) {
+      ans = val.confirmed ? 'yes' : 'no';
+      return cashDownPayment(
+          reqData: {'loan_request_id': loanRequestId, 'cash_down': ans});
+    }).then((val) {
+      _dialogService.showDialog(title: 'Cashdown Payment', description: val ?? "Done");
+      _navigationService.navigateAndClearRoute(AllRequestScreen.routeName);
+    });
   }
 }

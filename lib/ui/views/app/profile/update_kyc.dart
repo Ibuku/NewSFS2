@@ -160,25 +160,25 @@ class _UpdateKYCState extends State<UpdateKYC> {
                       },
                     ),
                     verticalSpace15,
-//                    Align(
-//                      alignment: Alignment.centerLeft,
-//                      child: Container(
-//                        child: CardBusyButton(
-//                          title: _avatarImage != null
-//                              ? _avatarImage.path.split('/').removeLast()
-//                              : "Add Profile Image",
-//                          onPressed: () async {
-//                            File uploadedFile = await FilePicker.getFile(
-//                                type: FileType.custom,
-//                                allowedExtensions: ['png', 'jpg', 'jpeg']);
-//                            setState(() {
-//                              _avatarImage = uploadedFile;
-//                            });
-//                          },
-//                          busy: false,
-//                        ),
-//                      ),
-//                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: CardBusyButton(
+                          title: _avatarImage != null
+                              ? _avatarImage.path.split('/').removeLast()
+                              : "Add Profile Image",
+                          onPressed: () async {
+                            File uploadedFile = await FilePicker.getFile(
+                                type: FileType.custom,
+                                allowedExtensions: ['png', 'jpg', 'jpeg']);
+                            setState(() {
+                              _avatarImage = uploadedFile;
+                            });
+                          },
+                          busy: false,
+                        ),
+                      ),
+                    ),
                     verticalSpace15,
                     Align(
                       alignment: Alignment.centerRight,
@@ -186,14 +186,16 @@ class _UpdateKYCState extends State<UpdateKYC> {
                         width: 160,
                         child: CardBusyButton(
                           title: "Update",
-                          onPressed: () {
+                          onPressed: () async {
                             if (!_formKey.currentState.validate()) {
                               return;
                             }
                             _formKey.currentState.save();
-                            model.updateUser(_userProfile, _avatarImage).then((val){
-                              model.toRoute(DashboardScreen.routeName);
-                            });
+                            await model.updateUser(_userProfile);
+                            if(_avatarImage != null){
+                              await model.updateUserAvatar(_avatarImage);
+                            }
+                            model.toRoute(DashboardScreen.routeName);
                           },
                           busy: model.busy,
                         ),

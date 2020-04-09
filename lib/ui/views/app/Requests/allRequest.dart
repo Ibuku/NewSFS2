@@ -152,6 +152,8 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
                                     onChanged: (newValue) {
                                       setState(() {
                                         _salaryValue = newValue;
+                                        _addSalaryReqData['guarantor_salary'] =
+                                            newValue;
                                       });
                                     },
                                     onSubmitted: (newValue) {

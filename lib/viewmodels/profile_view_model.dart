@@ -47,30 +47,40 @@ class ProfileViewModel extends ApplicationViewModel {
     }
   }
 
-  Future updateUser(Map _userProfile, File avatarImage) async {
-    List<Future> requests = [
-      _applicationService.updateUserProfile(_userProfile)
-    ];
-    if (avatarImage != null) {
-      String avatarUrl;
-      try {
-        avatarUrl = await uploadUserAvatarFile(avatarImage);
-      } catch (e) {
-        return e;
-      }
-      requests.add(_applicationService.uploadUserAvatar({'avatar': avatarUrl}));
-    }
+  Future updateUserAvatar(File avatarImage) async {
     setBusy(true);
-
-    var results = await Future.wait(requests);
-
+    String avatarUrl = await uploadUserAvatarFile(avatarImage);
+    var avatarRes = await _applicationService.uploadUserAvatar({'avatar': avatarUrl});
     setBusy(false);
 
-    var profileRes = results[0];
-    var avatarRes;
-    if (avatarImage != null) {
-      avatarRes = results[1];
+    if (avatarRes.runtimeType == Response) {
+      var body = jsonDecode(avatarRes.body);
+      if (avatarRes.statusCode == 200) {
+        _dialogService.showDialog(
+          title: "Profile Avatar Update Successful",
+          description: body['message'],
+        );
+      } else {
+        print("Error Body: $body");
+        _dialogService.showDialog(
+          title: "Error with Profile Avatar Update",
+          description: body['message'] ?? "Error",
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application Error with Profile Avatar Update",
+        description: avatarRes.toString(),
+      );
     }
+  }
+
+  Future updateUser(Map _userProfile) async {
+    setBusy(true);
+
+    var profileRes = await _applicationService.updateUserProfile(_userProfile);
+
+    setBusy(false);
 
     if (profileRes.runtimeType == Response) {
       var body = jsonDecode(profileRes.body);
@@ -78,38 +88,15 @@ class ProfileViewModel extends ApplicationViewModel {
         setBusy(true);
         await ApplicationViewModel().getUserProfile();
         setBusy(false);
-        if (avatarRes != null) {
-          if (avatarRes.runtimeType == Response) {
-            var fileBody = jsonDecode(avatarRes.body);
-            if (avatarRes.statusCode == 200) {
-              _dialogService.showDialog(
-                title: "Profile Update Successful",
-                description: body['message'],
-              );
-            } else {
-              print("FileBody: $fileBody");
-              _dialogService.showDialog(
-                title: "Error with Profile Avatar Update",
-                description: fileBody['message'] ?? "Error",
-              );
-            }
-          } else {
-            _dialogService.showDialog(
-              title: "Application Error with Profile Avatar Update",
-              description: avatarRes.toString(),
-            );
-          }
-        } else {
-          _dialogService.showDialog(
+          await _dialogService.showDialog(
             title: "Profile Update Successful",
             description: body['message'],
           );
-        }
       } else if (profileRes.statusCode == 400) {
-        await _dialogService.showDialog(
-          title: 'Profile Update failed',
-          description: body['message'],
-        );
+          await _dialogService.showDialog(
+            title: 'Profile Update failed',
+            description: body['message'],
+          );
       } else {
         await _dialogService.showDialog(
           title: 'Profile Update failed',
