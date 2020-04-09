@@ -22,7 +22,7 @@ class _WalletScreenState extends State<WalletScreen> {
   get value => null;
   List<WalletTransaction> _transactions = [];
 
-  Future<void> showTransactionModal(BuildContext pageContext) async {
+  Future<void> showTransactionModal(BuildContext pageContext, String type) async {
     await showModalBottomSheet(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -31,7 +31,7 @@ class _WalletScreenState extends State<WalletScreen> {
         backgroundColor: Colors.white,
         context: pageContext,
         builder: (builder) {
-          return WalletTransactionModalWidget(parentContext: pageContext);
+          return WalletTransactionModalWidget(parentContext: pageContext, transactionType: type);
         });
   }
 
@@ -106,8 +106,8 @@ class _WalletScreenState extends State<WalletScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         GestureDetector(
-                          onTap: () {
-                            print("Withdraw");
+                          onTap: () async {
+                            await showTransactionModal(context, 'withdraw');
                           },
                           child: Container(
                             margin: EdgeInsets.only(right: 20, left: 15),
@@ -148,8 +148,8 @@ class _WalletScreenState extends State<WalletScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            print("Fund");
+                          onTap: () async {
+                            await showTransactionModal(context, 'fund');
                           },
                           child: Container(
                             margin: EdgeInsets.only(left: 15),

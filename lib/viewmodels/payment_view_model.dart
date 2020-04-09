@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:http/http.dart';
-import 'package:sfscredit/models/user_card.dart';
 import 'package:sfscredit/models/wallet_transaction.dart';
 import 'package:sfscredit/services/application_service.dart';
 import 'package:sfscredit/services/dialog_service.dart';
+import 'package:sfscredit/services/navigation_service.dart';
 import 'package:sfscredit/services/payment_service.dart';
 import 'package:sfscredit/viewmodels/loan_application_view_model.dart';
 
@@ -15,11 +15,14 @@ import '../locator.dart';
 
 class PaymentViewModel extends LoanApplicationViewModel {
   final DialogService _dialogService = locator<DialogService>();
+  final NavigationService _navigationService = locator<NavigationService>();
   final PaymentService _payment = locator<PaymentService>();
   final ApplicationService _application = locator<ApplicationService>();
 
   String _reference;
   BuildContext _context;
+
+  BuildContext get context => _context;
 
   List<WalletTransaction> _walletTransactions = [];
   List<WalletTransaction> get walletTransactions => _walletTransactions;
@@ -46,15 +49,15 @@ class PaymentViewModel extends LoanApplicationViewModel {
     _chargeCard(charge);
   }
 
-  Future startWalletCharge(int amount) async {
+  Future startWalletCharge(Map reqData) async {
     setBusy(true);
-    String reference = await _payment.initializeWalletTransaction(amount);
+    String reference = await _payment.initializeWalletTransaction(reqData);
     var paymentRes = await _payment.fundWallet({
       'reference': reference,
-      'card_id': selectedCard.id,
+      'card_id': selectedCard.id.toString(),
       'card_last4': selectedCard.last4,
       'card_type': selectedCard.cardType,
-      'amount': amount
+      'amount': reqData['amount']
     });
     setBusy(false);
 
@@ -84,7 +87,11 @@ class PaymentViewModel extends LoanApplicationViewModel {
     if(confirmTransactionRes.runtimeType == Response){
       var body = jsonDecode(confirmTransactionRes.body);
       if(confirmTransactionRes.statusCode == 200){
-        notifyListeners();
+        _dialogService.showDialog(
+            title: "Success",
+            description: "Wallet Funded"
+        );
+        _navigationService.pop();
       } else {
         _dialogService.showDialog(
             title: "Request Error",
@@ -95,6 +102,33 @@ class PaymentViewModel extends LoanApplicationViewModel {
       _dialogService.showDialog(
           title: "Application Error",
           description: "An Error occured while confirming the transaction"
+      );
+    }
+  }
+
+  Future withdrawFromWallet(Map reqData) async {
+    setBusy(true);
+    var withdrawalRes = await _payment.withdrawFromWallet(reqData);
+    setBusy(false);
+
+    if(withdrawalRes.runtimeType == Response){
+      var body = jsonDecode(withdrawalRes.body);
+      if(withdrawalRes.statusCode == 200){
+        _dialogService.showDialog(
+            title: "Success",
+            description: "Withdrawal is being processed"
+        );
+        _navigationService.pop();
+      } else {
+        _dialogService.showDialog(
+            title: "Request Error",
+            description: body['message']
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+          title: "Application Error",
+          description: "An Error occured while making the transaction"
       );
     }
   }

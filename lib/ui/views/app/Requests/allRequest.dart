@@ -10,6 +10,7 @@ import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/guarantor_request.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
+import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/viewmodels/guarantor_request_view_model.dart';
 import '../../../../const.dart';
 
@@ -23,6 +24,16 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
   String _currentStatus = 'all';
   List<GuarantorRequest> _allRequests = [];
   List<GuarantorRequest> _currentRequestsList = [];
+
+  bool _isEditingSalary = false;
+  TextEditingController _salaryTextController;
+  String _salaryValue = "0";
+
+  Map _addSalaryReqData = {};
+
+  bool isEligible(int salary, int packageAmount) {
+    return packageAmount < (0.35 * (3 * salary));
+  }
 
   List<Widget> buildRequestOptionList() {
     List<String> statuses = ['all', 'pending', 'approved', 'declined'];
@@ -73,7 +84,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
     return ViewModelProvider<GuarantorRequestViewModel>.withConsumer(
       viewModel: GuarantorRequestViewModel(),
       onModelReady: (model) {
-        model.init().then((val) {
+        Future.wait([model.init(), model.getUsersCards()]).then((val) {
           setState(() {
             _allRequests = model.guarantorRequests;
             _currentRequestsList = _allRequests
@@ -101,78 +112,144 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
           ),
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           backgroundColor: Colors.white,
-          body: BusyOverlay(
-            show: model.loading,
-            title: "Loading...",
-            child: Container(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: ClampingScrollPhysics(),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Container(
+          body: new GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+              if (_isEditingSalary) {
+                setState(() {
+                  _isEditingSalary = false;
+                });
+              }
+            },
+            child: BusyOverlay(
+              show: model.loading,
+              title: "Loading...",
+              child: Container(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: ClampingScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Container(
                           padding: EdgeInsets.symmetric(
-                              vertical: 30, horizontal: 30),
-                          height: 120,
-                          decoration: BoxDecoration(
-                              //borderRadius: BorderRadius.circular(20),
-                              color: Hexcolor('#120A44'),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromRGBO(
-                                    75,
-                                    97,
-                                    119,
-                                    .1,
-                                  ),
-                                  blurRadius: 20,
-                                  offset: Offset(0, 10),
-                                )
-                              ]),
-                          child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: <Widget>[
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: buildRequestOptionList())
-                              ])),
-
-                      // History
-                      verticalSpace15,
-                      Container(
-                        margin: EdgeInsets.only(top: 5, left: 30),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              "History",
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: primaryColor,
-                                fontSize: 17,
+                              vertical: 30, horizontal: 15),
+                          decoration: BoxDecoration(color: primaryColor),
+                          child: Column(
+                            children: <Widget>[
+                              CardItem(
+                                customTitleTextWidget: Text(
+                                  "Current Salary",
+                                  style: GoogleFonts.mavenPro(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                  ).copyWith(color: primaryColor),
+                                ),
+                                customBtnTextWidget: _isEditingSalary
+                                    ? TextField(
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _salaryValue = newValue;
+                                      });
+                                    },
+                                    onSubmitted: (newValue) {
+                                      setState(() {
+                                        _salaryValue = newValue;
+                                        _addSalaryReqData['guarantor_salary'] =
+                                            newValue;
+                                        _isEditingSalary = false;
+                                      });
+                                    },
+                                    autofocus: true,
+                                    controller: _salaryTextController,
+                                    keyboardType: TextInputType.number)
+                                    : InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _isEditingSalary = true;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        "N ${model.formatNumber(int.parse(_salaryValue))}.00",
+                                        style: GoogleFonts.mavenPro(
+                                          fontWeight: FontWeight.bold,
+                                        ).copyWith(
+                                            color: primaryColor, fontSize: 20),
+                                      ),
+                                      horizontalSpaceTiny,
+                                      model.cards.length < 1 ? Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(40),
+                                          color: primaryColor
+                                        ),
+                                        child: IconButton(
+                                          icon: Icon(Icons.add),
+                                          iconSize: 20,
+                                          color: Colors.white,
+                                          tooltip: "Add A Card",
+                                          onPressed: (){},
+                                        )
+                                      ) : Container(),
+                                    ],
+                                  )
+                                ),
+                                icon: Icons.person,
+                                paddingVertical: 30,
                               ),
-                            ),
-                          ],
+                              verticalSpace15,
+                              Container(
+                                height: 50,
+                                child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: <Widget>[
+                                      Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: buildRequestOptionList())
+                                    ])
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      verticalSpace30,
-                      ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: _currentRequestsList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return GuarantorRequestWidget(
-                                request: _currentRequestsList[index], pageContext: context);
-                          },
-                          separatorBuilder: (context, index) {
-                            return verticalSpace15;
-                          }),
-                    ],
+                        // History
+                        verticalSpace15,
+                        Container(
+                          margin: EdgeInsets.only(top: 5, left: 30),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "History",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: primaryColor,
+                                  fontSize: 17,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        verticalSpace30,
+                        ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: _currentRequestsList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GuarantorRequestWidget(
+                                  request: _currentRequestsList[index],
+                                  addSalaryReqData: _addSalaryReqData);
+                            },
+                            separatorBuilder: (context, index) {
+                              return verticalSpace15;
+                            }),
+                      ],
+                    ),
                   ),
                 ),
               ),

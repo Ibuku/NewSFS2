@@ -141,25 +141,15 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     verticalSpace(5),
                     Container(
-                      margin: EdgeInsets.only(
-                        left: 10,
-                      ),
-                      padding: EdgeInsets.only(right: 110),
                       height: 50,
-                      width: 300,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          SizedBox(
-                            height: 380.0,
-                          ),
                           Image(
                             image: AssetImage('assets/images/icon1.png'),
                             alignment: Alignment.topRight,
                           ),
-                          SizedBox(
-                            height: 380.0,
-                          ),
+                          horizontalSpace(15),
                           Text(
                             "N ${model.walletBalance}.00",
                             style: TextStyle(

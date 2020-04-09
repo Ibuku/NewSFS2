@@ -23,19 +23,11 @@ class LoanApplicationViewModel extends ApplicationViewModel {
   List<LoanPackage> _loanPackages = [];
   List get loanPackages => _loanPackages;
 
-  List<UserCard> _userCards = [];
-  List get cards => _userCards;
-
   UserCard _selectedCard;
   UserCard get selectedCard => _selectedCard;
 
   void setLoanPackages(List<LoanPackage> packages) {
     _loanPackages = packages;
-    notifyListeners();
-  }
-
-  void setUserCards(List<UserCard> cards) {
-    _userCards = cards;
     notifyListeners();
   }
 
@@ -50,27 +42,6 @@ class LoanApplicationViewModel extends ApplicationViewModel {
         _navigationService.navigateTo(UpdateKYC.routeName);
         break;
       default:
-    }
-  }
-
-  Future<void> getUsersCards() async {
-    var cardsRes = await _application.getUsersCards();
-    if(cardsRes.runtimeType == Response) {
-      if (cardsRes.statusCode == 200) {
-        var body = jsonDecode(cardsRes.body);
-        List verifiedCards = body['data'];
-        setUserCards(verifiedCards.map((i) => UserCard.fromMap((i))).toList());
-      } else {
-        _dialogService.showDialog(
-          title: "Network error occured",
-          description: cardsRes.toString(),
-        );
-      }
-    } else {
-      _dialogService.showDialog(
-        title: "Application error",
-        description: cardsRes.toString(),
-      );
     }
   }
 

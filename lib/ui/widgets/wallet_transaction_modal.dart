@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider_architecture/viewmodel_provider.dart';
-import 'package:sfscredit/models/guarantor_request.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
+import 'package:sfscredit/ui/views/app/profile/add_bank_details.dart';
 import 'package:sfscredit/ui/widgets/custom_text_field.dart';
-import 'package:sfscredit/viewmodels/guarantor_request_view_model.dart';
 import 'package:sfscredit/viewmodels/payment_view_model.dart';
 
 import 'busy_button.dart';
@@ -33,14 +32,112 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
 
   String _modalTitle = "";
 
+  Widget buildCardInput(PaymentViewModel model) {
+    return !model.loading && !model.busy
+        ? widget.transactionType == 'withdraw'
+            ? Container()
+            : model.cards.length > 0 && widget.transactionType == 'fund'
+                ? CustomTextField(
+                    hintText: model.loading
+                        ? "Loading Cards ..."
+                        : (model.selectedCard != null
+                            ? model.selectedCard.display
+                            : "Select a card"),
+                    hintTextStyle: TextStyle(fontSize: 12),
+                    textController: _cardController,
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return "Please select a card";
+                      }
+                      return null;
+                    },
+                    enabled: !model.loading,
+                    onSaved: (value) {
+                      _cardController.value =
+                          new TextEditingController.fromValue(
+                                  new TextEditingValue(text: value))
+                              .value;
+                    },
+                    readOnly: true,
+                    suffixIcon: Icon(
+                      Icons.arrow_drop_down,
+                    ),
+                    onTap: () {
+                      if (model.loading) {
+                        return;
+                      }
+                      Navigator.push(
+                        widget.parentContext,
+                        MaterialPageRoute(
+                          builder: (context) => FullScreenPicker(
+                            title: "Select a card",
+                            dataSource: model.loading ? [] : model.cards,
+                          ),
+                          fullscreenDialog: false,
+                        ),
+                      ).then((value) {
+                        if (value != null) {
+                          model.setSelectedCard(value);
+                          _cardController.value =
+                              new TextEditingController.fromValue(
+                                      new TextEditingValue(text: value.display))
+                                  .value;
+                        }
+                      });
+                    },
+                  )
+                : Container(
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          RaisedButton(
+                            onPressed: () =>
+                                model.startAfreshCharge(model.user.email),
+                            color: primaryColor,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 16,
+                            ),
+                            child: new Text(
+                              "Add A Card",
+                              style: GoogleFonts.mavenPro(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal)
+                                  .copyWith(color: Colors.white),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+        : Container();
+  }
+
   Widget _buildForm() {
     return ViewModelProvider<PaymentViewModel>.withConsumer(
         viewModel: PaymentViewModel(),
-        onModelReady: (model) => {
-              model.getUsersCards().then((val) {
-                model.setBuildContext(widget.parentContext);
-              })
-            },
+        onModelReady: (model) {
+          var modelInit = widget.transactionType == 'fund'
+              ? model.getUsersCards()
+              : model.getUsersBankDetails();
+          modelInit.then((val) {
+            model.setBuildContext(widget.parentContext);
+            if (model.bankDetails == null && widget.transactionType == 'withdraw') {
+              Navigator.push(
+                model.context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AddBankDetails();
+                  }
+                ),
+              );
+            } else if(model.bankDetails != null && widget.transactionType == 'withdraw') {
+              _reqData['account_number'] = model.bankDetails.accountNo;
+              _reqData['bank_name'] = model.bankDetails.bankCode;
+            }
+          });
+        },
         builder: (context, model, child) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -61,6 +158,7 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                   ],
                 ),
               ),
+              verticalSpace15,
               Form(
                 key: _amountFormKey,
                 child: Column(
@@ -81,83 +179,7 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                       },
                     ),
                     verticalSpace15,
-                    model.cards.length > 0 && widget.transactionType == 'fund'
-                        ? CustomTextField(
-                            hintText: model.loading
-                                ? "Loading Cards ..."
-                                : (model.selectedCard != null
-                                    ? model.selectedCard.display
-                                    : "Select a card"),
-                            hintTextStyle: TextStyle(fontSize: 12),
-                            textController: _cardController,
-                            validator: (value) {
-                              if (value == null || value == "") {
-                                return "Please select a card";
-                              }
-                              return null;
-                            },
-                            enabled: !model.loading,
-                            onSaved: (value) {
-                              _cardController.value =
-                                  new TextEditingController.fromValue(
-                                          new TextEditingValue(text: value))
-                                      .value;
-                            },
-                            readOnly: true,
-                            suffixIcon: Icon(
-                              Icons.arrow_drop_down,
-                            ),
-                            onTap: () {
-                              if (model.loading || model.banks.isEmpty) {
-                                return;
-                              }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FullScreenPicker(
-                                    title: "Select a card",
-                                    dataSource:
-                                        model.loading ? [] : model.cards,
-                                  ),
-                                  fullscreenDialog: false,
-                                ),
-                              ).then((value) {
-                                if (value != null) {
-                                  model.setSelectedCard(value);
-                                  _cardController.value =
-                                      new TextEditingController.fromValue(
-                                              new TextEditingValue(
-                                                  text: value.display))
-                                          .value;
-                                }
-                              });
-                            },
-                          )
-                        : Container(
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  RaisedButton(
-                                    onPressed: () => model
-                                        .startAfreshCharge(model.user.email),
-                                    color: primaryColor,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                      vertical: 16,
-                                    ),
-                                    child: new Text(
-                                      "Add A Card",
-                                      style: GoogleFonts.mavenPro(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal)
-                                          .copyWith(color: Colors.white),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                    buildCardInput(model),
                     verticalSpace15,
                     BusyButton(
                       title:
@@ -167,6 +189,11 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                           return;
                         }
                         _amountFormKey.currentState.save();
+                        if (widget.transactionType == 'fund') {
+                          await model.startWalletCharge(_reqData);
+                        } else if (widget.transactionType == 'withdraw') {
+                          await model.withdrawFromWallet(_reqData);
+                        }
                       },
                       busy: model.busy,
                     ),

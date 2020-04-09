@@ -10,13 +10,11 @@ import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/viewmodels/guarantor_request_view_model.dart';
 
-import 'guarantor_details_modal.dart';
-
 class GuarantorRequestWidget extends StatefulWidget {
   final GuarantorRequest request;
-  final BuildContext pageContext;
+  final Map addSalaryReqData;
 
-  GuarantorRequestWidget({@required this.request, this.pageContext});
+  GuarantorRequestWidget({@required this.request, this.addSalaryReqData});
 
   @override
   _GuarantorRequestState createState() => _GuarantorRequestState();
@@ -29,21 +27,6 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
     return widget.request.guarantorApproved == 'pending';
   }
 
-  Future<void> showSalaryModal(
-      GuarantorRequest request, BuildContext pageContext) async {
-    await showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40))),
-        backgroundColor: Colors.white,
-        context: pageContext,
-        builder: (builder) {
-          return GuarantorDetailsModalWidget(
-              request: request, parentContext: pageContext);
-        });
-  }
-
   Widget buildActionWidget(GuarantorRequestViewModel model) {
     return Container(
         height: 80,
@@ -53,7 +36,17 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
           children: <Widget>[
             RaisedButton(
               onPressed: () async {
-                await showSalaryModal(widget.request, widget.pageContext);
+                if (widget.request.loanRequest.loanPackage.amount >
+                    (0.35 *
+                        (3 *
+                            int.parse(widget
+                                .addSalaryReqData['guarantor_salary'])))) {
+                  model.showMessage("Approve Loan Request",
+                      "Your Current Salary is not enough to approve this Loan Request");
+                  return;
+                }
+                await model.addGuarantorBankDetails(
+                    reqData: widget.addSalaryReqData);
               },
               color: primaryColor,
               padding: EdgeInsets.symmetric(

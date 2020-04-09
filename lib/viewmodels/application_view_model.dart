@@ -5,10 +5,10 @@ import 'package:intl/intl.dart' show NumberFormat;
 import 'package:sfscredit/models/bank.dart';
 import 'package:sfscredit/models/bank_details.dart';
 import 'package:sfscredit/models/guarantor_request.dart';
-import 'package:sfscredit/models/loan.dart';
 import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/models/loan_request.dart';
 import 'package:sfscredit/models/payback_schedule.dart';
+import 'package:sfscredit/models/user_card.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/views/auth/login_screen.dart';
 
@@ -108,6 +108,14 @@ class ApplicationViewModel extends BaseModel {
     notifyListeners();
   }
 
+  List<UserCard> _userCards = [];
+  List get cards => _userCards;
+
+  void setUserCards(List<UserCard> cards) {
+    _userCards = cards;
+    notifyListeners();
+  }
+
   Future<void> getUserProfile() async {
     var userProfile = await _application.userProfile();
     if (userProfile is Error) {
@@ -133,34 +141,6 @@ class ApplicationViewModel extends BaseModel {
         break;
     }
   }
-
-//  Future<void> getActiveLoan() async {
-//    var allLoanRequestsRes = await _application.getLoanRequests();
-//    if (allLoanRequestsRes.runtimeType == Response) {
-//      var body = jsonDecode(allLoanRequestsRes.body);
-//      if (allLoanRequestsRes.statusCode == 200) {
-//        List rawRequests = body['data'];
-//        List<LoanRequest> userLoanRequests =
-//            rawRequests.map((req) => LoanRequest.fromMap(req));
-//        List<LoanRequest> approvedLoanRequests = userLoanRequests.where(
-//            (req) => req.paymentStatus == 'unpaid' && req.approvalDate != null).toList();
-//        if (approvedLoanRequests.length != 0) {
-//          Loan currentActiveLoan = new List.from(userLoanList.reversed)[0];
-//          _activeLoanPayback = currentActiveLoan.totalPayback;
-//        }
-//      } else {
-//        _dialogService.showDialog(
-//          title: "Request error",
-//          description: body['message'],
-//        );
-//      }
-//    } else {
-//      _dialogService.showDialog(
-//        title: "Network error occured",
-//        description: allLoanRequestsRes.toString(),
-//      );
-//    }
-//  }
 
   Future<void> getWalletBalance() async {
     var walletRequestRes = await _application.getWallet();
@@ -373,6 +353,30 @@ class ApplicationViewModel extends BaseModel {
     setLoading(false);
   }
 
+  Future<void> getUsersCards() async {
+    setBusy(true);
+    var cardsRes = await _application.getUsersCards();
+    setBusy(false);
+
+    if(cardsRes.runtimeType == Response) {
+      if (cardsRes.statusCode == 200) {
+        var body = jsonDecode(cardsRes.body);
+        List verifiedCards = body['data'];
+        setUserCards(verifiedCards.map((i) => UserCard.fromMap((i))).toList());
+      } else {
+        _dialogService.showDialog(
+          title: "Network error occured",
+          description: cardsRes.toString(),
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application error",
+        description: cardsRes.toString(),
+      );
+    }
+  }
+
   Future<void> init() async {
     setLoading(true);
     await Future.wait([getUserLoanRequests(), getUsersBankDetails()]);
@@ -425,4 +429,9 @@ class ApplicationViewModel extends BaseModel {
   String formatNumber(int num) {
     return new NumberFormat('###,###').format(num);
   }
+
+  void showMessage(String title, String description) {
+    _dialogService.showDialog(title: title, description: description);
+  }
+
 }

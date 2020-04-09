@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:sfscredit/models/bank.dart';
 import 'package:sfscredit/models/bank_details.dart';
+import 'package:sfscredit/services/navigation_service.dart';
 
 import '../viewmodels/application_view_model.dart';
 import '../services/dialog_service.dart';
@@ -12,6 +13,7 @@ import '../locator.dart';
 class ProfileViewModel extends ApplicationViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final ApplicationService _applicationService = locator<ApplicationService>();
+  final NavigationService _navigationService = locator<NavigationService>();
 
   bool _passwordVisible = true;
   bool get passwordVisible => _passwordVisible;
@@ -66,6 +68,7 @@ class ProfileViewModel extends ApplicationViewModel {
         setBusy(true);
         await getUsersBankDetails();
         setBusy(false);
+        _navigationService.pop();
       } else {
         _dialogService.showDialog(
             title: "Bank Details Update Failed",

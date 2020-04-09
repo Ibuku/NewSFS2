@@ -48,7 +48,22 @@ class PaymentService {
 
   Future withdrawFromWallet(Map reqData) async {
     try {
-      Response res = await _network.post('$API_BASE_URL/wallet/transfer/bank',
+      return await _network.post('$API_BASE_URL/wallet/transfer/bank',
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: reqData,
+          encodeBody: false,
+          isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future initializeWalletTransaction(Map reqData) async {
+    try {
+      Response res = await _network.post('$API_BASE_URL/wallet/fund/initialize',
           headers: {
             "Accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded"
@@ -57,25 +72,8 @@ class PaymentService {
           encodeBody: false,
           isAuth: true);
       var body = jsonDecode(res.body);
-      print("$body");
-    } catch (e) {
-      return e;
-    }
-  }
-
-  Future initializeWalletTransaction(int amount) async {
-    try {
-      Response res = await _network.post('$API_BASE_URL/wallet/fund/initialize',
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: {'amount': amount},
-          encodeBody: false,
-          isAuth: true);
-      var body = jsonDecode(res.body);
       return body['data']['reference'];
-    } catch (e) {
+    } catch (e){
       return e;
     }
   }
