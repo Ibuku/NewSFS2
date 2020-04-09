@@ -43,7 +43,6 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                         : (model.selectedCard != null
                             ? model.selectedCard.display
                             : "Select a card"),
-                    hintTextStyle: TextStyle(fontSize: 12),
                     textController: _cardController,
                     validator: (value) {
                       if (value == null || value == "") {
@@ -166,7 +165,6 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                     CustomTextField(
                       hintText: 'Amount',
                       textController: _amountController,
-                      hintTextStyle: TextStyle(fontSize: 12),
                       validator: (value) {
                         if (value.isEmpty) {
                           return "Amount is required";

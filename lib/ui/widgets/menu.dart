@@ -31,7 +31,9 @@ class MenuDrawer extends StatelessWidget {
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",
+                  user.profile.avatar != null
+                      ? user.profile.avatar
+                      : "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",
                 ),
               ),
               decoration: new BoxDecoration(
@@ -163,7 +165,6 @@ class MenuDrawer extends StatelessWidget {
               leading: Icon(
                 Icons.cancel,
                 color: Colors.white,
-
               ),
               title: Text(
                 "Log out",
@@ -174,7 +175,6 @@ class MenuDrawer extends StatelessWidget {
               onTap: () async {
                 await logout();
               },
-
             ),
           ],
         ),

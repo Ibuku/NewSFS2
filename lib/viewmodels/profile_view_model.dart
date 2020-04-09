@@ -1,8 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart';
-import 'package:sfscredit/models/bank.dart';
-import 'package:sfscredit/models/bank_details.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:sfscredit/services/navigation_service.dart';
 
 import '../viewmodels/application_view_model.dart';
@@ -23,24 +23,89 @@ class ProfileViewModel extends ApplicationViewModel {
     notifyListeners();
   }
 
-  Future updateUser(Map _userProfile) async {
+  Future uploadUserAvatarFile(File avatarImage) async {
+    setBusy(true);
+    var fileRes = await _applicationService.uploadFile2(
+        {'uploadFile': await dio.MultipartFile.fromFile(avatarImage.path)});
+    setBusy(false);
+
+    if (fileRes.runtimeType == dio.Response) {
+      var fileBody = fileRes.data;
+      if (fileRes.statusCode == 200) {
+        return fileBody['data'];
+      } else {
+        _dialogService.showDialog(
+          title: "Error with Image Upload",
+          description: fileBody['message'],
+        );
+      }
+    } else {
+      _dialogService.showDialog(
+        title: "Application Error with Image Upload",
+        description: fileRes.toString(),
+      );
+    }
+  }
+
+  Future updateUser(Map _userProfile, File avatarImage) async {
+    List<Future> requests = [
+      _applicationService.updateUserProfile(_userProfile)
+    ];
+    if (avatarImage != null) {
+      String avatarUrl;
+      try {
+        avatarUrl = await uploadUserAvatarFile(avatarImage);
+      } catch (e) {
+        return e;
+      }
+      requests.add(_applicationService.uploadUserAvatar({'avatar': avatarUrl}));
+    }
     setBusy(true);
 
-    var result = await _applicationService.updateUserProfile(_userProfile);
+    var results = await Future.wait(requests);
 
     setBusy(false);
 
-    if (result.runtimeType == Response) {
-      var body = jsonDecode(result.body);
-      if (result.statusCode == 200) {
+    var profileRes = results[0];
+    var avatarRes;
+    if (avatarImage != null) {
+      avatarRes = results[1];
+    }
+
+    if (profileRes.runtimeType == Response) {
+      var body = jsonDecode(profileRes.body);
+      if (profileRes.statusCode == 200) {
         setBusy(true);
         await ApplicationViewModel().getUserProfile();
         setBusy(false);
-        _dialogService.showDialog(
-          title: "Profile Update Successful",
-          description: body['message'],
-        );
-      } else if (result.statusCode == 400) {
+        if (avatarRes != null) {
+          if (avatarRes.runtimeType == Response) {
+            var fileBody = jsonDecode(avatarRes.body);
+            if (avatarRes.statusCode == 200) {
+              _dialogService.showDialog(
+                title: "Profile Update Successful",
+                description: body['message'],
+              );
+            } else {
+              print("FileBody: $fileBody");
+              _dialogService.showDialog(
+                title: "Error with Profile Avatar Update",
+                description: fileBody['message'] ?? "Error",
+              );
+            }
+          } else {
+            _dialogService.showDialog(
+              title: "Application Error with Profile Avatar Update",
+              description: avatarRes.toString(),
+            );
+          }
+        } else {
+          _dialogService.showDialog(
+            title: "Profile Update Successful",
+            description: body['message'],
+          );
+        }
+      } else if (profileRes.statusCode == 400) {
         await _dialogService.showDialog(
           title: 'Profile Update failed',
           description: body['message'],
@@ -54,7 +119,7 @@ class ProfileViewModel extends ApplicationViewModel {
     } else {
       await _dialogService.showDialog(
         title: 'Application error',
-        description: result,
+        description: profileRes,
       );
     }
   }
@@ -62,7 +127,7 @@ class ProfileViewModel extends ApplicationViewModel {
   Future updateUserBankDetails(Map reqData) async {
     setBusy(true);
     var addDetailsRes = await _applicationService.addBankDetails(reqData);
-    if(addDetailsRes.runtimeType == Response) {
+    if (addDetailsRes.runtimeType == Response) {
       var body = jsonDecode(addDetailsRes.body);
       if (addDetailsRes.statusCode == 200) {
         setBusy(true);
@@ -71,9 +136,7 @@ class ProfileViewModel extends ApplicationViewModel {
         _navigationService.pop();
       } else {
         _dialogService.showDialog(
-            title: "Bank Details Update Failed",
-            description: body['message']
-        );
+            title: "Bank Details Update Failed", description: body['message']);
       }
     } else {
       _dialogService.showDialog(
@@ -83,5 +146,4 @@ class ProfileViewModel extends ApplicationViewModel {
     }
     setBusy(false);
   }
-
 }

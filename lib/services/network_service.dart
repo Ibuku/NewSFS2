@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 
 import '../locator.dart';
@@ -88,6 +89,27 @@ class NetworkService {
       );
     }
     return res;
+  }
+
+  Future<http.Response> postFile(String url,
+      {Map body}) async {
+    final String token = _tokenService.getToken();
+    var uri = Uri.parse(url);
+    var fileKey = body.keys.firstWhere((fieldKey) => body[fieldKey].runtimeType.toString().contains('File'), orElse: () => null);
+    print("FileKey: $fileKey");
+    if(fileKey == null){
+      throw new Exception("File is required");
+    }
+    File imageFile = body[fileKey];
+    var stream = new http.ByteStream(Stream.castFrom(imageFile.openRead()));
+    var length = await imageFile.length();
+    var request = new http.MultipartRequest("POST", uri);
+    request.headers['Authorization'] = 'Bearer $token';
+    http.MultipartFile multipartFile =
+        new http.MultipartFile(fileKey, stream, length);
+    request.files.add(multipartFile);
+    http.StreamedResponse streamRes = await request.send();
+    return http.Response.fromStream(streamRes);
   }
 
   Future<String> refresh(String token) async {

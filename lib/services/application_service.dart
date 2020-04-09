@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
 
 import 'package:sfscredit/const.dart';
 import 'package:sfscredit/locator.dart';
@@ -256,4 +257,38 @@ class ApplicationService {
     }
   }
 
+  Future uploadFile(Map reqData) async {
+    try {
+      return await _network.postFile("$API_BASE_URL/file/upload",
+          body: reqData);
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future uploadFile2(dynamic reqData) async {
+    try {
+      var dio = Dio();
+      FormData formData = FormData.fromMap(reqData);
+      return await dio.post("$API_BASE_URL/file/upload",
+          data:formData);
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future uploadUserAvatar(Map reqData) async {
+    try {
+      return await _network.post("$API_BASE_URL/user/avatar",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: reqData,
+          encodeBody: false,
+          isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
 }

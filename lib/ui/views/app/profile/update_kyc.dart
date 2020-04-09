@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
 import '../../../../ui/widgets/card_busy_button.dart';
 import '../../../../ui/shared/ui_helpers.dart';
@@ -27,6 +31,8 @@ class _UpdateKYCState extends State<UpdateKYC> {
 
   Map _userProfile = {};
   DateTime _selectedDOB;
+  bool uploadingImage = false;
+  File _avatarImage;
 
   void _presentDatePicker() {
     showDatePicker(
@@ -55,7 +61,7 @@ class _UpdateKYCState extends State<UpdateKYC> {
       builder: (context, model, child) {
         _fnTextController.text = model.user.firstname;
         _lnTextController.text = model.user.lastname;
-        
+
         if (model.user.profile != null) {
           _selectedDOB = DateTime.parse(model.user.profile.dateOfBirth);
           _dobTextController.text = DateFormat("y-MM-dd").format(_selectedDOB);
@@ -153,21 +159,27 @@ class _UpdateKYCState extends State<UpdateKYC> {
                         _userProfile['next_of_kin'] = val;
                       },
                     ),
-//                    verticalSpace15,
+                    verticalSpace15,
 //                    Align(
 //                      alignment: Alignment.centerLeft,
 //                      child: Container(
-//                        width: 100,
 //                        child: CardBusyButton(
-//                          title: "Add Profile Image",
-//                          onPressed: () {
-//
+//                          title: _avatarImage != null
+//                              ? _avatarImage.path.split('/').removeLast()
+//                              : "Add Profile Image",
+//                          onPressed: () async {
+//                            File uploadedFile = await FilePicker.getFile(
+//                                type: FileType.custom,
+//                                allowedExtensions: ['png', 'jpg', 'jpeg']);
+//                            setState(() {
+//                              _avatarImage = uploadedFile;
+//                            });
 //                          },
 //                          busy: false,
 //                        ),
 //                      ),
 //                    ),
-                    verticalSpace(50),
+                    verticalSpace15,
                     Align(
                       alignment: Alignment.centerRight,
                       child: Container(
@@ -179,7 +191,9 @@ class _UpdateKYCState extends State<UpdateKYC> {
                               return;
                             }
                             _formKey.currentState.save();
-                            model.updateUser(_userProfile);
+                            model.updateUser(_userProfile, _avatarImage).then((val){
+                              model.toRoute(DashboardScreen.routeName);
+                            });
                           },
                           busy: model.busy,
                         ),
