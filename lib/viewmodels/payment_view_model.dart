@@ -136,9 +136,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
   _chargeCard(Charge charge) {
     // This is called only before requesting OTP
     // Save reference so you may send to server if error occurs with OTP
-    handleBeforeValidate(Transaction transaction) {
-      updateStatus(transaction.reference, 'validating...');
-    }
+    handleBeforeValidate(Transaction transaction) {}
 
     handleOnError(Object e, Transaction transaction) async {
       // If an access code has expired, simply ask your server for a new one
@@ -157,7 +155,6 @@ class PaymentViewModel extends LoanApplicationViewModel {
         await _payment.verifyOnServer(transaction.reference);
       } else {
         setBusy(false);
-        updateStatus(transaction.reference, e.toString());
       }
     }
 

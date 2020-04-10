@@ -5,7 +5,6 @@ import 'package:intl/intl.dart' show NumberFormat;
 import 'package:sfscredit/models/loan_package.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
-import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 
 import 'custom_card.dart';
 
@@ -66,7 +65,7 @@ class LoanPackageWidget extends StatelessWidget {
                       Padding(
                           padding: EdgeInsets.symmetric(vertical: 5),
                           child: Text(
-                            'N ${package.amount}.00',
+                            'N ${new NumberFormat('###,###').format(package.amount)}.00',
                             textAlign: TextAlign.left,
                             textDirection: TextDirection.ltr,
                             style: GoogleFonts.mavenPro(

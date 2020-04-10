@@ -105,16 +105,6 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
       viewModel: PaymentViewModel(),
       onModelReady: (model) {
         model.initLoanApplication().then((val) {
-          if (model.bankDetails != null) {
-            _accountNoController.text = model.bankDetails.accountNo;
-            _accountNameController.text = model.bankDetails.accountName;
-            List<Bank> usersBankList = model.banks
-                .where((bank) => bank.code == model.bankDetails.bankCode)
-                .toList();
-            if (usersBankList.isNotEmpty) {
-              _bankController.text = usersBankList[0].name;
-            }
-          }
           model.setBuildContext(context);
         });
       },
@@ -465,7 +455,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                     builder: (context) => DashboardScreen()),
                               );
                             },
-                            busy: model.busy,
+                            busy: false,
                           ),
                           BusyButton(
                             title: "Finish",
@@ -479,7 +469,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                               _formKey.currentState.save();
                               await model.makeLoanRequest(reqData: _reqData);
                             },
-                            busy: model.busy,
+                            busy: false,
                           ),
                         ],
                       ),

@@ -10,6 +10,7 @@ import 'package:sfscredit/ui/views/app/Loans/loan.dart';
 import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
 import 'package:sfscredit/ui/views/app/profile/Notifications.dart';
 import 'package:sfscredit/ui/views/app/profile/settings.dart';
+import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
 
 class MenuDrawer extends StatelessWidget {
   MenuDrawer({@required this.user, @required this.logout});
@@ -77,6 +78,26 @@ class MenuDrawer extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ApplyScreen1(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.account_balance_wallet,
+                color: Colors.white,
+              ),
+              title: Text(
+                "My Wallet",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WalletScreen(),
                   ),
                 );
               },

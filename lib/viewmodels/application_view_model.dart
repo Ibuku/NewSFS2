@@ -379,7 +379,7 @@ class ApplicationViewModel extends BaseModel {
 
   Future<void> init() async {
     setLoading(true);
-    await Future.wait([getUserLoanRequests(), getUsersBankDetails()]);
+    await Future.wait([getUserLoanRequests()]);
     await Future.wait([
       getWalletBalance(),
       getTotalGuarantorLoan(),

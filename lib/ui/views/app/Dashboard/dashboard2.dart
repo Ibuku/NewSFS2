@@ -8,13 +8,11 @@ import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Dashboard/wallet.dart';
-import 'package:sfscredit/ui/views/app/profile/add_bank_details.dart';
 import 'package:sfscredit/ui/views/app/profile/update_kyc.dart';
 import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/card_item.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter/widgets.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -51,7 +49,7 @@ class DashboardScreen extends StatelessWidget {
             child: BusyOverlay(
               show: model.loading || model.busy,
               overlayBackground: Colors.white,
-              child: model.user.profile == null || model.bankDetails == null
+              child: model.user.profile == null
                   ? profileNotComplete(model)
                   : profileComplete(model),
             )
@@ -70,15 +68,6 @@ class DashboardScreen extends StatelessWidget {
                 btnText: "Update",
                 icon: Icons.person,
                 onPressed: () => model.toRoute(UpdateKYC.routeName),
-              )
-            : Container(),
-        verticalSpace15,
-        model.bankDetails == null
-            ? CardItem(
-                titleText: "Update Bank Details",
-                btnText: "Update",
-                icon: Icons.credit_card,
-                onPressed: () => model.toRoute(AddBankDetails.routeName),
               )
             : Container(),
         verticalSpace15,

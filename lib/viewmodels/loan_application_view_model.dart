@@ -78,7 +78,7 @@ class LoanApplicationViewModel extends ApplicationViewModel {
 
   Future<void> initLoanApplication() async {
     setLoading(true);
-    await Future.wait([getAllBanks(), getUsersCards(), getUsersBankDetails()]);
+    await Future.wait([getAllBanks(), getUsersCards()]);
     setLoading(false);
   }
 }

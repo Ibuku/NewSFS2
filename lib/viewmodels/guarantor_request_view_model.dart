@@ -128,7 +128,7 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
     setLoading(false);
   }
 
-  Future cashDownPayment({@required Map reqData}) async {
+  Future<bool> cashDownPayment({@required Map reqData}) async {
     setBusy(true);
     var cashDownRes = await _application.cashDownPayment(reqData);
     setBusy(false);
@@ -136,19 +136,14 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
     if (cashDownRes.runtimeType == Response) {
       var body = jsonDecode(cashDownRes.body);
       if (cashDownRes.statusCode == 200) {
-        return body['message'];
+        return true;
       } else {
-        _dialogService.showDialog(
-          title: "Request error",
-          description: body['message'],
-        );
+        print("Error: ${body['message']}");
       }
     } else {
-      _dialogService.showDialog(
-        title: "Application error",
-        description: cashDownRes.toString(),
-      );
+      print("App Error: $cashDownRes");
     }
+    return false;
   }
 
   Future cashDownPaymentDialog(String loanRequestId) async {
@@ -166,7 +161,11 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
       return cashDownPayment(
           reqData: {'loan_request_id': loanRequestId, 'cash_down': ans});
     }).then((val) {
-      _dialogService.showDialog(title: 'Cashdown Payment', description: val ?? "Done");
+      _dialogService.showDialog(
+          title: 'Cashdown Payment',
+          description: val
+              ? "Cashdown request successful"
+              : "Error with cashdown request");
       _navigationService.navigateAndClearRoute(AllRequestScreen.routeName);
     });
   }
