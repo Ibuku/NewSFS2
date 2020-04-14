@@ -302,4 +302,17 @@ class ApplicationService {
       return e;
     }
   }
+
+  Future getNotifications() async {
+    try {
+      return await _network.get("$API_BASE_URL/notifications",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          isAuth: true);
+    } catch (e) {
+      return e;
+    }
+  }
 }

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:sfscredit/services/application_service.dart';
-import 'package:sfscredit/ui/shared/app_colors.dart';
-import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
 import 'package:sfscredit/ui/views/app/Requests/allRequest.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
 class Request1Screen extends StatelessWidget {
   static const routeName = '/app/Requests/request.dart';
@@ -16,16 +12,6 @@ class Request1Screen extends StatelessWidget {
         title: Text("All Requests"),
       ),
       backgroundColor: Colors.white,
-
-
-
-//      body: SingleChildScrollView(
-//        padding: EdgeInsets.symmetric(),
-//        child: Text(ApplicationService.user.toJson().toString()),
-//      ),
-//    );
-//  }
-//}
       body: Container(
         child: SingleChildScrollView(
           child: new Container(

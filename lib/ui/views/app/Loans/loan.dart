@@ -40,15 +40,7 @@ class MyLoanScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text("My Loans"),
-            centerTitle: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(FeatherIcons.logOut),
-                onPressed: () async {
-                  await model.logout();
-                },
-              ),
-            ],
+            centerTitle: false
           ),
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           body: BusyOverlay(

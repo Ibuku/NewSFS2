@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:sfscredit/services/application_service.dart';
-import 'package:sfscredit/ui/shared/app_colors.dart';
-import 'package:sfscredit/ui/views/app/Apply/apply1.dart';
-import 'package:sfscredit/ui/views/app/Requests/approvedRequest.dart';
-import 'package:sfscredit/ui/views/app/Requests/request.dart';
-import 'package:sfscredit/ui/views/app/Dashboard/dashboard2.dart';
 
 class RequestSummaryScreen extends StatelessWidget {
   static const routeName = '/app/Requests/allRequest.dart';
@@ -17,16 +11,6 @@ class RequestSummaryScreen extends StatelessWidget {
         title: Text("Request Summary"),
       ),
       backgroundColor: Colors.white,
-
-
-
-//      body: SingleChildScrollView(
-//        padding: EdgeInsets.symmetric(),
-//        child: Text(ApplicationService.user.toJson().toString()),
-//      ),
-//    );
-//  }
-//}
       body: Container(
         child: SingleChildScrollView(
           child: new Container(
@@ -37,14 +21,11 @@ class RequestSummaryScreen extends StatelessWidget {
                 constraints: new BoxConstraints(),
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  //mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Container(
-                      //margin: EdgeInsets.only(top: 5,),
-                      //padding: EdgeInsets.only(right: 240),
                       height: 100,
                       decoration: BoxDecoration(
-                        //borderRadius: BorderRadius.circular(20),
+                          //borderRadius: BorderRadius.circular(20),
                           color: Hexcolor('#120A44'),
                           boxShadow: [
                             BoxShadow(
@@ -55,7 +36,8 @@ class RequestSummaryScreen extends StatelessWidget {
                                 .1,
                               ),
                               blurRadius: 20,
-                              offset: Offset(0, 10),)
+                              offset: Offset(0, 10),
+                            )
                           ]),
                     ),
 
@@ -64,7 +46,7 @@ class RequestSummaryScreen extends StatelessWidget {
                       height: 15.0,
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 5,left: 30),
+                      margin: EdgeInsets.only(top: 5, left: 30),
                       //padding: EdgeInsets.only(right: 280),
                       height: 40,
                       child: Row(
@@ -74,11 +56,6 @@ class RequestSummaryScreen extends StatelessWidget {
                           SizedBox(
                             height: 380.0,
                           ),
-                          // RaisedButton(
-//
-//                                shape: RoundedRectangleBorder(
-//                                  borderRadius: BorderRadius.circular(20),
-//                                ),
                           Text(
                             "History",
                             style: TextStyle(
@@ -87,52 +64,37 @@ class RequestSummaryScreen extends StatelessWidget {
                               fontSize: 17,
                             ),
                           ),
-//
-                          // ),
-
-                          //  SizedBox(width: 7.0),
                         ],
                       ),
                     ),
-
-                    // SizedBox(height: 5,),
                     ListView.separated(
                         shrinkWrap: true,
-                        itemBuilder: (context,index){
+                        itemBuilder: (context, index) {
                           return ListTile(
-                            title: Text("Package 1",
-                              style: TextStyle(color: Hexcolor('#120A44'),fontSize: 17,fontWeight: FontWeight.bold),
+                            title: Text(
+                              "Package 1",
+                              style: TextStyle(
+                                  color: Hexcolor('#120A44'),
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold),
                             ),
                             subtitle: Text("Date"),
                             trailing: Text("N0.00"),
                           );
-                        }, separatorBuilder: (context, index){
-                      return Divider(height: 16,);
-                    },itemCount: 7),
-
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            height: 16,
+                          );
+                        },
+                        itemCount: 7),
                   ],
                 ),
               ),
             ),
           ),
-
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Hexcolor('#120A44'),
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ApprovedRequestScreen(),
-            ),
-          );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
-
 }
-

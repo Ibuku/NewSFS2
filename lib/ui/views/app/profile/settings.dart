@@ -27,15 +27,7 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Scaffold(
           appBar: AppBar(
             title: Text("Settings"),
-            centerTitle: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(FeatherIcons.logOut),
-                onPressed: () async {
-                  await model.logout();
-                },
-              ),
-            ],
+            centerTitle: false
           ),
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           backgroundColor: Colors.white,

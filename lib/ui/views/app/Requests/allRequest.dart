@@ -100,15 +100,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
         child: Scaffold(
           appBar: AppBar(
             title: Text("All Requests"),
-            centerTitle: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(FeatherIcons.logOut),
-                onPressed: () async {
-                  await model.logout();
-                },
-              ),
-            ],
+            centerTitle: false
           ),
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           backgroundColor: Colors.white,

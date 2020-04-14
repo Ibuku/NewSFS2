@@ -434,4 +434,10 @@ class ApplicationViewModel extends BaseModel {
     _dialogService.showDialog(title: title, description: description);
   }
 
+  void prettyPrint(json) {
+    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+    String pprint = encoder.convert(json);
+    print(pprint);
+  }
+
 }

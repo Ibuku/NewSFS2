@@ -53,14 +53,6 @@ class _WalletScreenState extends State<WalletScreen> {
           appBar: AppBar(
             title: Text("Total Wallet Balance"),
             centerTitle: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(FeatherIcons.logOut),
-                onPressed: () async {
-                  await model.logout();
-                },
-              ),
-            ],
           ),
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           body: Container(

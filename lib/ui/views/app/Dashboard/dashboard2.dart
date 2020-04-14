@@ -33,14 +33,6 @@ class DashboardScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text("Dashboard"),
             centerTitle: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(FeatherIcons.logOut),
-                onPressed: () async {
-                  await model.logout();
-                },
-              ),
-            ],
           ),
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           // backgroundColor: Colors.white,
