@@ -126,13 +126,13 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
               : model.getUsersBankDetails();
           modelInit.then((val) {
             model.setBuildContext(widget.parentContext);
-            if (widget.bankDetails == null) {
+            if (model.bankDetails == null) {
               Navigator.push(widget.parentContext,
                   MaterialPageRoute(builder: (builder) => AddBankDetails()));
-            } else if (widget.bankDetails != null &&
+            } else if (model.bankDetails != null &&
                 widget.transactionType == 'withdraw') {
-              _reqData['account_number'] = widget.bankDetails.accountNo;
-              _reqData['bank_name'] = widget.bankDetails.bankCode;
+              _reqData['account_number'] = model.bankDetails.accountNo;
+              _reqData['bank_name'] = model.bankDetails.bankCode;
             }
           });
         },
@@ -191,7 +191,7 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                                 ),
                               ),
                               verticalSpaceTiny,
-                              Row(
+                              model.bankDetails != null ? Row(
                                 children: <Widget>[
                                   Radio(
                                     activeColor: primaryColor,
@@ -200,13 +200,13 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                                   ),
                                   horizontalSpaceSmall,
                                   Text(
-                                      "${widget.bankDetails.bankName}: ${widget.bankDetails.accountNo}",
+                                      "${model.bankDetails.bankName}: ${model.bankDetails.accountNo}",
                                       style: GoogleFonts.mavenPro(
                                         textStyle: TextStyle(
                                             fontSize: 15, color: primaryColor),
                                       ))
                                 ],
-                              )
+                              ): Container()
                             ],
                           )
                         : Container(),
