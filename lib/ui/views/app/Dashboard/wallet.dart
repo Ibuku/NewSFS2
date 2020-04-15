@@ -40,7 +40,7 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   Future<void> showTransactionModal(
-      BuildContext pageContext, String type, {BankDetails bankDetails}) async {
+      BuildContext pageContext, String type) async {
     await showModalBottomSheet(
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
@@ -55,34 +55,34 @@ class _WalletScreenState extends State<WalletScreen> {
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: WalletTransactionModalWidget(
-                  parentContext: pageContext, transactionType: type, bankDetails: bankDetails),
+                  parentContext: pageContext, transactionType: type),
             ),
           );
         });
   }
 
-  Future<void> showBankDetailsModal(
-      BuildContext pageContext, ApplicationViewModel model,
-      {Function callback}) async {
-    await showModalBottomSheet(
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40))),
-        backgroundColor: Colors.white,
-        context: pageContext,
-        builder: (builder) {
-          return SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: BankDetailsModalWidget(
-                  parentContext: pageContext, callback: callback, selectBank: selectBank),
-            ),
-          );
-        });
-  }
+//  Future<void> showBankDetailsModal(
+//      BuildContext pageContext, ApplicationViewModel model,
+//      {Function callback}) async {
+//    await showModalBottomSheet(
+//        isScrollControlled: true,
+//        shape: RoundedRectangleBorder(
+//            borderRadius: BorderRadius.only(
+//                topLeft: Radius.circular(40),
+//                bottomRight: Radius.circular(40))),
+//        backgroundColor: Colors.white,
+//        context: pageContext,
+//        builder: (builder) {
+//          return SingleChildScrollView(
+//            child: Container(
+//              padding: EdgeInsets.only(
+//                  bottom: MediaQuery.of(context).viewInsets.bottom),
+//              child: BankDetailsModalWidget(
+//                  parentContext: pageContext, callback: callback, selectBank: selectBank),
+//            ),
+//          );
+//        });
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,14 +149,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       children: <Widget>[
                         GestureDetector(
                           onTap: () async {
-                            await model.getUsersBankDetails();
-                            if (model.bankDetails == null) {
-                              await showBankDetailsModal(context, model,
-                                  callback: () => showTransactionModal(
-                                      context, 'withdraw'));
-                            } else {
-                              await showTransactionModal(context, 'withdraw', bankDetails: model.bankDetails);
-                            }
+                            await showTransactionModal(context, 'withdraw');
                           },
                           child: Container(
                             margin: EdgeInsets.only(right: 20, left: 15),

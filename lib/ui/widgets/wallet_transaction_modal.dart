@@ -122,10 +122,14 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
         viewModel: PaymentViewModel(),
         onModelReady: (model) {
           var modelInit = widget.transactionType == 'fund'
-              ? model.getUsersCards() : Future.value();
+              ? model.getUsersCards()
+              : model.getUsersBankDetails();
           modelInit.then((val) {
             model.setBuildContext(widget.parentContext);
-            if (widget.bankDetails != null &&
+            if (widget.bankDetails == null) {
+              Navigator.push(widget.parentContext,
+                  MaterialPageRoute(builder: (builder) => AddBankDetails()));
+            } else if (widget.bankDetails != null &&
                 widget.transactionType == 'withdraw') {
               _reqData['account_number'] = widget.bankDetails.accountNo;
               _reqData['bank_name'] = widget.bankDetails.bankCode;
@@ -173,21 +177,39 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                     ),
                     verticalSpace15,
                     buildCardInput(model),
-                    widget.transactionType == 'withdraw' ? Container() : verticalSpace15,
-                    widget.transactionType == 'withdraw' ? Row(
-                      children: <Widget>[
-                        Radio(
-                          activeColor: primaryColor,
-                          value: widget.bankDetails,
-                          groupValue: widget.bankDetails,
-                        ),
-                        horizontalSpaceSmall,
-                        Text("${widget.bankDetails.bankName} ${widget.bankDetails.accountNo}",
-                            style: GoogleFonts.mavenPro(
-                              textStyle: TextStyle(fontSize: 15, color: primaryColor),
-                            ))
-                      ],
-                    ) : Container(),
+                    widget.transactionType == 'withdraw'
+                        ? Container()
+                        : verticalSpace15,
+                    widget.transactionType == 'withdraw'
+                        ? Column(
+                            children: <Widget>[
+                              Text(
+                                "Which account will you like to use?",
+                                style: GoogleFonts.mavenPro(
+                                  textStyle: TextStyle(
+                                      fontSize: 15, color: primaryColor),
+                                ),
+                              ),
+                              verticalSpaceTiny,
+                              Row(
+                                children: <Widget>[
+                                  Radio(
+                                    activeColor: primaryColor,
+                                    value: widget.bankDetails,
+                                    groupValue: widget.bankDetails,
+                                  ),
+                                  horizontalSpaceSmall,
+                                  Text(
+                                      "${widget.bankDetails.bankName}: ${widget.bankDetails.accountNo}",
+                                      style: GoogleFonts.mavenPro(
+                                        textStyle: TextStyle(
+                                            fontSize: 15, color: primaryColor),
+                                      ))
+                                ],
+                              )
+                            ],
+                          )
+                        : Container(),
                     verticalSpace15,
                     BusyButton(
                       title:

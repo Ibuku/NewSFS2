@@ -104,14 +104,14 @@ class NotificationScreen extends StatelessWidget {
       result.add({
         'title': 'Today',
         'notifications': todaysNotifications,
-        'date': new DateFormat('dth MMMM, yyyy').format(today)
+        'date': new DateFormat('d MMMM, yyyy').format(today)
       });
     }
     if(yesterdaysNotifications.length > 0){
       result.add({
         'title': 'Yesterday',
         'notifications': yesterdaysNotifications,
-        'date': new DateFormat('dth MMMM, yyyy').format(yesterday)
+        'date': new DateFormat('d MMMM, yyyy').format(yesterday)
       });
     }
     if(olderNotifications.length > 0){
