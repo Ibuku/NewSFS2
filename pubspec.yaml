@@ -57,6 +57,8 @@ dependencies:
   flutter_paystack: ^1.0.3+1
   flutter_svg: ^0.17.1
   file_picker: ^1.6.2
+  rxdart: ^0.23.1
+  flutter_local_notifications: ^1.4.1
 
 
 dev_dependencies:

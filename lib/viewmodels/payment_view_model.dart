@@ -20,9 +20,6 @@ class PaymentViewModel extends LoanApplicationViewModel {
   final ApplicationService _application = locator<ApplicationService>();
 
   String _reference;
-  BuildContext _context;
-
-  BuildContext get context => _context;
 
   List<WalletTransaction> _walletTransactions = [];
   List<WalletTransaction> get walletTransactions => _walletTransactions;
@@ -167,7 +164,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
       }
     }
 
-    PaystackPlugin.chargeCard(_context,
+    PaystackPlugin.chargeCard(context,
         charge: charge,
         beforeValidate: (transaction) => handleBeforeValidate(transaction),
         onSuccess: (transaction) => handleOnSuccess(transaction),
@@ -185,10 +182,6 @@ class PaymentViewModel extends LoanApplicationViewModel {
     _dialogService.showDialog(
         title: 'Update Status',
         description: 'Reference: $reference \n\ Response: $message');
-  }
-
-  void setBuildContext(BuildContext context) {
-    _context = context;
   }
 
   Future<void> getWalletTransactions() async {

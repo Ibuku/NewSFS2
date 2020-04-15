@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart' show NumberFormat;
 import 'package:sfscredit/models/bank.dart';
@@ -114,6 +115,14 @@ class ApplicationViewModel extends BaseModel {
   void setUserCards(List<UserCard> cards) {
     _userCards = cards;
     notifyListeners();
+  }
+
+  BuildContext _context;
+
+  BuildContext get context => _context;
+
+  void setBuildContext(BuildContext context) {
+    _context = context;
   }
 
   Future<void> getUserProfile() async {
@@ -272,16 +281,23 @@ class ApplicationViewModel extends BaseModel {
 
   Future<void> getUsersBankDetails() async {
     setBusy(true);
-
+    await getAllBanks();
     var bankDetailsRes = await _application.getUsersBankDetails();
-
     setBusy(false);
 
     if (bankDetailsRes.runtimeType == Response) {
       if (bankDetailsRes.statusCode == 200) {
         var body = jsonDecode(bankDetailsRes.body);
         if (!body['data'].isEmpty) {
-          setBankDetails(BankDetails.fromMap(body['data'][0]));
+          List rawData = body['data'];
+          List<BankDetails> details = rawData.map((detailsMap) {
+            Bank userBank = banks.firstWhere((bank) => bank.code == detailsMap['bank_code']);
+            return BankDetails.fromMap({
+              ...detailsMap,
+              'bank_name': userBank.name
+            });
+          }).toList();
+          setBankDetails(details[0]);
         }
       } else {
         _dialogService.showDialog(

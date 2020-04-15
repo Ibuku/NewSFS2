@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider_architecture/viewmodel_provider.dart';
+import 'package:sfscredit/models/bank_details.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
 import 'package:sfscredit/ui/views/app/profile/add_bank_details.dart';
@@ -14,9 +15,12 @@ import 'full_screen_picker.dart';
 class WalletTransactionModalWidget extends StatefulWidget {
   final BuildContext parentContext;
   final String transactionType;
+  final BankDetails bankDetails;
 
   WalletTransactionModalWidget(
-      {@required this.parentContext, @required this.transactionType});
+      {@required this.parentContext,
+      @required this.transactionType,
+      this.bankDetails});
 
   @override
   _WalletTransactionModalState createState() => _WalletTransactionModalState();
@@ -118,22 +122,13 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
         viewModel: PaymentViewModel(),
         onModelReady: (model) {
           var modelInit = widget.transactionType == 'fund'
-              ? model.getUsersCards()
-              : model.getUsersBankDetails();
+              ? model.getUsersCards() : Future.value();
           modelInit.then((val) {
             model.setBuildContext(widget.parentContext);
-            if (model.bankDetails == null && widget.transactionType == 'withdraw') {
-              Navigator.push(
-                model.context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return AddBankDetails();
-                  }
-                ),
-              );
-            } else if(model.bankDetails != null && widget.transactionType == 'withdraw') {
-              _reqData['account_number'] = model.bankDetails.accountNo;
-              _reqData['bank_name'] = model.bankDetails.bankCode;
+            if (widget.bankDetails != null &&
+                widget.transactionType == 'withdraw') {
+              _reqData['account_number'] = widget.bankDetails.accountNo;
+              _reqData['bank_name'] = widget.bankDetails.bankCode;
             }
           });
         },
@@ -178,6 +173,21 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                     ),
                     verticalSpace15,
                     buildCardInput(model),
+                    widget.transactionType == 'withdraw' ? Container() : verticalSpace15,
+                    widget.transactionType == 'withdraw' ? Row(
+                      children: <Widget>[
+                        Radio(
+                          activeColor: primaryColor,
+                          value: widget.bankDetails,
+                          groupValue: widget.bankDetails,
+                        ),
+                        horizontalSpaceSmall,
+                        Text("${widget.bankDetails.bankName} ${widget.bankDetails.accountNo}",
+                            style: GoogleFonts.mavenPro(
+                              textStyle: TextStyle(fontSize: 15, color: primaryColor),
+                            ))
+                      ],
+                    ) : Container(),
                     verticalSpace15,
                     BusyButton(
                       title:
@@ -229,7 +239,7 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                   )),
             ),
           ),
-          _buildForm()
+          _buildForm(),
         ],
       ),
     );

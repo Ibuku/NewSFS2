@@ -50,7 +50,8 @@ class ProfileViewModel extends ApplicationViewModel {
   Future updateUserAvatar(File avatarImage) async {
     setBusy(true);
     String avatarUrl = await uploadUserAvatarFile(avatarImage);
-    var avatarRes = await _applicationService.uploadUserAvatar({'avatar': avatarUrl});
+    var avatarRes =
+        await _applicationService.uploadUserAvatar({'avatar': avatarUrl});
     setBusy(false);
 
     if (avatarRes.runtimeType == Response) {
@@ -88,15 +89,15 @@ class ProfileViewModel extends ApplicationViewModel {
         setBusy(true);
         await ApplicationViewModel().getUserProfile();
         setBusy(false);
-          await _dialogService.showDialog(
-            title: "Profile Update Successful",
-            description: body['message'],
-          );
+        await _dialogService.showDialog(
+          title: "Profile Update Successful",
+          description: body['message'],
+        );
       } else if (profileRes.statusCode == 400) {
-          await _dialogService.showDialog(
-            title: 'Profile Update failed',
-            description: body['message'],
-          );
+        await _dialogService.showDialog(
+          title: 'Profile Update failed',
+          description: body['message'],
+        );
       } else {
         await _dialogService.showDialog(
           title: 'Profile Update failed',
@@ -111,16 +112,17 @@ class ProfileViewModel extends ApplicationViewModel {
     }
   }
 
-  Future updateUserBankDetails(Map reqData) async {
+  Future updateUserBankDetails(
+    Map reqData,
+  ) async {
     setBusy(true);
     var addDetailsRes = await _applicationService.addBankDetails(reqData);
     if (addDetailsRes.runtimeType == Response) {
       var body = jsonDecode(addDetailsRes.body);
       if (addDetailsRes.statusCode == 200) {
-        setBusy(true);
-        await getUsersBankDetails();
-        setBusy(false);
-        _navigationService.pop();
+        _dialogService.showDialog(
+            title: "Bank Details", description: body['message']);
+        return "success";
       } else {
         _dialogService.showDialog(
             title: "Bank Details Update Failed", description: body['message']);

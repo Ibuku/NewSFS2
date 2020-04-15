@@ -173,12 +173,14 @@ class _AddBankDetailsState extends State<AddBankDetails> {
                         width: 160,
                         child: CardBusyButton(
                           title: model.bankDetails == null ? "Add" : "Update",
-                          onPressed: () {
+                          onPressed: () async {
                             if (!_formKey.currentState.validate()) {
                               return;
                             }
                             _formKey.currentState.save();
-                            model.updateUserBankDetails(_userBankDetails);
+                            await model.updateUserBankDetails(_userBankDetails);
+                            await model.getUsersBankDetails();
+                            Navigator.pop(context);
                           },
                           busy: model.busy,
                         ),

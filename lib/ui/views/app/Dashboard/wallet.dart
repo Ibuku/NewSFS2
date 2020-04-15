@@ -1,11 +1,14 @@
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:sfscredit/models/bank_details.dart';
 import 'package:sfscredit/models/wallet_transaction.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
+import 'package:sfscredit/ui/widgets/add_bank_details_modal.dart';
+import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/custom_list_item.dart';
+import 'package:sfscredit/ui/widgets/full_screen_picker.dart';
 import 'package:sfscredit/ui/widgets/menu.dart';
 import 'package:sfscredit/ui/widgets/wallet_transaction_modal.dart';
 import 'package:sfscredit/viewmodels/application_view_model.dart';
@@ -22,8 +25,24 @@ class _WalletScreenState extends State<WalletScreen> {
   get value => null;
   List<WalletTransaction> _transactions = [];
 
-  Future<void> showTransactionModal(BuildContext pageContext, String type) async {
+  Future selectBank(ApplicationViewModel model) {
+    return Navigator.push(
+      model.context,
+      MaterialPageRoute(
+        builder: (context) => FullScreenPicker(
+          title: "Select a bank",
+          dataSource:
+          model.loading ? [] : model.banks,
+        ),
+        fullscreenDialog: false,
+      ),
+    );
+  }
+
+  Future<void> showTransactionModal(
+      BuildContext pageContext, String type, {BankDetails bankDetails}) async {
     await showModalBottomSheet(
+        isScrollControlled: true,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40),
@@ -31,10 +50,39 @@ class _WalletScreenState extends State<WalletScreen> {
         backgroundColor: Colors.white,
         context: pageContext,
         builder: (builder) {
-          return WalletTransactionModalWidget(parentContext: pageContext, transactionType: type);
+          return SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: WalletTransactionModalWidget(
+                  parentContext: pageContext, transactionType: type, bankDetails: bankDetails),
+            ),
+          );
         });
   }
 
+  Future<void> showBankDetailsModal(
+      BuildContext pageContext, ApplicationViewModel model,
+      {Function callback}) async {
+    await showModalBottomSheet(
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40))),
+        backgroundColor: Colors.white,
+        context: pageContext,
+        builder: (builder) {
+          return SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: BankDetailsModalWidget(
+                  parentContext: pageContext, callback: callback, selectBank: selectBank),
+            ),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +95,17 @@ class _WalletScreenState extends State<WalletScreen> {
           });
         });
       },
-      builder: (context, model, child) => WillPopScope(
-        onWillPop: () async => await model.onWillPop(),
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text("Total Wallet Balance"),
-            centerTitle: false,
-          ),
-          drawer: MenuDrawer(user: model.user, logout: model.logout),
-          body: Container(
+      builder: (context, model, child) => Scaffold(
+        appBar: AppBar(
+          title: Text("Total Wallet Balance"),
+          centerTitle: false,
+        ),
+        drawer: MenuDrawer(user: model.user, logout: model.logout),
+        body: BusyOverlay(
+          show: model.loading || model.busy,
+          title: "Loading",
+          overlayBackground: Colors.white,
+          child: Container(
             constraints: BoxConstraints.expand(),
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -99,7 +149,14 @@ class _WalletScreenState extends State<WalletScreen> {
                       children: <Widget>[
                         GestureDetector(
                           onTap: () async {
-                            await showTransactionModal(context, 'withdraw');
+                            await model.getUsersBankDetails();
+                            if (model.bankDetails == null) {
+                              await showBankDetailsModal(context, model,
+                                  callback: () => showTransactionModal(
+                                      context, 'withdraw'));
+                            } else {
+                              await showTransactionModal(context, 'withdraw', bankDetails: model.bankDetails);
+                            }
                           },
                           child: Container(
                             margin: EdgeInsets.only(right: 20, left: 15),
