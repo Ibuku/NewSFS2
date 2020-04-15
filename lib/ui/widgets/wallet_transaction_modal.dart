@@ -195,8 +195,8 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                                 children: <Widget>[
                                   Radio(
                                     activeColor: primaryColor,
-                                    value: widget.bankDetails,
-                                    groupValue: widget.bankDetails,
+                                    value: model.bankDetails,
+                                    groupValue: model.bankDetails,
                                   ),
                                   horizontalSpaceSmall,
                                   Text(
