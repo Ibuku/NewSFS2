@@ -25,53 +25,31 @@ class ProfileViewModel extends ApplicationViewModel {
 
   Future uploadUserAvatarFile(File avatarImage) async {
     setBusy(true);
-    var fileRes = await _applicationService.uploadFile2(
-        {'uploadFile': await dio.MultipartFile.fromFile(avatarImage.path)});
+    var fileRes = await _applicationService.uploadAvatarFile(
+        {'avatar': await dio.MultipartFile.fromFile(avatarImage.path)});
     setBusy(false);
 
     if (fileRes.runtimeType == dio.Response) {
       var fileBody = fileRes.data;
       if (fileRes.statusCode == 200) {
-        return fileBody['data'];
+        Map userProfileData = fileBody['data'];
+        Map userJson = userProfileData.remove('user');
+        userJson['user_profile'] = userProfileData;
+        user = userJson;
+        _dialogService.showDialog(
+          title: "Profile Avatar Update Successful",
+          description: fileBody['message'],
+        );
       } else {
         _dialogService.showDialog(
-          title: "Error with Image Upload",
+          title: "Error with Avatar Image Upload",
           description: fileBody['message'],
         );
       }
     } else {
       _dialogService.showDialog(
-        title: "Application Error with Image Upload",
+        title: "Application Error with Avatar Image Upload",
         description: fileRes.toString(),
-      );
-    }
-  }
-
-  Future updateUserAvatar(File avatarImage) async {
-    setBusy(true);
-    String avatarUrl = await uploadUserAvatarFile(avatarImage);
-    var avatarRes =
-        await _applicationService.uploadUserAvatar({'avatar': avatarUrl});
-    setBusy(false);
-
-    if (avatarRes.runtimeType == Response) {
-      var body = jsonDecode(avatarRes.body);
-      if (avatarRes.statusCode == 200) {
-        _dialogService.showDialog(
-          title: "Profile Avatar Update Successful",
-          description: body['message'],
-        );
-      } else {
-        print("Error Body: $body");
-        _dialogService.showDialog(
-          title: "Error with Profile Avatar Update",
-          description: body['message'] ?? "Error",
-        );
-      }
-    } else {
-      _dialogService.showDialog(
-        title: "Application Error with Profile Avatar Update",
-        description: avatarRes.toString(),
       );
     }
   }

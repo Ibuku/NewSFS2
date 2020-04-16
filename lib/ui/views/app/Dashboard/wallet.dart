@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/models/bank_details.dart';
@@ -15,6 +16,8 @@ import 'package:sfscredit/viewmodels/application_view_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sfscredit/viewmodels/payment_view_model.dart';
 
+import '../../../../const.dart';
+
 class WalletScreen extends StatefulWidget {
   static const routeName = '/app/Dashboard/wallet';
   @override
@@ -23,6 +26,13 @@ class WalletScreen extends StatefulWidget {
 
 class _WalletScreenState extends State<WalletScreen> {
   get value => null;
+
+  @override
+  void initState() {
+    PaystackPlugin.initialize(publicKey: PAYSTACK_PUBLIC_KEY);
+    super.initState();
+  }
+
   List<WalletTransaction> _transactions = [];
 
   Future selectBank(ApplicationViewModel model) {
@@ -191,7 +201,9 @@ class _WalletScreenState extends State<WalletScreen> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            await showTransactionModal(context, 'fund');
+                            PaymentViewModel pay = PaymentViewModel();
+                            pay.setBuildContext(context);
+                            await pay.startAfreshCharge(model.user.email);
                           },
                           child: Container(
                             margin: EdgeInsets.only(left: 15),
@@ -220,7 +232,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                     alignment: Alignment.topCenter, width: 40),
                                 verticalSpace15,
                                 Text(
-                                  "Fund",
+                                  "Add Card",
                                   style: TextStyle(
                                     color: primaryColor,
                                     fontSize: 17,

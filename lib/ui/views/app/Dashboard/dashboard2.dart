@@ -37,40 +37,41 @@ class DashboardScreen extends StatelessWidget {
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           // backgroundColor: Colors.white,
           body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: BusyOverlay(
-              show: model.loading || model.busy,
-              overlayBackground: Colors.white,
-              child: model.user.profile == null
-                  ? profileNotComplete(model)
-                  : profileComplete(model),
-            )
-          ),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: BusyOverlay(
+                show: model.loading || model.busy,
+                overlayBackground: Colors.white,
+                child: model.user.profile == null
+                    ? profileNotComplete(model)
+                    : profileComplete(model),
+              )),
         ),
       ),
     );
   }
 
   Widget profileNotComplete(ApplicationViewModel model) {
-    return !model.loading ? Column(
-      children: <Widget>[
-        model.user.profile == null
-            ? CardItem(
-                titleText: "Update KYC",
-                btnText: "Update",
-                icon: Icons.person,
-                onPressed: () => model.toRoute(UpdateKYC.routeName),
-              )
-            : Container(),
-        verticalSpace15,
-        CardItem(
-          titleText: "Your first loan",
-          btnText: "Apply",
-          icon: Icons.keyboard_tab,
-          onPressed: () => model.toRoute(ApplyScreen1.routeName),
-        ),
-      ],
-    ) : Container();
+    return !model.loading
+        ? Column(
+            children: <Widget>[
+              model.user.profile == null
+                  ? CardItem(
+                      titleText: "Update KYC",
+                      btnText: "Update",
+                      icon: Icons.person,
+                      onPressed: () => model.toRoute(UpdateKYC.routeName),
+                    )
+                  : Container(),
+              verticalSpace15,
+              CardItem(
+                titleText: "Your first loan",
+                btnText: "Apply",
+                icon: Icons.keyboard_tab,
+                onPressed: () => model.toRoute(ApplyScreen1.routeName),
+              ),
+            ],
+          )
+        : Container();
   }
 
   Widget profileComplete(ApplicationViewModel model) {
@@ -86,7 +87,8 @@ class DashboardScreen extends StatelessWidget {
                     Container(
                       child: CardItem(
                         titleText: "Total Borrowed Loans",
-                        btnText: "N ${model.formatNumber(model.activeLoansTotal)}.00",
+                        btnText:
+                            "N ${model.formatNumber(model.activeLoansTotal)}.00",
                         icon: Icons.cloud_download,
                         //onPressed: () => model.toRoute(UpdateKYC.routeName),
                       ),
@@ -96,7 +98,8 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     CardItem(
                       titleText: "Total Guaranteed Loans",
-                      btnText: "N ${model.formatNumber(model.totalGuarantorLoan)}.00",
+                      btnText:
+                          "N ${model.formatNumber(model.totalGuarantorLoan)}.00",
                       icon: Icons.person,
                       // onPressed: () => model.toRoute(UpdateKYC.routeName),
                     ),
@@ -211,7 +214,7 @@ class DashboardScreen extends StatelessWidget {
                             footer: Text(
                                 "Left To Pay = N ${model.formatNumber(model.activeLoansAmountLeft)}"),
                             center: Text(
-                              "${(model.activeLoansTotalPaid / model.activeLoansTotal).isNaN ? 0 : ((model.activeLoansTotalPaid / model.activeLoansTotal) * 100)}%",
+                              "${(model.activeLoansTotalPaid / model.activeLoansTotal).isNaN ? 0 : (double.parse((model.activeLoansTotalPaid / model.activeLoansTotal).toStringAsFixed(2)) * 100).floor()}%",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15.0,
@@ -254,103 +257,6 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    verticalSpace15,
-//                    Container(
-//                      margin: EdgeInsets.only(right: 30.0, top: 5),
-//                      child: Row(
-//                        mainAxisAlignment: MainAxisAlignment.end,
-//                        children: <Widget>[
-//                          RaisedButton(
-//                            color: Colors.white,
-//                            elevation: 4,
-//                            shape: RoundedRectangleBorder(
-//                              borderRadius: BorderRadius.circular(20),
-//                            ),
-//                            child: Text(
-//                              "Timeline",
-//                              style: TextStyle(
-//                                color: primaryColor,
-//                                fontSize: 17,
-//                              ),
-//                            ),
-//                            onPressed: () =>
-//                                model.toRoute(TimelineScreen.routeName),
-//                          ),
-//                        ],
-//                      ),
-//                    ),
-//                    Container(
-//                      padding: EdgeInsets.only(right: 230),
-//                      height: 25,
-//                      child: Text(
-//                        "Overview",
-//                        style: TextStyle(
-//                          color: primaryColor,
-//                          fontSize: 20,
-//                          fontWeight: FontWeight.bold,
-//                        ),
-//                      ),
-//                    ),
-//                    verticalSpace15,
-//                    Row(
-//                      children: <Widget>[
-//                        Container(
-//                          //margin: EdgeInsets.only(left: 10),
-//                          height: 100,
-//                          width: 150,
-//                          child: Card(
-//                            shape: RoundedRectangleBorder(
-//                              borderRadius: BorderRadius.circular(15.0),
-//                            ),
-//                            color: Colors.white,
-//                            elevation: 10,
-//                            child: Column(
-//                              mainAxisSize: MainAxisSize.max,
-//                              children: <Widget>[
-//                                ListTile(
-//                                  leading: Icon(Icons.radio_button_checked,
-//                                      size: 15, color: primaryColor),
-//                                  title: Text('Loan',
-//                                      style: TextStyle(color: primaryColor, fontSize: 14)),
-//                                  subtitle: Text(
-//                                      "${model.totalApprovedLoans}",
-//                                      style: TextStyle(color: primaryColor)
-//                                  ),
-//                                ),
-//                              ],
-//                            ),
-//                          ),
-//                        ),
-//                        Container(
-//                          padding: EdgeInsets.only(right: 10),
-//                          height: 100,
-//                          width: 160,
-//                          child: Card(
-//                            shape: RoundedRectangleBorder(
-//                              borderRadius: BorderRadius.circular(15.0),
-//                            ),
-//                            color: primaryColor,
-//                            elevation: 10,
-//                            child: Column(
-//                              mainAxisSize: MainAxisSize.max,
-//                              children: <Widget>[
-//                                ListTile(
-//                                  leading: Icon(
-//                                    Icons.radio_button_checked,
-//                                    size: 15,
-//                                    color: Colors.white,
-//                                  ),
-//                                  title: Text('Request',
-//                                      style: TextStyle(color: Colors.white, fontSize: 14)),
-//                                  subtitle: Text("${model.totalGuarantorRequests}",
-//                                      style: TextStyle(color: Colors.white)),
-//                                ),
-//                              ],
-//                            ),
-//                          ),
-//                        ),
-//                      ],
-//                    ),
                   ],
                 ),
               ),

@@ -1,8 +1,6 @@
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:sfscredit/models/guarantor_request.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';

@@ -2,12 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
+import 'package:sfscredit/ui/views/auth/login_screen.dart';
 
 import '../locator.dart';
+import 'dialog_service.dart';
+import 'navigation_service.dart';
 import 'token_service.dart';
 
 class NetworkService {
   final TokenService _tokenService = locator<TokenService>();
+  final NavigationService _navigationService = locator<NavigationService>();
+  final DialogService _dialogService = locator<DialogService>();
 
   Future<http.Response> get(
     String url, {
@@ -20,11 +25,13 @@ class NetworkService {
       ...headers
     });
     if (res.statusCode == 401) {
-      final String tokenStr = await refresh(token);
-      return await http.get(url, headers: <String, String>{
-        if (isAuth) HttpHeaders.authorizationHeader: 'Bearer $tokenStr',
-        ...headers
-      });
+      _dialogService.showDialog(title: "Session Expired", description: "Please Login");
+      _navigationService.navigateAndClearRoute(LoginScreen.routeName);
+//      final String tokenStr = await refresh(token);
+//      return await http.get(url, headers: <String, String>{
+//        if (isAuth) HttpHeaders.authorizationHeader: 'Bearer $tokenStr',
+//        ...headers
+//      });
     }
     return res;
   }

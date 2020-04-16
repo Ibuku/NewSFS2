@@ -266,26 +266,13 @@ class ApplicationService {
     }
   }
 
-  Future uploadFile2(dynamic reqData) async {
+  Future uploadAvatarFile(dynamic reqData) async {
     try {
       var dio = Dio();
+      final String token = _tokenService.getToken();
+      dio.options.headers["authorization"] = "Bearer $token";
       FormData formData = FormData.fromMap(reqData);
-      return await dio.post("$API_BASE_URL/file/upload", data: formData);
-    } catch (e) {
-      return e;
-    }
-  }
-
-  Future uploadUserAvatar(Map reqData) async {
-    try {
-      return await _network.post("$API_BASE_URL/user/avatar",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: reqData,
-          encodeBody: false,
-          isAuth: true);
+      return await dio.post("$API_BASE_URL/user/avatar", data: formData);
     } catch (e) {
       return e;
     }

@@ -236,7 +236,7 @@ class ApplicationViewModel extends BaseModel {
         if (!body['data'].isEmpty) {
           List rawRequests = body['data'];
           List<PaybackSchedule> pendingSchedules = rawRequests
-              .where((schedule) => schedule.paymentStatus == 'pending')
+              .where((schedule) => schedule['payment_status'] == 'pending')
               .map((i) => PaybackSchedule.fromMap((i)))
               .toList();
           setActiveLoanParams(pendingSchedules, requests);

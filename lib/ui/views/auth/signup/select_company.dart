@@ -78,8 +78,8 @@ class SelectCompany extends StatelessWidget {
                           hintText: model.loading
                               ? "Loading Companies ..."
                               : model.selectedCompany != null
-                                  ? model.selectedCompany.display
-                                  : "Select a company",
+                              ? model.selectedCompany.display
+                              : "Select a company",
                           textController: _companyController,
                           validator: (value) {
                             if (value == null || value == "") {
@@ -105,7 +105,7 @@ class SelectCompany extends StatelessWidget {
                                 builder: (context) => FullScreenPicker(
                                   title: "Select a company",
                                   dataSource:
-                                      model.loading ? [] : model.companies,
+                                  model.loading ? [] : model.companies,
                                 ),
                                 fullscreenDialog: false,
                               ),

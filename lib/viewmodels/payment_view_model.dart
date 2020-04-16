@@ -161,6 +161,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
       if (verifyRes.runtimeType == Response && verifyRes.statusCode == 200) {
         await getUsersCards();
         setBusy(false);
+        _dialogService.showDialog(title: 'Card', description: "Card Added Successfully");
       }
     }
 
@@ -176,12 +177,6 @@ class PaymentViewModel extends LoanApplicationViewModel {
     return PaymentCard(
       expiryYear: 0,
     );
-  }
-
-  void updateStatus(String reference, String message) {
-    _dialogService.showDialog(
-        title: 'Update Status',
-        description: 'Reference: $reference \n\ Response: $message');
   }
 
   Future<void> getWalletTransactions() async {

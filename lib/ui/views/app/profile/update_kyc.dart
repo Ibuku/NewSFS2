@@ -193,7 +193,7 @@ class _UpdateKYCState extends State<UpdateKYC> {
                             _formKey.currentState.save();
                             await model.updateUser(_userProfile);
                             if(_avatarImage != null){
-                              await model.updateUserAvatar(_avatarImage);
+                              await model.uploadUserAvatarFile(_avatarImage);
                             }
                             model.toRoute(DashboardScreen.routeName);
                           },

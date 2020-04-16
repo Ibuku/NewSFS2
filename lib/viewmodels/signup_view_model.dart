@@ -45,7 +45,6 @@ class SignUpViewModel extends BaseModel {
         var body = jsonDecode(companyRes.body);
         List companies = body['data'];
         _companiesList = companies.map((i) => Company.fromMap(i)).toList();
-        return _companiesList;
       } else {
         _dialogService.showDialog(
           title: "Network error occured",
