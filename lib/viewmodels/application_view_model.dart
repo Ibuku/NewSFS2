@@ -76,12 +76,17 @@ class ApplicationViewModel extends BaseModel {
 
   void setActiveLoanParams(
       List<PaybackSchedule> pendingSchedules, List<LoanRequest> requests) {
-    pendingSchedules.forEach((schedule) {
-      LoanRequest request = requests
-          .where((request) => request.id == schedule.loanRequestId)
-          .toList()[0];
+    List rawSchedules =
+        pendingSchedules.map((schedule) => schedule.toMap()).toList();
+    List rawRequests = requests.map((request) => request.toMap()).toList();
+    print("Pending Schedules: ${rawSchedules}");
+    print("Loan Requests: ${rawRequests}");
+    requests.forEach((request) {
       _activeLoansTotal += request.loanPackage.totalPayback;
-      _activeLoansAmountLeft += schedule.amountDue;
+      _activeLoansAmountLeft += pendingSchedules
+          .where((schedule) => schedule.loanRequestId == request.id)
+          .map((sch) => sch.amountDue)
+          .reduce((int i, int j) => i + j);
     });
     _activeLoansTotalPaid = _activeLoansTotal - _activeLoansAmountLeft;
     notifyListeners();
@@ -291,11 +296,10 @@ class ApplicationViewModel extends BaseModel {
         if (!body['data'].isEmpty) {
           List rawData = body['data'];
           List<BankDetails> details = rawData.map((detailsMap) {
-            Bank userBank = banks.firstWhere((bank) => bank.code == detailsMap['bank_code']);
-            return BankDetails.fromMap({
-              ...detailsMap,
-              'bank_name': userBank.name
-            });
+            Bank userBank = banks
+                .firstWhere((bank) => bank.code == detailsMap['bank_code']);
+            return BankDetails.fromMap(
+                {...detailsMap, 'bank_name': userBank.name});
           }).toList();
           setBankDetails(details[0]);
         }
@@ -374,7 +378,7 @@ class ApplicationViewModel extends BaseModel {
     var cardsRes = await _application.getUsersCards();
     setBusy(false);
 
-    if(cardsRes.runtimeType == Response) {
+    if (cardsRes.runtimeType == Response) {
       if (cardsRes.statusCode == 200) {
         var body = jsonDecode(cardsRes.body);
         List verifiedCards = body['data'];
@@ -455,5 +459,4 @@ class ApplicationViewModel extends BaseModel {
     String pprint = encoder.convert(json);
     print(pprint);
   }
-
 }
