@@ -174,6 +174,9 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                       onSaved: (value) {
                         _reqData['amount'] = value;
                       },
+                      onEditComplete: (){
+                        FocusScope.of(widget.parentContext).requestFocus(new FocusNode());
+                      },
                     ),
                     verticalSpace15,
                     buildCardInput(model),
@@ -191,22 +194,25 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
                                 ),
                               ),
                               verticalSpaceTiny,
-                              model.bankDetails != null ? Row(
-                                children: <Widget>[
-                                  Radio(
-                                    activeColor: primaryColor,
-                                    value: model.bankDetails,
-                                    groupValue: model.bankDetails,
-                                  ),
-                                  horizontalSpaceSmall,
-                                  Text(
-                                      "${model.bankDetails.bankName}: ${model.bankDetails.accountNo}",
-                                      style: GoogleFonts.mavenPro(
-                                        textStyle: TextStyle(
-                                            fontSize: 15, color: primaryColor),
-                                      ))
-                                ],
-                              ): Container()
+                              model.bankDetails != null
+                                  ? Row(
+                                      children: <Widget>[
+                                        Radio(
+                                          activeColor: primaryColor,
+                                          value: model.bankDetails,
+                                          groupValue: model.bankDetails,
+                                        ),
+                                        horizontalSpaceSmall,
+                                        Text(
+                                            "${model.bankDetails.bankName}: ${model.bankDetails.accountNo}",
+                                            style: GoogleFonts.mavenPro(
+                                              textStyle: TextStyle(
+                                                  fontSize: 15,
+                                                  color: primaryColor),
+                                            ))
+                                      ],
+                                    )
+                                  : Container()
                             ],
                           )
                         : Container(),
@@ -246,24 +252,24 @@ class _WalletTransactionModalState extends State<WalletTransactionModalWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 25, horizontal: 35),
-      child: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topRight,
-            child: FlatButton(
-              onPressed: () {
-                Navigator.of(widget.parentContext).pop();
-              },
-              child: Text("Cancel",
-                  style: GoogleFonts.mavenPro(
-                    textStyle: TextStyle(fontSize: 15, color: primaryColor),
-                  )),
+        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 35),
+        child: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topRight,
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.of(widget.parentContext).pop();
+                },
+                child: Text("Cancel",
+                    style: GoogleFonts.mavenPro(
+                      textStyle: TextStyle(fontSize: 15, color: primaryColor),
+                    )),
+              ),
             ),
-          ),
-          _buildForm(),
-        ],
-      ),
+            _buildForm(),
+          ],
+        ),
     );
   }
 }

@@ -41,8 +41,7 @@ class _WalletScreenState extends State<WalletScreen> {
       MaterialPageRoute(
         builder: (context) => FullScreenPicker(
           title: "Select a bank",
-          dataSource:
-          model.loading ? [] : model.banks,
+          dataSource: model.loading ? [] : model.banks,
         ),
         fullscreenDialog: false,
       ),
@@ -60,12 +59,17 @@ class _WalletScreenState extends State<WalletScreen> {
         backgroundColor: Colors.white,
         context: pageContext,
         builder: (builder) {
-          return SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: WalletTransactionModalWidget(
-                  parentContext: pageContext, transactionType: type),
+          return GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: WalletTransactionModalWidget(
+                    parentContext: pageContext, transactionType: type),
+              ),
             ),
           );
         });

@@ -32,7 +32,7 @@ class MenuDrawer extends StatelessWidget {
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  user.profile.avatar != null
+                  user.profile?.avatar != null
                       ? user.profile.avatar
                       : "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",
                 ),
