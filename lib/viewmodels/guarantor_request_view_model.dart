@@ -152,7 +152,7 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
         .showConfirmationDialog(
       title: "Cashdown Payment",
       description:
-          "Would you like to signify Cahdown Payment for this Loan Request?",
+          "Would you like to signify Cashdown Payment for this Loan Request?",
       cancelTitle: "No",
       confirmationTitle: "Yes",
     )

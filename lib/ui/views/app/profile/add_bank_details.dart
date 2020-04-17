@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
-import 'package:sfscredit/models/bank.dart';
 import 'package:sfscredit/ui/widgets/full_screen_picker.dart';
 import 'package:sfscredit/viewmodels/profile_view_model.dart';
 
@@ -30,18 +29,8 @@ class _AddBankDetailsState extends State<AddBankDetails> {
   Widget build(BuildContext context) {
     return ViewModelProvider<ProfileViewModel>.withConsumer(
       viewModel: ProfileViewModel(),
-      onModelReady: (model) => model.initBankDetails(),
+      onModelReady: (model) {},
       builder: (context, model, child) {
-        if (model.bankDetails != null) {
-          _accountNameController.text = model.bankDetails.accountName;
-          _accountNoController.text = model.bankDetails.accountNo;
-          List<Bank> usersBankList = model.banks
-              .where((bank) => bank.code == model.bankDetails.bankCode)
-              .toList();
-          if(usersBankList.isNotEmpty) {
-            _bankController.text = usersBankList[0].name;
-          }
-        }
         return BusyOverlay(
           show: model.busy,
           title: "Loading",
@@ -172,14 +161,13 @@ class _AddBankDetailsState extends State<AddBankDetails> {
                       child: Container(
                         width: 160,
                         child: CardBusyButton(
-                          title: model.bankDetails == null ? "Add" : "Update",
+                          title: "Add",
                           onPressed: () async {
                             if (!_formKey.currentState.validate()) {
                               return;
                             }
                             _formKey.currentState.save();
-                            await model.updateUserBankDetails(_userBankDetails);
-                            await model.getUsersBankDetails();
+                            await model.addUserBankDetails(_userBankDetails);
                             Navigator.pop(context);
                           },
                           busy: model.busy,

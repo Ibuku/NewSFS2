@@ -15,7 +15,7 @@ import 'base_model.dart';
 
 class AccountActivateViewModel extends BaseModel {
   final AuthenticationService _authenticationService =
-      locator<AuthenticationService>();
+  locator<AuthenticationService>();
   final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
@@ -67,6 +67,10 @@ class AccountActivateViewModel extends BaseModel {
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
       if (result.statusCode == 200) {
+        _dialogService.showDialog(
+          title: "Account verification successful",
+          description: "Please Login"
+        );
         _navigationService.navigateTo(LoginScreen.routeName, replace: true);
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(

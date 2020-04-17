@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider_architecture/provider_architecture.dart';
-import 'package:sfscredit/models/bank_details.dart';
 import 'package:sfscredit/models/wallet_transaction.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
-import 'package:sfscredit/ui/widgets/add_bank_details_modal.dart';
+import 'package:sfscredit/ui/views/app/profile/add_bank_details.dart';
 import 'package:sfscredit/ui/widgets/busy_overlay.dart';
 import 'package:sfscredit/ui/widgets/custom_list_item.dart';
 import 'package:sfscredit/ui/widgets/full_screen_picker.dart';
@@ -27,26 +25,44 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> {
   get value => null;
 
-  @override
-  void initState() {
-    PaystackPlugin.initialize(publicKey: PAYSTACK_PUBLIC_KEY);
-    super.initState();
-  }
-
   List<WalletTransaction> _transactions = [];
 
-  Future selectBank(ApplicationViewModel model) {
-    return Navigator.push(
-      model.context,
-      MaterialPageRoute(
-        builder: (context) => FullScreenPicker(
-          title: "Select a bank",
-          dataSource: model.loading ? [] : model.banks,
-        ),
-        fullscreenDialog: false,
-      ),
-    );
-  }
+//  Future selectBank(ApplicationViewModel model) {
+//    return Navigator.push(
+//      model.context,
+//      MaterialPageRoute(
+//        builder: (context) => FullScreenPicker(
+//          title: "Select a bank",
+//          dataSource: model.loading ? [] : model.banks,
+//        ),
+//        fullscreenDialog: false,
+//      ),
+//    );
+//  }
+
+//  Future<void> showBankDetailsModal(
+//      BuildContext pageContext, ApplicationViewModel model,
+//      {Function callback}) async {
+//    await showModalBottomSheet(
+//        isScrollControlled: true,
+//        shape: RoundedRectangleBorder(
+//            borderRadius: BorderRadius.only(
+//                topLeft: Radius.circular(40),
+//                bottomRight: Radius.circular(40))),
+//        backgroundColor: Colors.white,
+//        context: pageContext,
+//        builder: (builder) {
+//          return SingleChildScrollView(
+//            child: Container(
+//              padding: EdgeInsets.only(
+//                  bottom: MediaQuery.of(context).viewInsets.bottom),
+//              child: BankDetailsModalWidget(
+//                  parentContext: pageContext, callback: callback, selectBank: selectBank),
+//            ),
+//          );
+//        });
+//  }
+
 
   Future<void> showTransactionModal(
       BuildContext pageContext, String type) async {
@@ -74,29 +90,6 @@ class _WalletScreenState extends State<WalletScreen> {
           );
         });
   }
-
-//  Future<void> showBankDetailsModal(
-//      BuildContext pageContext, ApplicationViewModel model,
-//      {Function callback}) async {
-//    await showModalBottomSheet(
-//        isScrollControlled: true,
-//        shape: RoundedRectangleBorder(
-//            borderRadius: BorderRadius.only(
-//                topLeft: Radius.circular(40),
-//                bottomRight: Radius.circular(40))),
-//        backgroundColor: Colors.white,
-//        context: pageContext,
-//        builder: (builder) {
-//          return SingleChildScrollView(
-//            child: Container(
-//              padding: EdgeInsets.only(
-//                  bottom: MediaQuery.of(context).viewInsets.bottom),
-//              child: BankDetailsModalWidget(
-//                  parentContext: pageContext, callback: callback, selectBank: selectBank),
-//            ),
-//          );
-//        });
-//  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,10 +197,13 @@ class _WalletScreenState extends State<WalletScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () async {
-                            PaymentViewModel pay = PaymentViewModel();
-                            pay.setBuildContext(context);
-                            await pay.startAfreshCharge(model.user.email);
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddBankDetails(),
+                              ),
+                            );
                           },
                           child: Container(
                             margin: EdgeInsets.only(left: 15),
@@ -236,7 +232,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                     alignment: Alignment.topCenter, width: 40),
                                 verticalSpace15,
                                 Text(
-                                  "Add Card",
+                                  "Add Bank",
                                   style: TextStyle(
                                     color: primaryColor,
                                     fontSize: 17,

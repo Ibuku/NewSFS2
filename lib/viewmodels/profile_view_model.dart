@@ -90,7 +90,7 @@ class ProfileViewModel extends ApplicationViewModel {
     }
   }
 
-  Future updateUserBankDetails(
+  Future addUserBankDetails(
     Map reqData,
   ) async {
     setBusy(true);
@@ -98,12 +98,14 @@ class ProfileViewModel extends ApplicationViewModel {
     if (addDetailsRes.runtimeType == Response) {
       var body = jsonDecode(addDetailsRes.body);
       if (addDetailsRes.statusCode == 200) {
+        setBusy(true);
+        await getUsersBankDetails();
+        setBusy(false);
         _dialogService.showDialog(
             title: "Bank Details", description: body['message']);
-        return "success";
       } else {
         _dialogService.showDialog(
-            title: "Bank Details Update Failed", description: body['message']);
+            title: "Adding Bank Details Failed", description: body['message']);
       }
     } else {
       _dialogService.showDialog(

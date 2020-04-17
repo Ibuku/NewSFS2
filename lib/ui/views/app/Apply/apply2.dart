@@ -113,15 +113,7 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
         child: Scaffold(
             appBar: AppBar(
               title: Text("Apply"),
-              centerTitle: false,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(FeatherIcons.logOut),
-                  onPressed: () async {
-                    await model.logout();
-                  },
-                ),
-              ],
+              centerTitle: false
             ),
             backgroundColor: Colors.white,
             body: BusyOverlay(

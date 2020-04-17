@@ -74,13 +74,14 @@ class ApplicationViewModel extends BaseModel {
   int _activeLoansTotalPaid = 0;
   int get activeLoansTotalPaid => _activeLoansTotalPaid;
 
+  int _nextInstallment = 0;
+  int get nextInstallment => _nextInstallment;
+
   void setActiveLoanParams(
       List<PaybackSchedule> pendingSchedules, List<LoanRequest> requests) {
     List rawSchedules =
         pendingSchedules.map((schedule) => schedule.toMap()).toList();
     List rawRequests = requests.map((request) => request.toMap()).toList();
-    print("Pending Schedules: ${rawSchedules}");
-    print("Loan Requests: ${rawRequests}");
     requests.forEach((request) {
       _activeLoansTotal += request.loanPackage.totalPayback;
       _activeLoansAmountLeft += pendingSchedules
@@ -89,6 +90,7 @@ class ApplicationViewModel extends BaseModel {
           .reduce((int i, int j) => i + j);
     });
     _activeLoansTotalPaid = _activeLoansTotal - _activeLoansAmountLeft;
+    _nextInstallment = pendingSchedules[0].amountDue;
     notifyListeners();
   }
 
@@ -274,7 +276,6 @@ class ApplicationViewModel extends BaseModel {
       List approvedLoanPackages = body['data'];
       List<LoanPackage> loanPackages =
           approvedLoanPackages.map((i) => LoanPackage.fromMap((i))).toList();
-      print("Loan packages : ${body['data']}");
       setLoanPackages(loanPackages);
     } else {
       _dialogService.showDialog(

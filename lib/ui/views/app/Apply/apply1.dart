@@ -30,7 +30,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
   final DialogService _dialogService = locator<DialogService>();
   bool _isEditingSalary = false;
   TextEditingController _salaryTextController;
-  String _salaryValue = "0";
+  String _salaryValue = "";
 
   bool isEligible(int salary, int packageAmount) {
     return packageAmount < (0.35 * (3 * salary));
@@ -73,22 +73,14 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
         child: Scaffold(
           appBar: AppBar(
             title: Text("Apply"),
-            centerTitle: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(FeatherIcons.logOut),
-                onPressed: () async {
-                  await model.logout();
-                },
-              ),
-            ],
+            centerTitle: false
           ),
           backgroundColor: Colors.white,
           drawer: MenuDrawer(user: model.user, logout: model.logout),
           body: new GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
-              if(_isEditingSalary){
+              if (_isEditingSalary) {
                 setState(() {
                   _isEditingSalary = false;
                 });
@@ -137,7 +129,7 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
                                     });
                                   },
                                   child: Text(
-                                    "N ${model.formatNumber(int.parse(_salaryValue))}.00",
+                                    "N ${_salaryValue != "" ? model.formatNumber(int.parse(_salaryValue)) : "0"}.00",
                                     style: GoogleFonts.mavenPro(
                                       fontWeight: FontWeight.bold,
                                     ).copyWith(
@@ -208,48 +200,6 @@ class _ApplyScreen1State extends State<ApplyScreen1> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class Dashboard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      elevation: 8,
-      // color: Colors.white70,
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 50,
-          ),
-          Container(
-            height: 500,
-            child: PageView(
-              controller: PageController(viewportFraction: 0.0),
-              scrollDirection: Axis.horizontal,
-              pageSnapping: true,
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  color: Colors.indigo[900],
-                  width: 180,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  color: Colors.indigo[900],
-                  width: 180,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  color: Colors.indigo[900],
-                  width: 180,
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

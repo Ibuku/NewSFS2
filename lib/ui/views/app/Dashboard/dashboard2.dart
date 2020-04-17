@@ -245,7 +245,7 @@ class DashboardScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "N 0.00",
+                                "N ${model.formatNumber(model.nextInstallment)}.00",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,
