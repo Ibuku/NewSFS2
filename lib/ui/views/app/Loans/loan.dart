@@ -31,18 +31,33 @@ class _MyLoanState extends State<MyLoanScreen> {
 
   List<Widget> _buildStatusCards(ApplicationViewModel model) {
     Map statusData = {
-      'Approved': {'color': Hexcolor('#70C6FF')},
-      'Declined': {'color': Hexcolor('#7787FC')},
-      'Pending': {'color': Hexcolor('#E2E2E2')}
+      'All': {'color': primaryColor, 'iterable': _allRequests},
+      'Active': {
+        'color': primaryColor,
+        'iterable': _allRequests.where((request) =>
+            request.status == 'approved' && request.paymentStatus == 'unpaid')
+      },
+      'Approved': {
+        'color': Hexcolor('#70C6FF'),
+        'iterable':
+            _allRequests.where((request) => request.status == 'approved')
+      },
+      'Declined': {
+        'color': Hexcolor('#7787FC'),
+        'iterable':
+            _allRequests.where((request) => request.status == 'declined')
+      },
+      'Pending': {
+        'color': Hexcolor('#E2E2E2'),
+        'iterable': _allRequests.where((request) => request.status == 'pending')
+      }
     };
     return statusData.keys.map((status) {
       Map singleStatusData = statusData[status];
       return GestureDetector(
           onTap: () {
             setState(() {
-              _currentRequestsList = _allRequests
-                  .where((request) => request.status == status.toLowerCase())
-                  .toList();
+              _currentRequestsList = singleStatusData['iterable'].toList();
             });
           },
           child: Container(
@@ -63,7 +78,7 @@ class _MyLoanState extends State<MyLoanScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "${_allRequests.where((loanRequest) => loanRequest.status == status.toLowerCase()).length}",
+                  "${singleStatusData['iterable'].length}",
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.normal,
@@ -160,41 +175,7 @@ class _MyLoanState extends State<MyLoanScreen> {
                         height: 150,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            Container(
-                              width: 120,
-                              margin: EdgeInsets.symmetric(horizontal: 8),
-                              padding: EdgeInsets.only(top: 15),
-                              decoration: BoxDecoration(
-                                  color: primaryColor,
-                                  image: DecorationImage(
-                                    alignment: Alignment.topLeft,
-                                    image: AssetImage('assets/images/up1.png'),
-                                  ),
-                                  borderRadius: BorderRadius.circular(15.0)),
-                              child: Center(
-                                  child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    "${model.loanRequests.where((loanRequest) => loanRequest.status == 'approved').length}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 17),
-                                  ),
-                                  Text(
-                                    "Active",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 17),
-                                  ),
-                                ],
-                              )),
-                            ),
-                            ..._buildStatusCards(model)
-                          ],
+                          children: <Widget>[..._buildStatusCards(model)],
                         ),
                       ),
                       verticalSpace15,
@@ -215,17 +196,19 @@ class _MyLoanState extends State<MyLoanScreen> {
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return CustomListItem(
-                              leadingIcon: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",
+                                leadingIcon: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",
+                                  ),
                                 ),
-                              ),
-                              title: _currentRequestsList[index].loanPackage.name,
-                              amount:
-                                  _currentRequestsList[index].loanPackage.amount,
-                              date: _currentRequestsList[index].createdAt,
-                              color: primaryColor
-                            );
+                                title: _currentRequestsList[index]
+                                    .loanPackage
+                                    .name,
+                                amount: _currentRequestsList[index]
+                                    .loanPackage
+                                    .amount,
+                                date: _currentRequestsList[index].createdAt,
+                                color: primaryColor);
                           },
                           separatorBuilder: (context, index) {
                             return verticalSpace15;

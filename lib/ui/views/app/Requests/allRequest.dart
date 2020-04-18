@@ -25,9 +25,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
 
   bool _isEditingSalary = false;
   TextEditingController _salaryTextController;
-  String _salaryValue = "0";
-
-  Map _addSalaryReqData = {};
+  String _salaryValue = "";
 
   bool isEligible(int salary, int packageAmount) {
     return packageAmount < (0.35 * (3 * salary));
@@ -142,15 +140,11 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
                                     onChanged: (newValue) {
                                       setState(() {
                                         _salaryValue = newValue;
-                                        _addSalaryReqData['guarantor_salary'] =
-                                            newValue;
                                       });
                                     },
                                     onSubmitted: (newValue) {
                                       setState(() {
                                         _salaryValue = newValue;
-                                        _addSalaryReqData['guarantor_salary'] =
-                                            newValue;
                                         _isEditingSalary = false;
                                       });
                                     },
@@ -167,7 +161,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                        "N ${model.formatNumber(int.parse(_salaryValue))}.00",
+                                        "N ${_salaryValue != "" ? model.formatNumber(int.parse(_salaryValue)) : "0"}.00",
                                         style: GoogleFonts.mavenPro(
                                           fontWeight: FontWeight.bold,
                                         ).copyWith(
@@ -235,7 +229,7 @@ class _AllRequestScreenState extends State<AllRequestScreen> {
                             itemBuilder: (BuildContext context, int index) {
                               return GuarantorRequestWidget(
                                   request: _currentRequestsList[index],
-                                  addSalaryReqData: _addSalaryReqData);
+                                  salary: _salaryValue, parentContext: context);
                             },
                             separatorBuilder: (context, index) {
                               return verticalSpace15;

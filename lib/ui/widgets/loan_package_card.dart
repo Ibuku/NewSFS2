@@ -94,32 +94,6 @@ class LoanPackageWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-//                Expanded(
-//                  flex: 2,
-//                  child: RaisedButton(
-//                      color: primaryColor,
-//                      elevation: 4,
-//                      padding: EdgeInsets.symmetric(horizontal: 2),
-//                      shape: RoundedRectangleBorder(
-//                        borderRadius: BorderRadius.circular(20),
-//                      ),
-//                      child: Text(
-//                        "See terms",
-//                        style: TextStyle(
-//                          color: Colors.white70,
-//                          fontSize: 10,
-//                        ),
-//                      ),
-//                      onPressed: () {
-//                        Navigator.push(
-//                          context,
-//                          MaterialPageRoute(
-//                            builder: (context) => Dashboard(),
-//                          ),
-//                        );
-//                      },
-//                    ),
-//                )
               ],
             ),
           ]),

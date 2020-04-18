@@ -79,9 +79,6 @@ class ApplicationViewModel extends BaseModel {
 
   void setActiveLoanParams(
       List<PaybackSchedule> pendingSchedules, List<LoanRequest> requests) {
-    List rawSchedules =
-        pendingSchedules.map((schedule) => schedule.toMap()).toList();
-    List rawRequests = requests.map((request) => request.toMap()).toList();
     requests.forEach((request) {
       _activeLoansTotal += request.loanPackage.totalPayback;
       _activeLoansAmountLeft += pendingSchedules

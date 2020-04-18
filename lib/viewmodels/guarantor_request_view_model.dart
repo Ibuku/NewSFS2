@@ -69,15 +69,10 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
         .approveOrDeclineLoanRequest(reqData: reqData, action: action);
     if (modifyGuarantorRequestRes.runtimeType == Response) {
       var body = jsonDecode(modifyGuarantorRequestRes.body);
-      print("Req Data: $reqData");
       if (modifyGuarantorRequestRes.statusCode == 200) {
-        if (action == 'approve') {
-          await cashDownPaymentDialog(reqData['loan_request_id']);
-        } else {
-          _dialogService.showDialog(
-              title: "Guarantor Request", description: body['message']);
-          _navigationService.navigateAndClearRoute(AllRequestScreen.routeName);
-        }
+        _dialogService.showDialog(
+            title: "Guarantor Request", description: body['message']);
+        _navigationService.navigateAndClearRoute(AllRequestScreen.routeName);
       } else {
         _dialogService.showDialog(
           title: "Request error occured",
@@ -93,16 +88,14 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
     setBusy(false);
   }
 
-  Future<void> addGuarantorBankDetails({@required Map reqData}) async {
+  Future<bool> addGuarantorBankDetails({@required Map reqData}) async {
     setBusy(true);
     var addGuarantorDetailsRes =
         await _application.addGuarantorBankDetails(reqData: reqData);
     if (addGuarantorDetailsRes.runtimeType == Response) {
       var body = jsonDecode(addGuarantorDetailsRes.body);
       if (addGuarantorDetailsRes.statusCode == 200) {
-        await modifyGuarantorRequest(
-            reqData: {'loan_request_id': reqData['loan_request_id']},
-            action: 'approve');
+        return true;
       } else {
         _dialogService.showDialog(
           title: "Request error occured",
@@ -115,8 +108,8 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
         description: addGuarantorDetailsRes.toString(),
       );
     }
-
     setBusy(false);
+    return false;
   }
 
   @override
@@ -138,35 +131,14 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
       if (cashDownRes.statusCode == 200) {
         return true;
       } else {
-        print("Error: ${body['message']}");
+        _dialogService.showDialog(
+            title: 'Cashdown Request Error', description: body['message']);
       }
     } else {
-      print("App Error: $cashDownRes");
+      _dialogService.showDialog(
+          title: 'Network Error',
+          description: "Failed to make Cashdown request");
     }
     return false;
-  }
-
-  Future cashDownPaymentDialog(String loanRequestId) async {
-    String ans = "";
-    await _dialogService
-        .showConfirmationDialog(
-      title: "Cashdown Payment",
-      description:
-          "Would you like to signify Cashdown Payment for this Loan Request?",
-      cancelTitle: "No",
-      confirmationTitle: "Yes",
-    )
-        .then((val) {
-      ans = val.confirmed ? 'yes' : 'no';
-      return cashDownPayment(
-          reqData: {'loan_request_id': loanRequestId, 'cash_down': ans});
-    }).then((val) {
-      _dialogService.showDialog(
-          title: 'Cashdown Payment',
-          description: val
-              ? "Cashdown request successful"
-              : "Error with cashdown request");
-      _navigationService.navigateAndClearRoute(AllRequestScreen.routeName);
-    });
   }
 }

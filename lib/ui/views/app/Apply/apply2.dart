@@ -192,11 +192,9 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                             key: _formKey,
                             child: Column(children: <Widget>[
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Expanded(
-                                    flex: 4,
+                                  Flexible(
+                                    flex: 10,
                                     child: CustomTextField(
                                       hintText: "Account Number",
                                       hintTextStyle: TextStyle(fontSize: 12),
@@ -225,8 +223,12 @@ class _ApplyScreen2State extends State<ApplyScreen2> {
                                       },
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 5,
+                                  Flexible(
+                                    flex:1,
+                                    child: horizontalSpace(30),
+                                  ),
+                                  Flexible(
+                                    flex: 10,
                                     child: CustomTextField(
                                       hintText: model.loading
                                           ? "Loading Banks ..."

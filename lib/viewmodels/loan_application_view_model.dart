@@ -47,7 +47,9 @@ class LoanApplicationViewModel extends ApplicationViewModel {
 
   Future<void> makeLoanRequest({@required Map reqData}) async {
     reqData['current_salary'] = reqData['current_salary'].toString();
+    setBusy(true);
     var loanRequestRes = await _application.requestForALoan(loanReqData: reqData);
+    setBusy(false);
     if(loanRequestRes.runtimeType == Response){
       var body = jsonDecode(loanRequestRes.body);
       if(loanRequestRes.statusCode == 200){

@@ -61,7 +61,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
     if(paymentRes.runtimeType == Response){
       var body = jsonDecode(paymentRes.body);
       if(paymentRes.statusCode == 200){
-        await confirmWalletCharge(reference);
+       return await confirmWalletCharge(reference);
       } else {
         _dialogService.showDialog(
           title: "Request Error",
@@ -76,7 +76,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
     }
   }
 
-  Future confirmWalletCharge(String reference) async {
+  Future<bool> confirmWalletCharge(String reference) async {
     setBusy(true);
     var confirmTransactionRes = await _payment.confirmWalletTransaction(reference);
     setBusy(false);
@@ -88,7 +88,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
             title: "Success",
             description: "Wallet Funded"
         );
-        _navigationService.pop();
+        return true;
       } else {
         _dialogService.showDialog(
             title: "Request Error",
@@ -101,6 +101,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
           description: "An Error occured while confirming the transaction"
       );
     }
+    return false;
   }
 
   Future withdrawFromWallet(Map reqData) async {
