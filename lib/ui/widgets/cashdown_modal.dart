@@ -6,12 +6,10 @@ import 'package:sfscredit/models/guarantor_request.dart';
 import 'package:sfscredit/models/user_card.dart';
 import 'package:sfscredit/ui/shared/app_colors.dart';
 import 'package:sfscredit/ui/shared/ui_helpers.dart';
-import 'package:sfscredit/ui/widgets/custom_text_field.dart';
 import 'package:sfscredit/viewmodels/guarantor_request_view_model.dart';
 import 'package:sfscredit/viewmodels/payment_view_model.dart';
 
 import 'busy_button.dart';
-import 'full_screen_picker.dart';
 
 class CashDownModal extends StatefulWidget {
   final BuildContext parentContext;
@@ -34,14 +32,15 @@ class _CashDownModalState extends State<CashDownModal> {
 
   Future approveRequest(
       GuarantorRequestViewModel model, String cashDown) async {
-    bool cashDownRes = await model.cashDownPayment(reqData: {
-      'loan_request_id': widget.request.loanRequestId,
-      'cash_down': cashDown
-    });
-    if (cashDownRes) {
-      bool guarantorBankDetailsRes = await model.addGuarantorBankDetails(
-          reqData: widget.guarantorBankDetailsReqData);
-      if (guarantorBankDetailsRes) {
+    bool guarantorBankDetailsRes = await model.addGuarantorBankDetails(
+        reqData: widget.guarantorBankDetailsReqData);
+
+    if (guarantorBankDetailsRes) {
+      bool cashDownRes = await model.cashDownPayment(reqData: {
+        'loan_request_id': widget.request.loanRequestId,
+        'cash_down': cashDown
+      });
+      if (cashDownRes) {
         await model.modifyGuarantorRequest(
             reqData: {'loan_request_id': widget.request.loanRequestId},
             action: 'approve');
@@ -67,7 +66,14 @@ class _CashDownModalState extends State<CashDownModal> {
                           textStyle:
                               TextStyle(fontSize: 15, color: primaryColor))),
                 ]);
-              }).toList()
+              }).toList(),
+              BusyButton(
+                title: 'Add a New Card',
+                onPressed: () {
+                  model.startAfreshCharge(model.user.email);
+                },
+                busy: model.busy,
+              )
             ],
           )
         : Container(
@@ -96,7 +102,11 @@ class _CashDownModalState extends State<CashDownModal> {
         builder: (context, model, child) {
           return ViewModelProvider<PaymentViewModel>.withConsumer(
               viewModel: PaymentViewModel(),
-              onModelReady: (pModel) => pModel.getUsersCards(),
+              onModelReady: (pModel) {
+                pModel.getUsersCards().then((val){
+                  pModel.setBuildContext(widget.parentContext);
+                });
+              },
               builder: (context, pModel, child) {
                 return Container(
                   padding: EdgeInsets.symmetric(vertical: 50, horizontal: 35),
@@ -193,8 +203,7 @@ class _CashDownModalState extends State<CashDownModal> {
                         title: _choosingCard ? "Fund Wallet" : "Proceed",
                         onPressed: () async {
                           bool enoughCashInWallet = model.walletBalance >=
-                              widget
-                                  .request.loanRequest.loanPackage.totalPayback;
+                              widget.request.loanRequest.loanPackage.amount;
                           if (_cashDown == 'no') {
                             // Admin Funding
                             await approveRequest(model, 'no');

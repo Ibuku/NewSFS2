@@ -128,6 +128,7 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
 
     if (cashDownRes.runtimeType == Response) {
       var body = jsonDecode(cashDownRes.body);
+      print("Body: $body");
       if (cashDownRes.statusCode == 200) {
         return true;
       } else {
@@ -135,8 +136,9 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
             title: 'Cashdown Request Error', description: body['message']);
       }
     } else {
+      print("Error: ${cashDownRes.toString()}");
       _dialogService.showDialog(
-          title: 'Network Error',
+          title: 'Application Error',
           description: "Failed to make Cashdown request");
     }
     return false;

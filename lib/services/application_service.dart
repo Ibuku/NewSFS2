@@ -282,6 +282,10 @@ class ApplicationService {
     try {
       return await _network.post(
           "$API_BASE_URL/guarantor-request/loan-request/cash-down",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           body: reqData,
           encodeBody: false,
           isAuth: true);
