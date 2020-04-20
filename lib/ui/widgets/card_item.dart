@@ -52,7 +52,7 @@ class CardItem extends StatelessWidget {
                     btnText,
                     style: GoogleFonts.nunito(
                       fontWeight: FontWeight.bold,
-                    ).copyWith(color: Colors.white, fontSize: 16),
+                    ).copyWith(color: onPressed == null ? primaryColor : Colors.white, fontSize: 16),
                   ),
                   onPressed: onPressed,
                   color: primaryColor,
