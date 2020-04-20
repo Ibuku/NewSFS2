@@ -63,7 +63,6 @@ class _WalletScreenState extends State<WalletScreen> {
 //        });
 //  }
 
-
   Future<void> showTransactionModal(
       BuildContext pageContext, String type) async {
     await showModalBottomSheet(
@@ -121,145 +120,143 @@ class _WalletScreenState extends State<WalletScreen> {
                     end: Alignment.bottomCenter,
                     stops: [0.3, 1],
                     colors: [primaryColor, blueColor])),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              physics: ClampingScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      height: 80,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image(
-                            image: AssetImage('assets/images/wallet.png'),
-                            alignment: Alignment.topRight,
-                          ),
-                          horizontalSpaceSmall,
-                          Text(
-                            "N ${model.walletBalance}.00",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 30,
-                            ),
-                          ),
-                        ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  height: 80,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image(
+                        image: AssetImage('assets/images/wallet.png'),
+                        alignment: Alignment.topRight,
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () async {
-                            await showTransactionModal(context, 'withdraw');
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: 20, left: 15),
-                            padding: EdgeInsets.only(bottom: 20, top: 10),
-                            height: 120,
-                            width: 120,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white70,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(
-                                      75,
-                                      97,
-                                      119,
-                                      .1,
-                                    ),
-                                    blurRadius: 20,
-                                    offset: Offset(0, 10),
-                                  )
-                                ]),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                SvgPicture.asset("assets/svgs/withdraw.svg",
-                                    alignment: Alignment.topCenter, width: 40),
-                                verticalSpace15,
-                                Text(
-                                  "Withdraw",
-                                  style: TextStyle(
-                                    color: primaryColor,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddBankDetails(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(left: 15),
-                            padding: EdgeInsets.only(bottom: 20, top: 10),
-                            height: 120,
-                            width: 120,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white70,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(
-                                      75,
-                                      97,
-                                      119,
-                                      .1,
-                                    ),
-                                    blurRadius: 20,
-                                    offset: Offset(0, 10),
-                                  )
-                                ]),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                SvgPicture.asset("assets/svgs/fund.svg",
-                                    alignment: Alignment.topCenter, width: 40),
-                                verticalSpace15,
-                                Text(
-                                  "Add Bank",
-                                  style: TextStyle(
-                                    color: primaryColor,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    verticalSpace15,
-                    Container(
-                      margin: EdgeInsets.only(top: 5, left: 15),
-                      height: 40,
-                      child: Text(
-                        "Transactions",
+                      horizontalSpaceSmall,
+                      Text(
+                        "N ${model.walletBalance}.00",
                         style: TextStyle(
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontSize: 17,
+                          fontSize: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () async {
+                        await showTransactionModal(context, 'withdraw');
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 20, left: 15),
+                        padding: EdgeInsets.only(bottom: 20, top: 10),
+                        height: 120,
+                        width: 120,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white70,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromRGBO(
+                                  75,
+                                  97,
+                                  119,
+                                  .1,
+                                ),
+                                blurRadius: 20,
+                                offset: Offset(0, 10),
+                              )
+                            ]),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SvgPicture.asset("assets/svgs/withdraw.svg",
+                                alignment: Alignment.topCenter, width: 40),
+                            verticalSpace15,
+                            Text(
+                              "Withdraw",
+                              style: TextStyle(
+                                color: primaryColor,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    _transactions.length > 0
-                        ? ListView.separated(
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddBankDetails(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 15),
+                        padding: EdgeInsets.only(bottom: 20, top: 10),
+                        height: 120,
+                        width: 120,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white70,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromRGBO(
+                                  75,
+                                  97,
+                                  119,
+                                  .1,
+                                ),
+                                blurRadius: 20,
+                                offset: Offset(0, 10),
+                              )
+                            ]),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SvgPicture.asset("assets/svgs/fund.svg",
+                                alignment: Alignment.topCenter, width: 40),
+                            verticalSpace15,
+                            Text(
+                              "Add Bank",
+                              style: TextStyle(
+                                color: primaryColor,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                verticalSpace15,
+                Container(
+                  margin: EdgeInsets.only(top: 5, left: 15),
+                  height: 40,
+                  child: Text(
+                    "Transactions",
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+                _transactions.length > 0
+                    ? Expanded(
+                        child: ListView.separated(
+                            physics: ClampingScrollPhysics(),
+                            scrollDirection: Axis.vertical,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               String type = _transactions[index].type;
@@ -282,11 +279,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                 height: 16,
                               );
                             },
-                            itemCount: _transactions.length)
-                        : Container()
-                  ],
-                ),
-              ),
+                            itemCount: _transactions.length))
+                    : Container()
+              ],
             ),
           ),
         ),

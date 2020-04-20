@@ -49,49 +49,41 @@ class _CashDownModalState extends State<CashDownModal> {
   }
 
   Widget _buildSelectCard(PaymentViewModel model) {
-    return model.cards.length > 0
-        ? Column(
-            children: <Widget>[
-              ...model.cards.map((card) {
-                return Row(children: <Widget>[
-                  Radio(
-                    value: card,
-                    groupValue: model.selectedCard,
-                    onChanged: (value) {
-                      model.setSelectedCard(card);
-                    },
-                  ),
-                  Text("${card.display}",
-                      style: GoogleFonts.mavenPro(
-                          textStyle:
-                              TextStyle(fontSize: 15, color: primaryColor))),
-                ]);
-              }).toList(),
-              BusyButton(
-                title: 'Add a New Card',
-                onPressed: () {
-                  model.startAfreshCharge(model.user.email);
-                },
-                busy: model.busy,
-              )
-            ],
-          )
-        : Container(
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  BusyButton(
-                    title: 'Add a New Card',
-                    onPressed: () {
-                      model.startAfreshCharge(model.user.email);
-                    },
-                    busy: model.busy,
-                  )
-                ],
-              ),
+    return Column(
+      children: <Widget>[
+        ...model.cards.map((card) {
+          return Row(children: <Widget>[
+            Radio(
+              value: card,
+              groupValue: model.selectedCard,
+              onChanged: (value) {
+                model.setSelectedCard(card);
+              },
             ),
-          );
+            Text("${card.display}",
+                style: GoogleFonts.mavenPro(
+                    textStyle:
+                    TextStyle(fontSize: 15, color: primaryColor))),
+          ]);
+        }).toList(),
+        GestureDetector(
+            onTap: (){
+              model.startAfreshCharge(model.user.email);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.add),
+                Text("Add a new card",
+                    style: GoogleFonts.mavenPro(
+                      textStyle: TextStyle(
+                          fontSize: 15, color: primaryColor),
+                    ))
+              ],
+            )
+        )
+      ],
+    );
   }
 
   @override

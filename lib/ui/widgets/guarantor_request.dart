@@ -202,21 +202,6 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
                                       ),
                                     ),
                                   ),
-                                  !_isPending() &&
-                                          widget.request.loanRequest
-                                                  .paymentStatus ==
-                                              'unpaid'
-                                      ? Text(
-                                          "Active",
-                                          style: GoogleFonts.mavenPro(
-                                            textStyle: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.normal,
-                                              color: lightGrey,
-                                            ),
-                                          ),
-                                        )
-                                      : Container()
                                 ],
                               )
                             ],
