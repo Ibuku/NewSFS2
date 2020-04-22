@@ -28,6 +28,8 @@ class CashDownModal extends StatefulWidget {
 class _CashDownModalState extends State<CashDownModal> {
   String _cashDown = 'no';
   bool _choosingCard = false;
+  bool _enoughCashInWallet = false;
+  bool _checkedWallet = false;
   UserCard selectedCard;
 
   Future approveRequest(
@@ -62,12 +64,11 @@ class _CashDownModalState extends State<CashDownModal> {
             ),
             Text("${card.display}",
                 style: GoogleFonts.mavenPro(
-                    textStyle:
-                    TextStyle(fontSize: 15, color: primaryColor))),
+                    textStyle: TextStyle(fontSize: 15, color: primaryColor))),
           ]);
         }).toList(),
         GestureDetector(
-            onTap: (){
+            onTap: () {
               model.startAfreshCharge(model.user.email);
             },
             child: Row(
@@ -76,12 +77,10 @@ class _CashDownModalState extends State<CashDownModal> {
                 Icon(Icons.add),
                 Text("Add a new card",
                     style: GoogleFonts.mavenPro(
-                      textStyle: TextStyle(
-                          fontSize: 15, color: primaryColor),
+                      textStyle: TextStyle(fontSize: 15, color: primaryColor),
                     ))
               ],
-            )
-        )
+            ))
       ],
     );
   }
@@ -90,12 +89,14 @@ class _CashDownModalState extends State<CashDownModal> {
   Widget build(BuildContext context) {
     return ViewModelProvider<GuarantorRequestViewModel>.withConsumer(
         viewModel: GuarantorRequestViewModel(),
-        onModelReady: (model) => model.getWalletBalance(),
+        onModelReady: (model) {
+          model.getWalletBalance();
+        },
         builder: (context, model, child) {
           return ViewModelProvider<PaymentViewModel>.withConsumer(
               viewModel: PaymentViewModel(),
               onModelReady: (pModel) {
-                pModel.getUsersCards().then((val){
+                pModel.getUsersCards().then((_) {
                   pModel.setBuildContext(widget.parentContext);
                 });
               },
@@ -131,104 +132,127 @@ class _CashDownModalState extends State<CashDownModal> {
                         ],
                       ),
                       Text(
-                          _choosingCard
-                              ? "Choose Card"
-                              : "Choose Funding Source",
+                          _enoughCashInWallet
+                              ? "Approve Loan"
+                              : _choosingCard
+                                  ? "Choose Card"
+                                  : "Choose Funding Source",
                           style: GoogleFonts.mavenPro(
                             textStyle:
                                 TextStyle(fontSize: 17, color: primaryColor),
                           )),
                       verticalSpace15,
-                      !_choosingCard
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Row(
+                      _enoughCashInWallet
+                          ? Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                  "Do you want to approve this Loan Request?",
+                                  style: GoogleFonts.mavenPro(
+                                    textStyle: TextStyle(
+                                        fontSize: 15, color: primaryColor),
+                                  )))
+                          : !_choosingCard
+                              ? Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
-                                        Radio(
-                                          value: 'no',
-                                          groupValue: _cashDown,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _cashDown = 'no';
-                                            });
-                                          },
+                                        Row(
+                                          children: <Widget>[
+                                            Radio(
+                                              value: 'no',
+                                              groupValue: _cashDown,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _cashDown = 'no';
+                                                });
+                                              },
+                                            ),
+                                            Text("Admin Funding",
+                                                style: GoogleFonts.mavenPro(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 15,
+                                                      color: primaryColor),
+                                                ))
+                                          ],
                                         ),
-                                        Text("Admin Funding",
-                                            style: GoogleFonts.mavenPro(
-                                              textStyle: TextStyle(
-                                                  fontSize: 15,
-                                                  color: primaryColor),
-                                            ))
+                                        Row(
+                                          children: <Widget>[
+                                            Radio(
+                                              value: 'yes',
+                                              groupValue: _cashDown,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _cashDown = 'yes';
+                                                });
+                                              },
+                                            ),
+                                            Text("Cashdown",
+                                                style: GoogleFonts.mavenPro(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 15,
+                                                      color: primaryColor),
+                                                ))
+                                          ],
+                                        )
                                       ],
                                     ),
-                                    Row(
-                                      children: <Widget>[
-                                        Radio(
-                                          value: 'yes',
-                                          groupValue: _cashDown,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _cashDown = 'yes';
-                                            });
-                                          },
-                                        ),
-                                        Text("Cashdown",
-                                            style: GoogleFonts.mavenPro(
-                                              textStyle: TextStyle(
-                                                  fontSize: 15,
-                                                  color: primaryColor),
-                                            ))
-                                      ],
-                                    )
                                   ],
-                                ),
-                              ],
-                            )
-                          : _buildSelectCard(pModel),
+                                )
+                              : _buildSelectCard(pModel),
                       verticalSpace15,
-                      BusyButton(
-                        title: _choosingCard ? "Fund Wallet" : "Proceed",
-                        onPressed: () async {
-                          bool enoughCashInWallet = model.walletBalance >=
-                              widget.request.loanRequest.loanPackage.amount;
-                          if (_cashDown == 'no') {
-                            // Admin Funding
-                            await approveRequest(model, 'no');
-                          } else if (_cashDown == 'yes' && enoughCashInWallet) {
-                            // CashDown with enough cash in the Wallet
-                            await approveRequest(model, 'yes');
-                          } else if (_choosingCard &&
-                              pModel.selectedCard != null) {
-                            // Fund Wallet with Loan Request Amount
-                            bool res = await pModel.startWalletCharge({
-                              'amount': widget
-                                  .request.loanRequest.loanPackage.amount
-                                  .toString()
-                            });
-                            if (res) {
-                              // CashDown after Wallet Fund
-                              await approveRequest(model, 'yes');
-                            }
-                          } else if (_cashDown == 'yes' &&
-                              !enoughCashInWallet) {
-                            // CashDown with insufficient funds
-                            model.showMessage("Insufficient funds in wallet",
-                                "Choose a card to fund wallet");
-                            setState(() {
-                              _choosingCard = true;
-                            });
-                          }
-                        },
-                        busy: model.busy ||
-                            model.loading ||
-                            pModel.busy ||
-                            pModel.loading,
-                      ),
+                      !_enoughCashInWallet && !_checkedWallet
+                          ? BusyButton(
+                              title: _choosingCard ? "Fund Wallet" : "Proceed",
+                              onPressed: () async {
+                                if (_cashDown == 'no') {
+                                  // Admin Funding
+                                  await approveRequest(model, 'no');
+                                } else if (_cashDown == 'yes') {
+                                  setState(() {
+                                    _enoughCashInWallet = model.walletBalance >=
+                                        widget.request.loanRequest.loanPackage
+                                            .amount;
+                                    if (_enoughCashInWallet) {
+                                      _checkedWallet = true;
+                                    } else {
+                                      model.showMessage(
+                                          "Insufficient funds in wallet",
+                                          "Choose a card to fund wallet");
+                                      _choosingCard = true;
+                                    }
+                                  });
+                                  if (_choosingCard &&
+                                      pModel.selectedCard != null) {
+                                    // Fund Wallet with Loan Request Amount
+                                    bool res = await pModel.startWalletCharge({
+                                      'amount': widget.request.loanRequest
+                                          .loanPackage.amount
+                                          .toString()
+                                    });
+                                    if (res) {
+                                      setState(() {
+                                        _choosingCard = false;
+                                        _enoughCashInWallet = true;
+                                        _checkedWallet = true;
+                                      });
+                                    }
+                                  }
+                                }
+                              },
+                              busy: model.busy ||
+                                  model.loading ||
+                                  pModel.busy ||
+                                  pModel.loading,
+                            )
+                          : BusyButton(
+                              title: "Approve Request",
+                              onPressed: () async =>
+                                  await approveRequest(model, 'yes'),
+                              busy: model.busy || model.loading),
                     ],
                   ),
                 );
