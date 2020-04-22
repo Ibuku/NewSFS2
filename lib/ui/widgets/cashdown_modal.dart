@@ -29,7 +29,7 @@ class _CashDownModalState extends State<CashDownModal> {
   String _cashDown = 'no';
   bool _choosingCard = false;
   bool _enoughCashInWallet = false;
-  bool _checkedWallet = false;
+  bool _canApproveLoan = false;
   UserCard selectedCard;
 
   Future approveRequest(
@@ -132,7 +132,7 @@ class _CashDownModalState extends State<CashDownModal> {
                         ],
                       ),
                       Text(
-                          _enoughCashInWallet
+                          _canApproveLoan
                               ? "Approve Loan"
                               : _choosingCard
                                   ? "Choose Card"
@@ -142,7 +142,7 @@ class _CashDownModalState extends State<CashDownModal> {
                                 TextStyle(fontSize: 17, color: primaryColor),
                           )),
                       verticalSpace15,
-                      _enoughCashInWallet
+                      _canApproveLoan
                           ? Container(
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
@@ -204,20 +204,22 @@ class _CashDownModalState extends State<CashDownModal> {
                                 )
                               : _buildSelectCard(pModel),
                       verticalSpace15,
-                      !_enoughCashInWallet && !_checkedWallet
+                      !_canApproveLoan
                           ? BusyButton(
                               title: _choosingCard ? "Fund Wallet" : "Proceed",
                               onPressed: () async {
                                 if (_cashDown == 'no') {
                                   // Admin Funding
-                                  await approveRequest(model, 'no');
+                                 setState(() {
+                                   _canApproveLoan = true;
+                                 });
                                 } else if (_cashDown == 'yes') {
                                   setState(() {
                                     _enoughCashInWallet = model.walletBalance >=
                                         widget.request.loanRequest.loanPackage
                                             .amount;
                                     if (_enoughCashInWallet) {
-                                      _checkedWallet = true;
+                                      _canApproveLoan = true;
                                     } else {
                                       model.showMessage(
                                           "Insufficient funds in wallet",
@@ -237,7 +239,7 @@ class _CashDownModalState extends State<CashDownModal> {
                                       setState(() {
                                         _choosingCard = false;
                                         _enoughCashInWallet = true;
-                                        _checkedWallet = true;
+                                        _canApproveLoan = true;
                                       });
                                     }
                                   }
@@ -251,7 +253,7 @@ class _CashDownModalState extends State<CashDownModal> {
                           : BusyButton(
                               title: "Approve Request",
                               onPressed: () async =>
-                                  await approveRequest(model, 'yes'),
+                                  await approveRequest(model, _cashDown),
                               busy: model.busy || model.loading),
                     ],
                   ),
