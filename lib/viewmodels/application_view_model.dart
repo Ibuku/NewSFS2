@@ -86,14 +86,13 @@ class ApplicationViewModel extends BaseModel {
         .map((request) => request.loanPackage.totalPayback)
         .reduce((int i, int j) => i + j);
     approvedRequests
-        .where((request) => request.paymentStatus == 'unpaid')
+        .where((request) => request.paymentStatus != 'paid')
         .forEach((request) {
       _activeLoanTotal += request.loanPackage.totalPayback;
       _activeLoansAmountLeft += pendingSchedules
           .where((schedule) => schedule.loanRequestId == request.id)
-          .map((sch) {
-        return sch.amountDue;
-      }).reduce((int i, int j) => i + j);
+          .map((sch) => sch.amountDue)
+          .reduce((int i, int j) => i + j);
     });
     _activeLoansTotalPaid = _activeLoanTotal - _activeLoansAmountLeft;
     _nextInstallment = pendingSchedules[0].amountDue;
