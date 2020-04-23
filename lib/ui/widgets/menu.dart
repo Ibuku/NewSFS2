@@ -36,7 +36,9 @@ class MenuDrawer extends StatelessWidget {
                       ? user.profile.avatar
                       : "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/person.png",
                 ),
+
               ),
+
               decoration: new BoxDecoration(
                 color: Hexcolor('#120A44'),
               ),

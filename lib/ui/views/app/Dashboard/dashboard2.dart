@@ -181,7 +181,7 @@ class DashboardScreen extends StatelessWidget {
                       padding: EdgeInsets.only(right: 200),
                       height: 25,
                       child: Text(
-                        "Active Loans",
+                        "Payment Progress",
                         style: TextStyle(
                           color: primaryColor,
                           fontWeight: FontWeight.bold,
@@ -210,9 +210,11 @@ class DashboardScreen extends StatelessWidget {
                                 : (model.activeLoansTotalPaid /
                                     model.activeLoansTotal),
                             header: Text(
-                                "Paid = N ${model.formatNumber(model.activeLoansTotalPaid)}"),
+                                "Paid = N ${model.formatNumber(model.activeLoansTotalPaid)}.00",
+                              style: TextStyle(color: primaryColor,fontSize: 17,),),
                             footer: Text(
-                                "Left To Pay = N ${model.formatNumber(model.activeLoansAmountLeft)}"),
+                                "Left To Pay = N ${model.formatNumber(model.activeLoansAmountLeft)}.00",
+                              style: TextStyle(color: primaryColor,fontSize: 17,),),
                             center: Text(
                               "${(model.activeLoansTotalPaid / model.activeLoansTotal).isNaN ? 0 : (double.parse((model.activeLoansTotalPaid / model.activeLoansTotal).toStringAsFixed(2)) * 100).floor()}%",
                               style: TextStyle(
