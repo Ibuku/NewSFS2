@@ -88,7 +88,7 @@ class DashboardScreen extends StatelessWidget {
                       child: CardItem(
                         titleText: "Total Borrowed Loans",
                         btnText:
-                            "N ${model.formatNumber(model.activeLoansTotal)}.00",
+                            "N ${model.formatNumber(model.borrowedLoansTotal)}.00",
                         icon: Icons.cloud_download,
                         //onPressed: () => model.toRoute(UpdateKYC.routeName),
                       ),
@@ -204,11 +204,11 @@ class DashboardScreen extends StatelessWidget {
                             lineWidth: 15.0,
                             animation: true,
                             percent: (model.activeLoansTotalPaid /
-                                        model.activeLoansTotal)
+                                        model.activeLoanTotal)
                                     .isNaN
                                 ? 0
                                 : (model.activeLoansTotalPaid /
-                                    model.activeLoansTotal),
+                                    model.activeLoanTotal),
                             header: Text(
                                 "Paid = N ${model.formatNumber(model.activeLoansTotalPaid)}.00",
                               style: TextStyle(color: primaryColor,fontSize: 17,),),
@@ -216,7 +216,7 @@ class DashboardScreen extends StatelessWidget {
                                 "Left To Pay = N ${model.formatNumber(model.activeLoansAmountLeft)}.00",
                               style: TextStyle(color: primaryColor,fontSize: 17,),),
                             center: Text(
-                              "${(model.activeLoansTotalPaid / model.activeLoansTotal).isNaN ? 0 : (double.parse((model.activeLoansTotalPaid / model.activeLoansTotal).toStringAsFixed(2)) * 100).floor()}%",
+                              "${(model.activeLoansTotalPaid / model.activeLoanTotal).isNaN ? 0 : (double.parse((model.activeLoansTotalPaid / model.activeLoanTotal).toStringAsFixed(2)) * 100).floor()}%",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15.0,
@@ -230,7 +230,7 @@ class DashboardScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                "N ${model.formatNumber(model.activeLoansTotal)}.00",
+                                "N ${model.formatNumber(model.activeLoanTotal)}.00",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,

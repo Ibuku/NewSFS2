@@ -35,8 +35,8 @@ class ApplicationViewModel extends BaseModel {
   int _totalGuarantorLoanPayback = 0;
   int get totalGuarantorLoan => _totalGuarantorLoanPayback;
 
-  int _userWallerBalance = 0;
-  int get walletBalance => _userWallerBalance;
+  int _userWalletBalance = 0;
+  int get walletBalance => _userWalletBalance;
 
   User _user;
   User get user {
@@ -65,8 +65,11 @@ class ApplicationViewModel extends BaseModel {
     notifyListeners();
   }
 
-  int _activeLoansTotal = 0;
-  int get activeLoansTotal => _activeLoansTotal;
+  int _borrowedLoansTotal = 0;
+  int get borrowedLoansTotal => _borrowedLoansTotal;
+
+  int _activeLoanTotal = 0;
+  int get activeLoanTotal => _activeLoanTotal;
 
   int _activeLoansAmountLeft = 0;
   int get activeLoansAmountLeft => _activeLoansAmountLeft;
@@ -77,16 +80,22 @@ class ApplicationViewModel extends BaseModel {
   int _nextInstallment = 0;
   int get nextInstallment => _nextInstallment;
 
-  void setActiveLoanParams(
-      List<PaybackSchedule> pendingSchedules, List<LoanRequest> requests) {
-    requests.forEach((request) {
-      _activeLoansTotal += request.loanPackage.totalPayback;
+  void setActiveLoanParams(List<PaybackSchedule> pendingSchedules,
+      List<LoanRequest> approvedRequests) {
+    _borrowedLoansTotal = approvedRequests
+        .map((request) => request.loanPackage.totalPayback)
+        .reduce((int i, int j) => i + j);
+    approvedRequests
+        .where((request) => request.paymentStatus == 'unpaid')
+        .forEach((request) {
+      _activeLoanTotal += request.loanPackage.totalPayback;
       _activeLoansAmountLeft += pendingSchedules
           .where((schedule) => schedule.loanRequestId == request.id)
-          .map((sch) => sch.amountDue)
-          .reduce((int i, int j) => i + j);
+          .map((sch) {
+        return sch.amountDue;
+      }).reduce((int i, int j) => i + j);
     });
-    _activeLoansTotalPaid = _activeLoansTotal - _activeLoansAmountLeft;
+    _activeLoansTotalPaid = _activeLoanTotal - _activeLoansAmountLeft;
     _nextInstallment = pendingSchedules[0].amountDue;
     notifyListeners();
   }
@@ -166,7 +175,7 @@ class ApplicationViewModel extends BaseModel {
     }
     if (walletRequestRes.statusCode == 200) {
       var body = jsonDecode(walletRequestRes.body)['data'];
-      _userWallerBalance = body['balance'];
+      _userWalletBalance = body['balance'];
     } else {
       _dialogService.showDialog(
         title: "Network error occured",
@@ -232,7 +241,7 @@ class ApplicationViewModel extends BaseModel {
     setLoading(false);
   }
 
-  Future getLoanPaybackSchedules(List<LoanRequest> requests) async {
+  Future getLoanPaybackSchedules(List<LoanRequest> approvedRequests) async {
     var paybackSchedulesRes = await _application.getPaybackSchedules();
     if (paybackSchedulesRes.runtimeType == Response) {
       if (paybackSchedulesRes.statusCode == 200) {
@@ -243,7 +252,7 @@ class ApplicationViewModel extends BaseModel {
               .where((schedule) => schedule['payment_status'] == 'pending')
               .map((i) => PaybackSchedule.fromMap((i)))
               .toList();
-          setActiveLoanParams(pendingSchedules, requests);
+          setActiveLoanParams(pendingSchedules, approvedRequests);
         }
       } else {
         _dialogService.showDialog(
@@ -397,12 +406,13 @@ class ApplicationViewModel extends BaseModel {
 
   Future<void> init() async {
     setLoading(true);
-    await Future.wait([getUserLoanRequests()]);
+    await Future.wait(
+        [getUserLoanRequests(), getWalletBalance(), getTotalGuarantorLoan()]);
     await Future.wait([
-      getWalletBalance(),
-      getTotalGuarantorLoan(),
-      getLoanPaybackSchedules(_userLoanRequests)
+      getLoanPaybackSchedules(
+          _userLoanRequests.where((req) => req.status == 'approved').toList())
     ]);
+    notifyListeners();
     setLoading(false);
   }
 
@@ -450,11 +460,5 @@ class ApplicationViewModel extends BaseModel {
 
   void showMessage(String title, String description) {
     _dialogService.showDialog(title: title, description: description);
-  }
-
-  void prettyPrint(json) {
-    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
-    String pprint = encoder.convert(json);
-    print(pprint);
   }
 }
