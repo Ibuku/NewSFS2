@@ -193,7 +193,7 @@ class _GuarantorRequestState extends State<GuarantorRequestWidget> {
                               Column(
                                 children: <Widget>[
                                   Text(
-                                    "N ${new NumberFormat('###,###').format(widget.request.loanRequest.loanPackage.totalPayback)}.00",
+                                    "N ${new NumberFormat('###,###').format(widget.request.loanRequest.loanPackage.amount)}.00",
                                     style: GoogleFonts.mavenPro(
                                       textStyle: TextStyle(
                                         fontSize: 15,
