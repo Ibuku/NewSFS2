@@ -198,7 +198,7 @@ class ApplicationViewModel extends BaseModel {
             .toList();
         if (approvedRequests.length > 0) {
           int guaranteedLoansTotal = approvedRequests
-              .map((req) => req.loanRequest.loanPackage.totalPayback)
+              .map((req) => req.loanRequest.loanPackage.amount)
               .reduce((int i, int j) => i + j);
           _totalGuarantorLoanPayback = guaranteedLoansTotal;
         }
