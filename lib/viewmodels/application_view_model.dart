@@ -65,8 +65,11 @@ class ApplicationViewModel extends BaseModel {
     notifyListeners();
   }
 
-  int _activeLoansTotal = 0;
-  int get activeLoansTotal => _activeLoansTotal;
+  int _borrowedLoansTotal = 0;
+  int get borrowedLoansTotal => _borrowedLoansTotal;
+
+  int _activeLoanTotal = 0;
+  int get activeLoanTotal => _activeLoanTotal;
 
   int _activeLoansAmountLeft = 0;
   int get activeLoansAmountLeft => _activeLoansAmountLeft;
@@ -78,16 +81,21 @@ class ApplicationViewModel extends BaseModel {
   int get nextInstallment => _nextInstallment;
 
   void setActiveLoanParams(List<PaybackSchedule> pendingSchedules,
-      List<LoanRequest> activeRequests) {
-    activeRequests.forEach((request) {
-      _activeLoansTotal += request.loanPackage.totalPayback;
+      List<LoanRequest> approvedRequests) {
+    _borrowedLoansTotal = approvedRequests
+        .map((request) => request.loanPackage.totalPayback)
+        .reduce((int i, int j) => i + j);
+    approvedRequests
+        .where((request) => request.paymentStatus == 'unpaid')
+        .forEach((request) {
+      _activeLoanTotal += request.loanPackage.totalPayback;
       _activeLoansAmountLeft += pendingSchedules
           .where((schedule) => schedule.loanRequestId == request.id)
           .map((sch) {
         return sch.amountDue;
       }).reduce((int i, int j) => i + j);
     });
-    _activeLoansTotalPaid = _activeLoansTotal - _activeLoansAmountLeft;
+    _activeLoansTotalPaid = _activeLoanTotal - _activeLoansAmountLeft;
     _nextInstallment = pendingSchedules[0].amountDue;
     notifyListeners();
   }
@@ -233,7 +241,7 @@ class ApplicationViewModel extends BaseModel {
     setLoading(false);
   }
 
-  Future getLoanPaybackSchedules(List<LoanRequest> activeRequests) async {
+  Future getLoanPaybackSchedules(List<LoanRequest> approvedRequests) async {
     var paybackSchedulesRes = await _application.getPaybackSchedules();
     if (paybackSchedulesRes.runtimeType == Response) {
       if (paybackSchedulesRes.statusCode == 200) {
@@ -244,7 +252,7 @@ class ApplicationViewModel extends BaseModel {
               .where((schedule) => schedule['payment_status'] == 'pending')
               .map((i) => PaybackSchedule.fromMap((i)))
               .toList();
-          setActiveLoanParams(pendingSchedules, activeRequests);
+          setActiveLoanParams(pendingSchedules, approvedRequests);
         }
       } else {
         _dialogService.showDialog(
@@ -401,10 +409,8 @@ class ApplicationViewModel extends BaseModel {
     await Future.wait(
         [getUserLoanRequests(), getWalletBalance(), getTotalGuarantorLoan()]);
     await Future.wait([
-      getLoanPaybackSchedules(_userLoanRequests
-          .where((req) =>
-              req.status == 'approved' && req.paymentStatus == 'unpaid')
-          .toList())
+      getLoanPaybackSchedules(
+          _userLoanRequests.where((req) => req.status == 'approved').toList())
     ]);
     notifyListeners();
     setLoading(false);
