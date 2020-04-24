@@ -95,7 +95,9 @@ class ApplicationViewModel extends BaseModel {
           .reduce((int i, int j) => i + j);
     });
     _activeLoansTotalPaid = _activeLoanTotal - _activeLoansAmountLeft;
-    _nextInstallment = pendingSchedules[0].amountDue;
+    if(pendingSchedules.length > 0){
+      _nextInstallment = pendingSchedules[0].amountDue;
+    }
     notifyListeners();
   }
 
@@ -411,7 +413,6 @@ class ApplicationViewModel extends BaseModel {
       getLoanPaybackSchedules(
           _userLoanRequests.where((req) => req.status == 'approved').toList())
     ]);
-    notifyListeners();
     setLoading(false);
   }
 
