@@ -84,11 +84,13 @@ class SignUpViewModel extends BaseModel {
         _navigationService.navigateTo(ActivateAccount.routeName,
             replace: true, arguments: authData['email']);
       } else if (result.statusCode == 400) {
+        print("400 Error: $body");
         await _dialogService.showDialog(
           title: 'Sign Up Failed',
           description: body['message'],
         );
       } else {
+        print("Error: $body");
         await _dialogService.showDialog(
           title: 'Sign Up Failed',
           description: body['message'],

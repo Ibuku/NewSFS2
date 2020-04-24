@@ -103,6 +103,7 @@ class AccountActivateViewModel extends BaseModel {
 
     if (result.runtimeType == Response) {
       var body = jsonDecode(result.body);
+      print("Body: $body");
       if (result.statusCode == 200) {
         await _dialogService.showDialog(
           title: 'OTP Resend request Sent',
@@ -111,18 +112,18 @@ class AccountActivateViewModel extends BaseModel {
       } else if (result.statusCode == 400) {
         await _dialogService.showDialog(
           title: 'OTP Resend failed',
-          description: body['message'],
+          description: body['message']
         );
       } else {
         await _dialogService.showDialog(
           title: 'OTP Resend failed',
-          description: body['message'],
+          description: body['message'] ?? "Server Error",
         );
       }
     } else {
       await _dialogService.showDialog(
         title: 'OTP Resend failed',
-        description: result.toString(),
+        description: result.toString() ?? "Application Error",
       );
     }
   }
