@@ -61,7 +61,7 @@ class LoanApplicationViewModel extends ApplicationViewModel {
       } else {
         _dialogService.showDialog(
           title: "Failed to make a Loan Request",
-          description: body['message'].toString(),
+          description: body['message'] ?? "Service Unavailable",
         );
       }
     } else {

@@ -167,16 +167,17 @@ class ApplicationViewModel extends BaseModel {
 
   Future<void> getWalletBalance() async {
     var walletRequestRes = await _application.getWallet();
-    if (walletRequestRes is Error) {
-      _dialogService.showDialog(
-        title: "Network error occured",
-        description: walletRequestRes.toString(),
-      );
-      return;
-    }
-    if (walletRequestRes.statusCode == 200) {
-      var body = jsonDecode(walletRequestRes.body)['data'];
-      _userWalletBalance = body['balance'];
+    if (walletRequestRes.runtimeType == Response) {
+      var body = jsonDecode(walletRequestRes.body);
+      if (walletRequestRes.statusCode == 200) {
+        var data = body['data'];
+        _userWalletBalance = data['balance'];
+      } else {
+        _dialogService.showDialog(
+          title: "Request error occured",
+          description: body['message'] ?? "Service Unavailable",
+        );
+      }
     } else {
       _dialogService.showDialog(
         title: "Network error occured",
@@ -206,7 +207,7 @@ class ApplicationViewModel extends BaseModel {
       } else {
         _dialogService.showDialog(
           title: "Request Error",
-          description: body['message'],
+          description: body['message'] ?? "Service Unavailable",
         );
       }
     } else {
@@ -221,16 +222,16 @@ class ApplicationViewModel extends BaseModel {
     setLoading(true);
     var allLoanRequestsRes = await _application.getLoanRequests();
     if (allLoanRequestsRes.runtimeType == Response) {
+      var body = jsonDecode(allLoanRequestsRes.body);
       if (allLoanRequestsRes.statusCode == 200) {
-        var body = jsonDecode(allLoanRequestsRes.body);
         List allLoanRequests = body['data'];
         List<LoanRequest> userLoanRequestList =
             allLoanRequests.map((i) => LoanRequest.fromMap(i)).toList();
         setUserLoanRequests(userLoanRequestList);
       } else {
         _dialogService.showDialog(
-          title: "Network error occured",
-          description: allLoanRequestsRes.toString(),
+          title: "Request error occured",
+          description: body['message'] ?? "Service Unavailable",
         );
       }
     } else {
@@ -245,8 +246,8 @@ class ApplicationViewModel extends BaseModel {
   Future getLoanPaybackSchedules(List<LoanRequest> approvedRequests) async {
     var paybackSchedulesRes = await _application.getPaybackSchedules();
     if (paybackSchedulesRes.runtimeType == Response) {
+      var body = jsonDecode(paybackSchedulesRes.body);
       if (paybackSchedulesRes.statusCode == 200) {
-        var body = jsonDecode(paybackSchedulesRes.body);
         if (!body['data'].isEmpty) {
           List rawRequests = body['data'];
           List<PaybackSchedule> pendingSchedules = rawRequests
@@ -257,8 +258,8 @@ class ApplicationViewModel extends BaseModel {
         }
       } else {
         _dialogService.showDialog(
-          title: "Network error occured",
-          description: paybackSchedulesRes.toString(),
+          title: "Request error occured",
+          description: body['message'] ?? "Service Unavailable",
         );
       }
     } else {
@@ -271,22 +272,22 @@ class ApplicationViewModel extends BaseModel {
 
   Future getAllLoanPackages(Function setLoanPackages) async {
     var approvedLoanPackagesRes = await _application.getApprovedLoanPackages();
-    if (approvedLoanPackagesRes is Error) {
-      _dialogService.showDialog(
-        title: "Network error occured",
-        description: approvedLoanPackagesRes.toString(),
-      );
-      return;
-    }
-    if (approvedLoanPackagesRes.statusCode == 200) {
+    if (approvedLoanPackagesRes.runtimeType == Response) {
       var body = jsonDecode(approvedLoanPackagesRes.body);
-      List approvedLoanPackages = body['data'];
-      List<LoanPackage> loanPackages =
-          approvedLoanPackages.map((i) => LoanPackage.fromMap((i))).toList();
-      setLoanPackages(loanPackages);
+      if (approvedLoanPackagesRes.statusCode == 200) {
+        List approvedLoanPackages = body['data'];
+        List<LoanPackage> loanPackages =
+        approvedLoanPackages.map((i) => LoanPackage.fromMap((i))).toList();
+        setLoanPackages(loanPackages);
+      } else {
+        _dialogService.showDialog(
+          title: "Request error occured",
+          description: body['message'] ?? "Service Unavilable",
+        );
+      }
     } else {
       _dialogService.showDialog(
-        title: "Network error occured",
+        title: "Application error occured",
         description: approvedLoanPackagesRes.toString(),
       );
     }
@@ -299,8 +300,8 @@ class ApplicationViewModel extends BaseModel {
     setBusy(false);
 
     if (bankDetailsRes.runtimeType == Response) {
+      var body = jsonDecode(bankDetailsRes.body);
       if (bankDetailsRes.statusCode == 200) {
-        var body = jsonDecode(bankDetailsRes.body);
         if (!body['data'].isEmpty) {
           List rawData = body['data'];
           List<BankDetails> details = rawData.map((detailsMap) {
@@ -313,8 +314,8 @@ class ApplicationViewModel extends BaseModel {
         }
       } else {
         _dialogService.showDialog(
-          title: "Network error occured",
-          description: bankDetailsRes.toString(),
+          title: "Request error occured",
+          description: body['message'] ?? "Service Unavailable",
         );
       }
     } else {
@@ -331,14 +332,14 @@ class ApplicationViewModel extends BaseModel {
     setBusy(false);
 
     if (allBanksRes.runtimeType == Response) {
+      var body = jsonDecode(allBanksRes.body);
       if (allBanksRes.statusCode == 200) {
-        var body = jsonDecode(allBanksRes.body);
         List allBanks = body['data'];
         _banksList = allBanks.map((i) => Bank.fromMap((i))).toList();
       } else {
         _dialogService.showDialog(
           title: "Network error occured",
-          description: allBanksRes.toString(),
+          description: body['message'] ?? "Service Unavailable",
         );
       }
     } else {
@@ -362,7 +363,7 @@ class ApplicationViewModel extends BaseModel {
       } else {
         _dialogService.showDialog(
             title: "Bank Account Verification Failed",
-            description: body['message']);
+            description: body['message'] ?? "Service Unavailable");
       }
     } else {
       _dialogService.showDialog(
@@ -387,14 +388,14 @@ class ApplicationViewModel extends BaseModel {
     setBusy(false);
 
     if (cardsRes.runtimeType == Response) {
+      var body = jsonDecode(cardsRes.body);
       if (cardsRes.statusCode == 200) {
-        var body = jsonDecode(cardsRes.body);
         List verifiedCards = body['data'];
         setUserCards(verifiedCards.map((i) => UserCard.fromMap((i))).toList());
       } else {
         _dialogService.showDialog(
-          title: "Network error occured",
-          description: cardsRes.toString(),
+          title: "Request error occured",
+          description: body['message'] ?? "Service Unavailable",
         );
       }
     } else {

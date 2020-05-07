@@ -39,8 +39,8 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
   Future getGuarantorRequests() async {
     var guarantorRequestRes = await _application.getGuarantorRequests();
     if (guarantorRequestRes.runtimeType == Response) {
+      var body = jsonDecode(guarantorRequestRes.body);
       if (guarantorRequestRes.statusCode == 200) {
-        var body = jsonDecode(guarantorRequestRes.body);
         if (!body['data'].isEmpty) {
           List rawRequests = body['data'];
           List<GuarantorRequest> requests =
@@ -49,8 +49,8 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
         }
       } else {
         _dialogService.showDialog(
-          title: "Network error occured",
-          description: guarantorRequestRes.toString(),
+          title: "Request error occured",
+          description: body['message'] ?? "Service Unavailable",
         );
       }
     } else {
@@ -128,12 +128,11 @@ class GuarantorRequestViewModel extends ApplicationViewModel {
 
     if (cashDownRes.runtimeType == Response) {
       var body = jsonDecode(cashDownRes.body);
-      print("Body: $body");
       if (cashDownRes.statusCode == 200) {
         return true;
       } else {
         _dialogService.showDialog(
-            title: 'Cashdown Request Error', description: body['message']);
+            title: 'Cashdown Request Error', description: body['message'] ?? 'Service Unavailable');
       }
     } else {
       print("Error: ${cashDownRes.toString()}");

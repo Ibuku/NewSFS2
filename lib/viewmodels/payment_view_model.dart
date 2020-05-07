@@ -198,7 +198,7 @@ class PaymentViewModel extends LoanApplicationViewModel {
       } else {
         _dialogService.showDialog(
           title: "Request error occured",
-          description: body['message'],
+          description: body['message'] ?? "Service Unavailable",
         );
       }
     } else {
